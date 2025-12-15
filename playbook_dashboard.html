@@ -164,8 +164,11 @@
       .mention-item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
       .mention-item:hover { background: #f8fafc; }
 
-      .mini-chat-btn { margin-left: 8px; }
-      .mini-chat { position: absolute; right: 18px; bottom: 18px; width: 260px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15,23,42,0.25); display: none; flex-direction: column; z-index: 80; }
+      .add-card { display: flex; align-items: center; justify-content: center; border: 1px dashed var(--border); border-radius: 12px; background: #f9fafb; cursor: pointer; }
+      .add-card-btn { border: 0; background: transparent; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; color: #0f766e; }
+      .add-card-plus { width: 40px; height: 40px; border-radius: 999px; border: 1px dashed #0f766e; display: flex; align-items: center; justify-content: center; font-size: 24px; line-height: 1; }
+      .add-card-label { font-size: 12px; color: var(--muted); }
+      .mini-chat { position: absolute; width: 260px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15,23,42,0.25); display: none; flex-direction: column; z-index: 80; }
       .mini-chat.open { display: flex; }
       .mini-chat-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
       .mini-chat-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 2px 6px; font-size: 12px; cursor: pointer; }
@@ -274,7 +277,6 @@
         <section id="dashPanel" class="paper">
           <div class="hd">
             <div class="title">Playbook Dashboard</div>
-            <button id="miniChatBtn" class="icon-btn mini-chat-btn" type="button">+</button>
           </div>
           <div class="bd">
             <div id="dashGrid" class="dash-grid">
@@ -331,6 +333,12 @@
                   </div>
                 </div>
                 <div class="chart-container"><div class="chart-skeleton"></div></div>
+              </div>
+              <div class="chart-card add-card" data-w="1" data-h="1">
+                <button id="miniChatBtn" class="add-card-btn" type="button">
+                  <div class="add-card-plus">+</div>
+                  <div class="add-card-label">New widget</div>
+                </button>
               </div>
             </div>
           </div>
@@ -545,6 +553,7 @@
       }
       let dragEl = null;
       function bindCardDrag(card) {
+        if (card.classList.contains('add-card')) return;
         card.addEventListener('dragstart', () => {
           dragEl = card;
           card.classList.add('dragging');
@@ -977,14 +986,11 @@
           document.querySelectorAll('.card-upd-pop.open').forEach(pop => pop.classList.remove('open'));
         }
       });
-      cfgChatSend.addEventListener('click', () => {
-        const text = cfgChatInput.value.trim();
-        if (!text) return;
+      function runChatFlow(text) {
         const you = document.createElement('div');
         you.className = 'chat-msg msg-you';
         you.innerHTML = '<div class="chat-role">You</div><div>' + text + '</div>';
         cfgChatList.appendChild(you);
-        cfgChatInput.value = '';
         setTimeout(() => {
           const ai = document.createElement('div');
           ai.className = 'chat-msg msg-ai';
@@ -1032,11 +1038,17 @@
               cfgChatList.scrollTop = cfgChatList.scrollHeight;
             }, 1800);
           } else {
-            ai.innerHTML = '<div class="chat-role">AI</div><div>Noted. This box is for chatting about the current playbook.</div>';
-            cfgChatList.appendChild(ai);
-            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+          ai.innerHTML = '<div class="chat-role">AI</div><div>Noted. This box is for chatting about the current playbook.</div>';
+          cfgChatList.appendChild(ai);
+          cfgChatList.scrollTop = cfgChatList.scrollHeight;
           }
         }, 500);
+      }
+      cfgChatSend.addEventListener('click', () => {
+        const text = cfgChatInput.value.trim();
+        if (!text) return;
+        cfgChatInput.value = '';
+        runChatFlow(text);
       });
       cfgChatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
@@ -1052,6 +1064,24 @@
       function openMiniChat() {
         if (!miniChat) return;
         miniChat.classList.add('open');
+        miniChat.style.right = 'auto';
+        miniChat.style.bottom = 'auto';
+        const panel = document.getElementById('dashPanel');
+        if (panel && miniChatBtn) {
+          const btnRect = miniChatBtn.getBoundingClientRect();
+          const panelRect = panel.getBoundingClientRect();
+          let top = btnRect.bottom - panelRect.top + 8;
+          let left = btnRect.left - panelRect.left;
+          const maxLeft = panelRect.width - miniChat.offsetWidth - 16;
+          if (!Number.isFinite(maxLeft)) {
+            miniChat.style.left = left + 'px';
+            miniChat.style.top = top + 'px';
+          } else {
+            if (left > maxLeft) left = Math.max(0, maxLeft);
+            miniChat.style.left = left + 'px';
+            miniChat.style.top = top + 'px';
+          }
+        }
         if (miniChatInput) {
           miniChatInput.focus();
           miniChatInput.select();
@@ -1065,14 +1095,9 @@
         if (!miniChatInput) return;
         const text = miniChatInput.value.trim();
         if (!text) return;
-        const cmd = parseChartCommand(text);
-        if (!cmd) {
-          closeMiniChat();
-          return;
-        }
-        addChartCard(cmd.title);
         miniChatInput.value = '';
         closeMiniChat();
+        runChatFlow(text);
       }
       if (miniChatBtn) {
         miniChatBtn.addEventListener('click', (e) => {
