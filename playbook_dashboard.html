@@ -65,7 +65,7 @@
       .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
       .paper .bd { padding: 12px 14px; }
-      #dashPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+      #dashPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; position: relative; }
       #dashPanel .bd { flex: 1; }
       #configPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
       #configPanel .bd { flex: 1; display: flex; flex-direction: column; }
@@ -163,6 +163,16 @@
       .mention-list { display: flex; flex-direction: column; gap: 4px; padding: 6px; max-height: 240px; overflow: auto; }
       .mention-item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
       .mention-item:hover { background: #f8fafc; }
+
+      .mini-chat-btn { margin-left: 8px; }
+      .mini-chat { position: absolute; right: 18px; bottom: 18px; width: 260px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15,23,42,0.25); display: none; flex-direction: column; z-index: 80; }
+      .mini-chat.open { display: flex; }
+      .mini-chat-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+      .mini-chat-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 2px 6px; font-size: 12px; cursor: pointer; }
+      .mini-chat-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+      .mini-chat-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font-size: 12px; resize: vertical; min-height: 56px; }
+      .mini-chat-send { align-self: flex-end; border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+      .mini-chat-hint { padding: 0 10px 8px; font-size: 11px; color: var(--muted); }
 
       .nav-popover { position: fixed; top: 70px; left: 260px; width: 380px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.12); display: none; z-index: 900; }
       .nav-popover.open { display: block; }
@@ -264,6 +274,7 @@
         <section id="dashPanel" class="paper">
           <div class="hd">
             <div class="title">Playbook Dashboard</div>
+            <button id="miniChatBtn" class="icon-btn mini-chat-btn" type="button">+</button>
           </div>
           <div class="bd">
             <div id="dashGrid" class="dash-grid">
@@ -322,6 +333,17 @@
                 <div class="chart-container"><div class="chart-skeleton"></div></div>
               </div>
             </div>
+          </div>
+          <div id="miniChat" class="mini-chat">
+            <div class="mini-chat-header">
+              <div class="mini-chat-title">Quick chart chat</div>
+              <button id="miniChatClose" class="mini-chat-close" type="button">X</button>
+            </div>
+            <div class="mini-chat-body">
+              <textarea id="miniChatInput" class="mini-chat-input" placeholder="比如：add chart BTC MA25" rows="2"></textarea>
+              <button id="miniChatSend" class="mini-chat-send" type="button">Send</button>
+            </div>
+            <div class="mini-chat-hint">支持「add chart xxx」或「新增图表 xxx」指令</div>
           </div>
         </section>
       </div>
@@ -1020,6 +1042,70 @@
         if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
           e.preventDefault();
           cfgChatSend.click();
+        }
+      });
+      const miniChatBtn = document.getElementById('miniChatBtn');
+      const miniChat = document.getElementById('miniChat');
+      const miniChatClose = document.getElementById('miniChatClose');
+      const miniChatInput = document.getElementById('miniChatInput');
+      const miniChatSend = document.getElementById('miniChatSend');
+      function openMiniChat() {
+        if (!miniChat) return;
+        miniChat.classList.add('open');
+        if (miniChatInput) {
+          miniChatInput.focus();
+          miniChatInput.select();
+        }
+      }
+      function closeMiniChat() {
+        if (!miniChat) return;
+        miniChat.classList.remove('open');
+      }
+      function handleMiniChatSend() {
+        if (!miniChatInput) return;
+        const text = miniChatInput.value.trim();
+        if (!text) return;
+        const cmd = parseChartCommand(text);
+        if (!cmd) {
+          closeMiniChat();
+          return;
+        }
+        addChartCard(cmd.title);
+        miniChatInput.value = '';
+        closeMiniChat();
+      }
+      if (miniChatBtn) {
+        miniChatBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openMiniChat();
+        });
+      }
+      if (miniChatClose) {
+        miniChatClose.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeMiniChat();
+        });
+      }
+      if (miniChatSend) {
+        miniChatSend.addEventListener('click', (e) => {
+          e.preventDefault();
+          handleMiniChatSend();
+        });
+      }
+      if (miniChatInput) {
+        miniChatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+            e.preventDefault();
+            handleMiniChatSend();
+          }
+        });
+      }
+      document.addEventListener('click', (e) => {
+        if (!miniChat || !miniChat.classList.contains('open')) return;
+        const target = e.target;
+        if (miniChatBtn && miniChatBtn.contains(target)) return;
+        if (!miniChat.contains(target)) {
+          closeMiniChat();
         }
       });
     </script>
