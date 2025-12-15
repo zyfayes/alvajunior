@@ -60,29 +60,63 @@
       .subnav-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 4px 8px; }
 
       main { grid-area: main; padding: 16px; }
+      .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+      .paper .bd { padding: 12px 14px; }
+      #dashPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+      #dashPanel .bd { flex: 1; }
+      .dash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(160px, auto); gap: 16px; }
+      #dashGrid > .canvas { grid-column: 1 / -1; }
+      .chart-card { position: relative; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); display: flex; flex-direction: column; overflow: hidden; }
+      .card-hd { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+      .card-title { font-size: 14px; font-weight: 700; cursor: pointer; }
+      .card-title:hover { color: #0f766e; }
+      .chart-container { background: #ffffff; padding: 10px; flex: 1; }
+      .chart-canvas { width: 100%; height: 160px; display: block; }
       .canvas { min-height: calc(100vh - 32px); border: 2px dashed #e5e7eb; border-radius: 16px; background: #ffffff; display: grid; align-items: center; justify-items: center; padding: 24px; }
       .canvas-inner { width: min(980px, 90%); }
       .canvas-title { font-weight: 700; margin-bottom: 10px; }
       .template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .tpl-card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+      .tpl-card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); transition: box-shadow 0.2s ease, border-color 0.2s ease; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+      .tpl-card:hover { border-color: #0f766e; box-shadow: 0 4px 10px rgba(15,118,110,0.18); }
       .tpl-title { font-weight: 700; margin: 0 0 6px; }
       .tpl-desc { color: var(--muted); font-size: 12px; margin: 0; }
+      .tpl-cta { margin-top: 4px; align-self: flex-start; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc; color: #0f766e; font-size: 12px; padding: 6px 10px; cursor: pointer; }
+      .tpl-card:hover .tpl-cta { border-color: #0f766e; background: #ecfdf5; }
 
       #configPanel { grid-area: config; height: 100vh; position: sticky; top: 0; border-left: 1px solid var(--border); background: #ffffff; display: flex; flex-direction: column; }
       #configPanel .hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
-      #configPanel .title { font-weight: 700; }
-      #configPanel .bd { display: flex; flex-direction: column; padding: 12px 14px; gap: 8px; overflow-y: auto; flex: 1; }
-      #configPanel .bd { padding-bottom: 6px; }
-      .chat-list { display: flex; flex-direction: column; gap: 8px; min-height: 120px; }
-      .chat-msg { display: grid; grid-template-columns: 70px 1fr; gap: 8px; }
+      #configPanel .title { font-weight: 700; text-transform: lowercase; }
+      #configPanel .bd { display: flex; flex-direction: column; padding: 12px 14px; gap: 8px; overflow-y: auto; flex: 1; padding-bottom: 6px; }
+      .chat-box { display: flex; flex-direction: column; flex: 1; }
+      .chat-list { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: auto; }
+      .chat-msg { display: grid; grid-template-columns: 70px 1fr; gap: 8px; padding: 8px; border-radius: 10px; }
       .chat-role { color: var(--muted); }
-      .msg-ai { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
-      .msg-you { background: #ecfdf5; border: 1px solid #14b8a6; border-radius: 10px; padding: 10px; color: #0f766e; }
-      .chat-hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
-      .chat-compose { display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto; gap: 12px; margin-top: auto; padding: 12px; background: #f8fafc; border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; }
-      .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 14px 16px; font-size: 13px; min-height: 96px; resize: vertical; }
+      .msg-ai { background: #ffffff; border: 1px solid var(--border); }
+      .msg-you { background: #ecfdf5; border: 1px solid #14b8a6; color: #0f766e; }
+      .chat-msg code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; background: #f3f4f6; border-radius: 4px; padding: 0 4px; }
+      .chat-compose { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; position: relative; }
+      .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 13px 14px; min-height: 96px; resize: vertical; }
       .chat-input::placeholder { color: var(--muted); }
-      .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; justify-self: end; }
+      .chat-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .mode-dd { position: relative; }
+      .mode-btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: #f8fafc; color: var(--text); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+      .mode-ico svg { width: 14px; height: 14px; }
+      .mode-menu { position: absolute; top: calc(100% + 6px); left: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; padding: 6px; z-index: 30; }
+      .mode-menu.open { display: grid; grid-template-columns: 1fr; gap: 6px; }
+      .mode-item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+      .mode-item:hover { background: #f8fafc; }
+      .at-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 8px; cursor: pointer; }
+      .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; align-self: flex-end; }
+      .spin { width: 14px; height: 14px; border: 2px solid #e5e7eb; border-top-color: #a7f3d0; border-right-color: #a7f3d0; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .chat-result-card { display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .chat-result-card .res-title { font-weight: 700; }
+      .chat-result-card .res-meta { color: var(--muted); font-size: 12px; }
+      .chat-result-card .res-actions { display: flex; align-items: center; gap: 8px; }
+      .chat-result-card .btn-view { border: 1px solid var(--border); background: #f8fafc; color: var(--text); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+      .res-thumb { border: 1px dashed var(--border); border-radius: 8px; padding: 6px; background: #f8fafc; }
+      .res-thumb-canvas { width: 100%; height: 42px; display: block; }
       .search-overlay { position: fixed; inset: 0; background: rgba(2,8,23,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
       .search-overlay.open { display: flex; }
       .search-modal { width: min(760px, 92vw); border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
@@ -107,6 +141,27 @@
       .sym { font-weight: 600; letter-spacing: 0.4px; }
       .type { color: var(--muted); font-size: 12px; }
       .exch { color: #a7f3d0; font-size: 12px; }
+      .mention-menu { position: absolute; left: 8px; min-width: 240px; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 40; }
+      .mention-menu.open { display: block; }
+      .mention-list { display: flex; flex-direction: column; gap: 4px; padding: 6px; max-height: 240px; overflow: auto; }
+      .mention-item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+      .mention-item:hover { background: #f8fafc; }
+      .nav-popover { position: fixed; top: 70px; left: 260px; width: 380px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.12); display: none; z-index: 900; }
+      .nav-popover.open { display: block; }
+      .nav-popover .pop-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); font-weight: 700; }
+      .nav-popover .pop-bd { padding: 12px 14px; }
+      .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+      .action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 10px; padding: 14px 8px; cursor: pointer; text-decoration: none; }
+      .action-btn:hover { border-color: #cbd5e1; }
+      .action-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+      .act-ico { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
+      .act-ico svg { width: 18px; height: 18px; }
+      .ico-orange { background: #5a3a0b; }
+      .ico-green { background: #0b3a2a; }
+      .ico-purple { background: #3a0b55; }
+      .label { font-size: 13px; color: #374151; font-weight: 600; }
+      .popover-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      body.sidebar-collapsed .nav-popover { left: 60px; }
     </style>
   </head>
   <body>
@@ -129,7 +184,7 @@
         </div>
         <div class="nav-top">
           <ul>
-            <li><a class="active" href="#home">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="explore.html">Explore</a></li>
             <li><a href="#search">Search</a></li>
           </ul>
@@ -173,28 +228,61 @@
     </aside>
 
     <main>
-      <div class="canvas">
-        <div class="canvas-inner">
-          <div class="canvas-title">Blank Canvas</div>
-          <div class="template-grid">
-            <div class="tpl-card"><div class="tpl-title">Asset Tracker</div><p class="tpl-desc">Track assets with price, volume and alerts.</p></div>
-            <div class="tpl-card"><div class="tpl-title">Momentum Strategy</div><p class="tpl-desc">Signal generation based on MA crossovers.</p></div>
-            <div class="tpl-card"><div class="tpl-title">Macro Dashboard</div><p class="tpl-desc">Combine macro indicators into a single view.</p></div>
+      <section id="dashPanel" class="paper">
+        <div class="hd">
+          <div class="title">Playbook Dashboard</div>
+        </div>
+        <div class="bd">
+          <div id="dashGrid" class="dash-grid">
+            <div class="canvas">
+              <div class="canvas-inner">
+                <div class="canvas-title">Blank Dashboard</div>
+                <div class="template-grid">
+                  <div class="tpl-card">
+                    <div class="tpl-title">Asset Tracker</div>
+                    <p class="tpl-desc">Track assets with price, volume and alerts.</p>
+                    <button class="tpl-cta" type="button">Start build</button>
+                  </div>
+                  <div class="tpl-card">
+                    <div class="tpl-title">Momentum Strategy</div>
+                    <p class="tpl-desc">Signal generation based on MA crossovers.</p>
+                    <button class="tpl-cta" type="button">Start build</button>
+                  </div>
+                  <div class="tpl-card">
+                    <div class="tpl-title">Macro Dashboard</div>
+                    <p class="tpl-desc">Combine macro indicators into a single view.</p>
+                    <button class="tpl-cta" type="button">Start build</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </main>
 
     <aside id="configPanel">
-      <div class="hd"><div class="title">Chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
+      <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
       <div class="bd">
-        <div id="cfgChatList" class="chat-list">
-          <div class="chat-msg msg-ai"><div class="chat-role">AI</div><div>Welcome. Pick a template to start, or describe your playbook.</div></div>
-        </div>
-        <div class="chat-hint">Tip: describe objective, data source, and desired outputs.</div>
-        <div class="chat-compose">
-          <textarea id="cfgChatInput" class="chat-input" placeholder="Ask about this playbook"></textarea>
-          <button id="cfgChatSend" class="chat-send">Send</button>
+        <div class="chat-box">
+          <div id="cfgChatList" class="chat-list">
+            <div class="chat-msg msg-ai"><div class="chat-role">AI</div><div>Welcome. Pick a template to start, or describe your dashboard.</div></div>
+          </div>
+          <div class="chat-compose">
+            <textarea id="cfgChatInput" class="chat-input" placeholder="Ask anything about this dashboard" rows="4"></textarea>
+            <div id="mentionMenu" class="mention-menu"><div class="mention-list"></div></div>
+            <div class="chat-toolbar">
+              <div class="mode-dd">
+                <button id="chatModeBtn" class="mode-btn" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span class="mode-label">Charts</span> ▾</button>
+                <div id="chatModeMenu" class="mode-menu">
+                  <button class="mode-item" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span>Charts</span></button>
+                  <button class="mode-item" data-mode="strategy"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg></span><span>Strategy</span></button>
+                </div>
+              </div>
+              <button id="chatAtBtn" class="at-btn">@</button>
+            </div>
+            <button id="cfgChatSend" class="chat-send">Send</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -232,41 +320,340 @@
           document.querySelector('.subnav-title').textContent = cfg.title;
         });
       });
-      document.querySelector('.subnav-close').addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
-      // Search handled centrally in nav.js
-      const panelToggle = document.getElementById('panelToggle');
-      panelToggle.addEventListener('click', () => {
-        const collapsed = document.body.classList.toggle('right-collapsed');
-        if (collapsed) {
-          panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
-          panelToggle.setAttribute('aria-label', 'Expand chat panel');
-          panelToggle.setAttribute('data-tip', 'Chat with Alva！');
-        } else {
-          panelToggle.textContent = '▾';
-          panelToggle.setAttribute('aria-label', 'Collapse chat panel');
-          panelToggle.removeAttribute('data-tip');
+      const subnavClose = document.querySelector('.subnav-close');
+      if (subnavClose) subnavClose.addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
+      const charts = [];
+      function applyLayout() {
+        document.querySelectorAll('#dashGrid .chart-card').forEach(card => {
+          const w = parseInt(card.dataset.w || '1', 10);
+          const h = parseInt(card.dataset.h || '1', 10);
+          card.style.gridColumn = 'span ' + w;
+          card.style.gridRow = 'span ' + h;
+        });
+      }
+      function calcCanvasHeight(cv) {
+        try {
+          const container = cv.parentElement;
+          const card = container ? container.closest('.chart-card') : null;
+          if (!card) {
+            const dh = parseInt(cv.dataset.h || '160', 10);
+            return dh;
+          }
+          const header = card.querySelector('.card-hd');
+          const cardRect = card.getBoundingClientRect();
+          const headerRect = header ? header.getBoundingClientRect() : { height: 0 };
+          const cs = getComputedStyle(container);
+          const paddingV = parseFloat(cs.paddingTop || '0') + parseFloat(cs.paddingBottom || '0');
+          const available = Math.max(100, Math.floor(cardRect.height - headerRect.height - paddingV));
+          return available;
+        } catch {
+          return parseInt(cv.dataset.h || '160', 10);
         }
-      });
+      }
+      function drawLineChart(cv, data, color) {
+        const ctx = cv.getContext('2d');
+        const ratio = window.devicePixelRatio || 1;
+        const w = cv.parentElement.clientWidth || 600;
+        const h = calcCanvasHeight(cv);
+        cv.width = w * ratio;
+        cv.height = h * ratio;
+        cv.style.width = '100%';
+        cv.style.height = h + 'px';
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        if (!data || !data.length) return;
+        let min = Math.min.apply(null, data);
+        let max = Math.max.apply(null, data);
+        if (min === max) { min -= 1; max += 1; }
+        const pad = 10;
+        const xStep = (w - pad * 2) / (data.length - 1);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color || '#22c55e';
+        ctx.beginPath();
+        data.forEach((v, i) => {
+          const x = pad + xStep * i;
+          const y = pad + (h - pad * 2) * (1 - (v - min) / (max - min));
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      }
+      function genSeries() {
+        return Array.from({ length: 16 }, (_, i) => 50 + Math.sin(i / 2.2) * 8 + (i % 4) - (i % 5) * 0.6);
+      }
+      function addChartCard(title) {
+        const grid = document.getElementById('dashGrid');
+        if (!grid) return null;
+        const empty = grid.querySelector('.canvas');
+        if (empty) empty.remove();
+        const card = document.createElement('div');
+        card.className = 'chart-card';
+        card.dataset.w = '1';
+        card.dataset.h = '1';
+        const id = 'chart-' + Date.now();
+        card.id = id;
+        card.innerHTML = '<div class="card-hd"><div class="card-title"></div></div><div class="chart-container"></div>';
+        grid.appendChild(card);
+        const titleEl = card.querySelector('.card-title');
+        if (titleEl) titleEl.textContent = title || 'New Chart';
+        const container = card.querySelector('.chart-container');
+        const canvas = document.createElement('canvas');
+        canvas.className = 'chart-canvas';
+        container.appendChild(canvas);
+        const series = genSeries();
+        const colors = ['#0ea5e9', '#7c3aed', '#f59e0b', '#22c55e'];
+        const idx = document.querySelectorAll('#dashGrid .chart-card').length;
+        const color = colors[(idx - 1) % colors.length];
+        charts.push(() => drawLineChart(canvas, series, color));
+        charts.forEach(fn => fn());
+        return { id, color };
+      }
+      function parseChartCommand(input) {
+        const t = (input || '').trim();
+        let m = t.match(/^(?:add|create)\s+chart\s*:?(.+)$/i);
+        if (!m) m = t.match(/新增图表[:：]?\s*(.+)$/);
+        if (!m) m = t.match(/^(?:add|新增)(?:\s+(.+))?$/i);
+        if (!m) return null;
+        const title = (m[1] || '').trim();
+        return { title: title || 'New Chart' };
+      }
+      function parseStrategyCommand(input) {
+        const t = (input || '').trim();
+        let m = t.match(/^(?:add|create)\s+strategy\s*:?(.+)$/i);
+        if (!m) m = t.match(/新增策略[:：]?\s*(.+)$/);
+        if (!m) return null;
+        const title = (m[1] || '').trim();
+        return { title: title || 'New Strategy' };
+      }
+      function getChartsList() {
+        return Array.from(document.querySelectorAll('#dashGrid .chart-card')).map(card => {
+          const title = (card.querySelector('.card-title')?.textContent || 'Chart').trim();
+          return { id: card.id || '', title };
+        });
+      }
+      function escapeHtml(text) {
+        return (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      function renderInlineMarkdown(text) {
+        const esc = escapeHtml(text);
+        return esc.replace(/`([^`]+)`/g, '<code>$1</code>');
+      }
+      function insertAtCursor(el, text) {
+        const start = el.selectionStart || 0;
+        const end = el.selectionEnd || 0;
+        const val = el.value || '';
+        el.value = val.slice(0, start) + text + val.slice(end);
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+      }
       const cfgChatList = document.getElementById('cfgChatList');
       const cfgChatInput = document.getElementById('cfgChatInput');
       const cfgChatSend = document.getElementById('cfgChatSend');
-      cfgChatSend.addEventListener('click', () => {
-        const text = cfgChatInput.value.trim();
-        if (!text) return;
+      const chatModeBtn = document.getElementById('chatModeBtn');
+      const chatModeMenu = document.getElementById('chatModeMenu');
+      const chatAtBtn = document.getElementById('chatAtBtn');
+      const mentionMenu = document.getElementById('mentionMenu');
+      function buildMentionMenu() {
+        if (!cfgChatInput || !mentionMenu) return;
+        const listEl = mentionMenu.querySelector('.mention-list');
+        if (!listEl) return;
+        const data = getChartsList();
+        listEl.innerHTML = data.map(d => `<button class="mention-item" data-id="${d.id}" data-title="${d.title}"># ${d.title}</button>`).join('');
+        mentionMenu.style.display = 'block';
+        const compose = document.querySelector('.chat-compose');
+        const inputRect = cfgChatInput.getBoundingClientRect();
+        const composeRect = compose ? compose.getBoundingClientRect() : { left: 0, top: 0 };
+        const menuRect = mentionMenu.getBoundingClientRect();
+        const left = inputRect.left - composeRect.left + 8;
+        const top = inputRect.top - composeRect.top - menuRect.height - 8;
+        mentionMenu.style.left = left + 'px';
+        mentionMenu.style.top = Math.max(0, top) + 'px';
+        mentionMenu.classList.add('open');
+        listEl.querySelectorAll('.mention-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title') || '';
+            insertAtCursor(cfgChatInput, '@`' + title + '` ');
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          });
+        });
+      }
+      function runChatFlow(text) {
+        if (!cfgChatList) return;
         const you = document.createElement('div');
         you.className = 'chat-msg msg-you';
-        you.innerHTML = '<div class="chat-role">You</div><div>' + text + '</div>';
+        you.innerHTML = '<div class="chat-role">You</div><div>' + renderInlineMarkdown(text) + '</div>';
         cfgChatList.appendChild(you);
-        cfgChatInput.value = '';
+        cfgChatList.scrollTop = cfgChatList.scrollHeight;
         setTimeout(() => {
           const ai = document.createElement('div');
           ai.className = 'chat-msg msg-ai';
-          ai.innerHTML = '<div class="chat-role">AI</div><div>Let\'s scaffold this playbook from a template.</div>';
-          cfgChatList.appendChild(ai);
-          cfgChatList.scrollTop = cfgChatList.scrollHeight;
+          const mode = chatModeBtn ? chatModeBtn.getAttribute('data-mode') || 'charts' : 'charts';
+          const cmd = mode === 'strategy' ? parseStrategyCommand(text) : parseChartCommand(text);
+          if (cmd && mode === 'charts') {
+            ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Thinking…</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Analyzing instruction…</div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 600);
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Generating data series…</div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 1200);
+            let createdMeta = null;
+            setTimeout(() => {
+              createdMeta = addChartCard(cmd.title);
+              ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Rendering chart…</div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 1800);
+            setTimeout(() => {
+              const target = createdMeta && createdMeta.id ? createdMeta.id : '';
+              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + escapeHtml(cmd.title) + '</div><div class="res-meta">已创建图表并加入 Dashboard</div><div class="res-thumb"><canvas class="res-thumb-canvas" data-h="42"></canvas></div><div class="res-actions"><button class="btn-view" data-target="' + target + '">在仪表盘定位</button></div></div>';
+              const thumb = ai.querySelector('.res-thumb-canvas');
+              if (thumb) {
+                thumb.dataset.h = '42';
+                const seriesMini = genSeries();
+                const colMini = createdMeta && createdMeta.color ? createdMeta.color : '#22c55e';
+                drawLineChart(thumb, seriesMini, colMini);
+              }
+              const btn = ai.querySelector('.btn-view');
+              if (btn) {
+                btn.addEventListener('click', () => {
+                  const el = document.getElementById(btn.getAttribute('data-target') || '');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('drag-over');
+                    setTimeout(() => el.classList.remove('drag-over'), 800);
+                  }
+                });
+              }
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 2400);
+          } else if (cmd && mode === 'strategy') {
+            ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Thinking…</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Analyzing instruction…</div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 600);
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Composing strategy rule set…</div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 1200);
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + escapeHtml(cmd.title) + '</div><div class="res-meta">已创建策略（模拟）</div></div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 1800);
+          } else {
+            ai.innerHTML = '<div class="chat-role">AI</div><div>Noted. This box is for chatting about the current playbook.</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+          }
         }, 400);
+      }
+      if (cfgChatSend && cfgChatInput) {
+        cfgChatSend.addEventListener('click', () => {
+          const text = cfgChatInput.value.trim();
+          if (!text) return;
+          cfgChatInput.value = '';
+          runChatFlow(text);
+        });
+        cfgChatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+            e.preventDefault();
+            cfgChatSend.click();
+          }
+        });
+      }
+      if (chatModeBtn && chatModeMenu) {
+        chatModeBtn.addEventListener('click', (e) => { e.preventDefault(); chatModeMenu.classList.toggle('open'); });
+        chatModeMenu.querySelectorAll('.mode-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const mode = item.getAttribute('data-mode') || 'charts';
+            chatModeBtn.setAttribute('data-mode', mode);
+            const label = mode === 'strategy' ? 'Strategy' : 'Charts';
+            const ico = mode === 'strategy'
+              ? '<svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg>'
+              : '<svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg>';
+            chatModeBtn.innerHTML = '<span class="mode-ico">' + ico + '</span><span class="mode-label">' + label + '</span> ▾';
+            chatModeMenu.classList.remove('open');
+          });
+        });
+        document.addEventListener('click', (e) => {
+          const dd = chatModeBtn.closest('.mode-dd');
+          if (dd && !dd.contains(e.target)) chatModeMenu.classList.remove('open');
+        });
+      }
+      if (chatAtBtn && mentionMenu && cfgChatInput) {
+        chatAtBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (mentionMenu.classList.contains('open')) {
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          } else {
+            buildMentionMenu();
+          }
+        });
+        cfgChatInput.addEventListener('input', () => {
+          try {
+            const pos = cfgChatInput.selectionStart || 0;
+            const prev = cfgChatInput.value.slice(pos - 1, pos);
+            if (prev === '@') buildMentionMenu();
+          } catch {}
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          }
+        });
+        document.addEventListener('click', (e) => {
+          const compose = document.querySelector('.chat-compose');
+          if (compose && !compose.contains(e.target)) {
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          }
+        });
+      }
+      const panelToggle = document.getElementById('panelToggle');
+      if (panelToggle) {
+        panelToggle.addEventListener('click', () => {
+          const collapsed = document.body.classList.toggle('right-collapsed');
+          if (collapsed) {
+            panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
+            panelToggle.setAttribute('aria-label', 'Expand chat panel');
+            panelToggle.setAttribute('data-tip', 'Chat with Alva！');
+          } else {
+            panelToggle.textContent = '▾';
+            panelToggle.setAttribute('aria-label', 'Collapse chat panel');
+            panelToggle.removeAttribute('data-tip');
+          }
+        });
+      }
+      function handleTemplateClick(card) {
+        if (!cfgChatInput) return;
+        const titleEl = card.querySelector('.tpl-title');
+        const name = titleEl ? titleEl.textContent.trim() : '';
+        if (!name) return;
+        insertAtCursor(cfgChatInput, '@`' + name + '` ');
+        cfgChatInput.focus();
+      }
+      document.querySelectorAll('.tpl-card').forEach(card => {
+        card.addEventListener('click', () => {
+          handleTemplateClick(card);
+        });
+        const btn = card.querySelector('.tpl-cta');
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleTemplateClick(card);
+          });
+        }
       });
-      // New Playbook handled centrally in nav.js
+      window.addEventListener('resize', () => { charts.forEach(fn => fn()); });
     </script>
   </body>
 </html>

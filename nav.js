@@ -147,18 +147,33 @@
   }
   function bindNewPlaybook() {
     const btn = document.getElementById('newChatBtn');
-    const pop = document.getElementById('navPopover');
-    const closeBtn = document.getElementById('popoverClose');
     if (!btn) return;
-    if (!pop) { btn.addEventListener('click', (e) => { e.preventDefault(); location.href = 'playbook-new.html'; }); return; }
-    const open = () => pop.classList.add('open');
-    const close = () => pop.classList.remove('open');
-    btn.addEventListener('click', (e) => { e.preventDefault(); open(); });
+    const initialPop = document.getElementById('navPopover');
+    const closeBtn = document.getElementById('popoverClose');
+    if (!initialPop) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        location.href = 'playbook-new.html';
+      });
+      return;
+    }
+    const close = () => {
+      const p = document.getElementById('navPopover');
+      if (p) p.classList.remove('open');
+    };
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const p = document.getElementById('navPopover');
+      if (p) p.classList.add('open');
+    });
     if (closeBtn) closeBtn.addEventListener('click', close);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
     document.addEventListener('click', (e) => {
-      if (!pop.classList.contains('open')) return;
-      const within = pop.contains(e.target) || (btn && btn.contains(e.target));
+      const p = document.getElementById('navPopover');
+      if (!p || !p.classList.contains('open')) return;
+      const within = p.contains(e.target) || (btn && btn.contains(e.target));
       if (!within) close();
     });
   }
@@ -166,6 +181,7 @@
     const pop = document.getElementById('navPopover');
     if (!pop) return;
     pop.querySelectorAll('.action-btn').forEach(btn => {
+      if (btn.classList.contains('disabled') || btn.getAttribute('aria-disabled') === 'true') return;
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const act = btn.getAttribute('data-act');
