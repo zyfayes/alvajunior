@@ -640,6 +640,16 @@
         insertAtCursor(cfgChatInput, '@`' + name + '` ');
         cfgChatInput.focus();
       }
+      function handleTemplateBuild(card) {
+        if (!cfgChatInput) return;
+        const titleEl = card.querySelector('.tpl-title');
+        const name = titleEl ? titleEl.textContent.trim() : '';
+        if (!name) return;
+        const cmd = 'add chart ' + name + ' dashboard @`' + name + '`';
+        cfgChatInput.value = cmd;
+        cfgChatInput.focus();
+        cfgChatInput.selectionStart = cfgChatInput.selectionEnd = cfgChatInput.value.length;
+      }
       document.querySelectorAll('.tpl-card').forEach(card => {
         card.addEventListener('click', () => {
           handleTemplateClick(card);
@@ -649,7 +659,7 @@
           btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleTemplateClick(card);
+            handleTemplateBuild(card);
           });
         }
       });
