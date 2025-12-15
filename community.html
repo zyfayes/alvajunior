@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Alva · Community</title>
+    <title>Alva · Explore</title>
     <style>
       :root { --bg: #ffffff; --panel: #f8fafc; --text: #111827; --muted: #6b7280; --accent: #14b8a6; --border: #e5e7eb; }
       * { box-sizing: border-box; }
@@ -129,7 +129,7 @@
         <a class="rail-btn" href="index.html" title="Home" aria-label="Home">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/></svg>
         </a>
-        <a class="rail-btn" href="community.html" title="Community" aria-label="Community">
+        <a class="rail-btn" href="explore.html" title="Explore" aria-label="Explore">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg>
         </a>
       <a class="rail-btn" href="#search" title="Search" aria-label="Search">
@@ -155,7 +155,7 @@
         <div class="nav-top">
           <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a class="active" href="community.html">Community</a></li>
+            <li><a class="active" href="explore.html">Explore</a></li>
             <li><a href="#search">Search</a></li>
           </ul>
         </div>
@@ -170,7 +170,7 @@
             </ul>
           </div>
           <div class="section with-divider">
-            <div class="section-title section-title-row"><span>Playbooks</span><button class="title-plus" title="New Playbook" aria-label="New Playbook">+</button></div>
+            <div class="section-title section-title-row"><span>Playbooks</span></div>
             <ul>
               <li><a href="playbook.html">Dashboard-Playbook A</a></li>
               <li><a href="playbook.html">Strategy-Playbook B<span class="dot" aria-label="更新"></span></a></li>
@@ -179,7 +179,7 @@
             </ul>
           </div>
           <div class="section with-divider">
-            <div class="section-title section-title-row"><span>Threads</span><button class="title-plus" title="New Thread" aria-label="New Thread">+</button></div>
+            <div class="section-title section-title-row"><span>Threads</span></div>
             <ul>
               <li><a href="#threads-a">Thread A</a></li>
               <li><a href="#threads-b">Thread B</a></li>
@@ -233,7 +233,7 @@
     <main>
       <section id="community" class="home">
         <div class="featured-header">
-          <div>Community</div>
+          <div>Explore</div>
         </div>
         <div class="pill-group" id="community-groups">
           <span class="pill active" data-target="cards-trending">Trending</span>
@@ -241,7 +241,7 @@
           <span class="pill" data-target="cards-best">Top Returns</span>
         </div>
         <div id="cards-trending" class="cards">
-          <div class="tile"><div class="meta"><div class="avatar"></div><div>alice</div></div><h3>Macro Pulse Weekly</h3><p>Community macro recap and key charts for the past week.</p></div>
+          <div class="tile"><div class="meta"><div class="avatar"></div><div>alice</div></div><h3>Macro Pulse Weekly</h3><p>Explore macro recap and key charts for the past week.</p></div>
           <div class="tile"><div class="meta"><div class="avatar"></div><div>bob</div></div><h3>Smart Screener: AI Exposed</h3><p>Screen US tech stocks by AI revenue exposure and momentum.</p></div>
           <div class="tile"><div class="meta"><div class="avatar"></div><div>carol</div></div><h3>Risk Monitor · Vol Surface</h3><p>Daily IV surface snapshots for top tickers with anomalies.</p></div>
           <div class="tile"><div class="meta"><div class="avatar"></div><div>grace</div></div><h3>Crypto Intel · ETF Flows</h3><p>Daily crypto ETF net flows with coin-level breakdowns.</p></div>
@@ -322,41 +322,11 @@
           <div class="entity-row"><div class="sym">${e.sym}</div><div class="name">${e.name}</div><div class="type">${e.type}</div><div class="exch">${e.exch}</div></div>
         `).join('');
       }
-      function openSearch() {
-        searchOverlay.classList.add('open');
-        renderEntities('');
-        searchInput.value = '';
-        searchInput.focus();
-      }
-      function closeSearch() { searchOverlay.classList.remove('open'); }
-      searchLinks.forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); openSearch(); }));
-      searchClose.addEventListener('click', closeSearch);
-      searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) closeSearch(); });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
-      searchInput.addEventListener('input', (e) => renderEntities(e.target.value));
+      // Search handled centrally in nav.js
       const newChatBtn = document.getElementById('newChatBtn');
       const navPopover = document.getElementById('navPopover');
       const popoverClose = document.getElementById('popoverClose');
-      function openPopover() { navPopover.classList.add('open'); }
-      function closePopover() { navPopover.classList.remove('open'); }
-      if (newChatBtn) newChatBtn.addEventListener('click', (e) => { e.preventDefault(); openPopover(); });
-      popoverClose.addEventListener('click', closePopover);
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopover(); });
-      document.addEventListener('click', (e) => {
-        if (!navPopover.classList.contains('open')) return;
-        const within = navPopover.contains(e.target) || (newChatBtn && newChatBtn.contains(e.target));
-        if (!within) closePopover();
-      });
-      document.querySelectorAll('.action-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const act = btn.getAttribute('data-act');
-          closePopover();
-          if (act === 'dashboard') location.href = 'playbook-new.html';
-          if (act === 'strategy') location.href = 'playbook-new.html';
-          if (act === 'research') location.href = 'playbook-new.html';
-        });
-      });
+      // New Playbook popover handled centrally in nav.js
       const sidebarToggle = document.getElementById('sidebarToggle');
       sidebarToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('sidebar-collapsed');

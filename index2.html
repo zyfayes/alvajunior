@@ -129,7 +129,7 @@
       <div class="side-brand"><div class="logo"></div><div class="name">ALVA</div><button id="sidebarToggle" class="collapse-btn" aria-label="Collapse Navigation">«</button></div>
       <div class="icon-rail">
         <a class="rail-btn" href="index2.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/></svg></a>
-        <a class="rail-btn" href="community.html" title="Community" aria-label="Community"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg></a>
+        <a class="rail-btn" href="explore.html" title="Explore" aria-label="Explore"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg></a>
         <a class="rail-btn" href="#search" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg></a>
         <a class="rail-btn" href="playbook.html" title="Starred" aria-label="Starred"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></a>
         <a class="rail-btn" href="playbook.html" title="Playbooks" aria-label="Playbooks"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V2zm-2 14H8v-2h8v2zm0-4H8V8h8v4z"/></svg></a>
@@ -145,13 +145,13 @@
         <div class="nav-top">
           <ul>
             <li><a class="active" href="#home">Home</a></li>
-            <li><a href="community.html">Community</a></li>
+            <li><a href="explore.html">Explore</a></li>
             <li><a href="#search">Search</a></li>
           </ul>
         </div>
         <div class="nav-scroll">
           <div class="section with-divider">
-            <div class="section-title section-title-row"><span>Playbooks</span><button class="title-plus" title="New Playbook" aria-label="New Playbook">+</button></div>
+            <div class="section-title section-title-row"><span>Playbooks</span></div>
             <ul>
               <li><a href="playbook.html"><span class="nav-star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>Dashboard-Playbook A</a></li>
               <li><a href="playbook.html"><span class="nav-star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>Strategy-Playbook B<span class="dot" aria-label="更新"></span></a></li>
@@ -165,7 +165,7 @@
             </ul>
           </div>
           <div class="section with-divider">
-            <div class="section-title section-title-row"><span>Threads</span><button class="title-plus" title="New Thread" aria-label="New Thread">+</button></div>
+            <div class="section-title section-title-row"><span>Threads</span></div>
             <ul>
               <li><a href="#threads-a">Thread A</a></li>
               <li><a href="#threads-b">Thread B</a></li>
@@ -199,6 +199,7 @@
 
     <div id="searchOverlay" class="search-overlay"><div class="search-modal"><div class="modal-header"><div class="modal-title">Search</div><button id="searchClose" class="modal-close">X</button></div><div class="modal-body"><input id="searchInput" class="modal-input" placeholder="Try symbol, e.g. AAPL" /><div id="entityList" class="entity-list"></div></div></div></div>
 
+    <script src="nav.js"></script>
     <script>
       const moreHandlers = {
         '#starred-more': { title: 'Starred · More', items: Array.from({length: 12}, (_, i) => `Starred Item ${i+1}`) },
@@ -220,35 +221,7 @@
       });
       document.querySelector('.subnav-close').addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
 
-      const searchOverlay = document.getElementById('searchOverlay');
-      const searchClose = document.getElementById('searchClose');
-      const entityList = document.getElementById('entityList');
-      const searchInput = document.getElementById('searchInput');
-      const searchLinks = Array.from(document.querySelectorAll('a[href="#search"]'));
-      const entities = [
-        { sym: 'ETH', name: 'Ethereum', type: 'CRYPTO', exch: 'Binance' },
-        { sym: 'BTC', name: 'Bitcoin', type: 'CRYPTO', exch: 'Binance' },
-        { sym: 'MARA', name: 'Marathon Digital Holdings, Inc.', type: 'STOCK', exch: 'NASDAQ' },
-        { sym: 'NVDA', name: 'NVIDIA Corporation', type: 'STOCK', exch: 'NASDAQ' },
-        { sym: 'AMZN', name: 'Amazon.com, Inc.', type: 'STOCK', exch: 'NASDAQ' },
-        { sym: 'AC', name: 'Associated Capital Group, Inc.', type: 'STOCK', exch: 'NYSE' },
-        { sym: 'META', name: 'Meta Platforms, Inc.', type: 'STOCK', exch: 'NASDAQ' },
-        { sym: 'ARB', name: 'Arbitrum', type: 'CRYPTO', exch: 'Binance' },
-        { sym: 'TSM', name: 'Taiwan Semiconductor Company Limited', type: 'STOCK', exch: 'NYSE' },
-        { sym: 'AVAX', name: 'Avalanche', type: 'CRYPTO', exch: 'Binance' }
-      ];
-      function renderEntities(filter = '') {
-        const q = filter.trim().toLowerCase();
-        const data = entities.filter(e => !q || e.sym.toLowerCase().includes(q) || e.name.toLowerCase().includes(q));
-        entityList.innerHTML = data.map(e => `<div class=\"entity-row\"><div class=\"sym\">${e.sym}</div><div class=\"name\">${e.name}</div><div class=\"type\">${e.type}</div><div class=\"exch\">${e.exch}</div></div>`).join('');
-      }
-      function openSearch() { searchOverlay.classList.add('open'); renderEntities(''); searchInput.value=''; searchInput.focus(); }
-      function closeSearch() { searchOverlay.classList.remove('open'); }
-      searchLinks.forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); openSearch(); }));
-      searchClose.addEventListener('click', closeSearch);
-      searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) closeSearch(); });
-      document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } if (e.key === 'Escape') closeSearch(); });
-      searchInput.addEventListener('input', (e) => renderEntities(e.target.value));
+      // Search handled centrally in nav.js
       const sidebarToggle = document.getElementById('sidebarToggle');
       sidebarToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('sidebar-collapsed');
