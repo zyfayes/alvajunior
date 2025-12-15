@@ -49,6 +49,20 @@
       .icon-btn { height: 32px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
       .icon-btn:hover { border-color: #24513b; }
       .icon-btn svg { width: 18px; height: 18px; fill: #a7f3d0; opacity: 0.9; }
+      .drag-over { outline: 2px dashed #14b8a6; outline-offset: -6px; }
+      .chart-card.drag-over-top::before,
+      .chart-card.drag-over-bottom::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        height: 0;
+        border-top: 2px solid #14b8a6;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      .chart-card.drag-over-top::before { top: 4px; }
+      .chart-card.drag-over-bottom::after { bottom: 4px; }
       .subnav { grid-area: subnav; height: 100vh; position: sticky; top: 0; border-right: 1px solid var(--border); background: #ffffff; display: none; flex-direction: column; }
       .subnav a { color: #111827; }
       .subnav a:hover { background: #f1f5f9; color: #111827; }
