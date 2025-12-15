@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alva · Playbook Dashboard</title>
+    <style>
+      :root { --bg: #ffffff; --panel: #f8fafc; --text: #111827; --muted: #6b7280; --accent: #14b8a6; --border: #e5e7eb; }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin: 0; display: grid; grid-template-columns: 260px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar main"; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+      body.subnav-open { grid-template-columns: 260px 220px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar subnav main"; }
+      body.sidebar-collapsed { grid-template-columns: 60px 1fr; }
+      body.sidebar-collapsed .name, body.sidebar-collapsed .nav-top, body.sidebar-collapsed .nav-scroll, body.sidebar-collapsed .nav-bottom, body.sidebar-collapsed .nav-new-chat { display: none; }
+      body.sidebar-collapsed .icon-rail { display: flex; }
+
+      aside { grid-area: sidebar; height: 100vh; position: sticky; top: 0; border-right: 1px solid #3a3a48; background: #2A2A38; padding: 12px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+      nav { display: flex; flex-direction: column; gap: 12px; height: 100%; }
+      .nav-new-chat { padding: 0 6px 6px; }
+      .new-chat-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e5e7eb; background: #f8fafc; color: #111827; border-radius: 10px; padding: 8px 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+      .new-chat-btn:hover { background: #ffffff; }
+      .new-chat-btn svg { width: 14px; height: 14px; fill: #374151; }
+      .nav-top { padding: 4px 0; }
+      .nav-scroll { flex: 1; overflow-y: auto; padding-right: 4px; }
+      .nav-bottom { padding-top: 12px; border-top: 1px solid #3a3a48; position: sticky; bottom: 0; background: #2A2A38; }
+      .me-icons { display: flex; gap: 8px; }
+      .nav-bottom .icon-btn { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+      .nav-bottom .icon-btn svg { width: 16px; height: 16px; }
+      .icon-rail { display: none; flex-direction: column; gap: 6px; padding: 0 6px; }
+      .rail-btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+      .rail-btn:hover { border-color: #24513b; }
+      .rail-btn svg { width: 18px; height: 18px; fill: #a7f3d0; opacity: 0.9; }
+      .side-brand { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-weight: 800; letter-spacing: 0.8px; }
+      .side-brand .logo { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), #16a34a); box-shadow: 0 0 0 1px #0b5d31 inset; }
+      .side-brand .name { font-size: 13px; color: #e5e7eb; }
+      .collapse-btn { margin-left: auto; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; width: 24px; height: 24px; line-height: 22px; text-align: center; cursor: pointer; }
+      .collapse-btn:hover { border-color: #14b8a6; }
+      .section { display: flex; flex-direction: column; gap: 6px; }
+      .section-title { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.6px; padding: 0 6px; }
+      .section-title-row { display: flex; align-items: center; justify-content: space-between; }
+      .with-divider { border-top: 1px solid #182030; padding-top: 8px; margin-top: 4px; }
+      ul { list-style: none; margin: 0; padding: 0; }
+      li { display: block; }
+      a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 1px 0; border-radius: 8px; color: var(--text); text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
+      a:hover { background: #e2e8f0; }
+      aside a { color: #e5e7eb; }
+      aside a:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
+      aside a.active { background: rgba(255,255,255,0.10); color: #ffffff; }
+      .badge { margin-left: auto; font-size: 10px; color: var(--muted); }
+      .more { color: var(--muted); }
+      .more:hover { color: var(--text); }
+      .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 6px; box-shadow: 0 0 0 2px #ffffff; }
+
+      .subnav { grid-area: subnav; height: 100vh; position: sticky; top: 0; border-right: 1px solid var(--border); background: #ffffff; display: none; flex-direction: column; }
+      .subnav a { color: #111827; }
+      .subnav a:hover { background: #f1f5f9; color: #111827; }
+      body.subnav-open .subnav { display: flex; }
+      .subnav-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+      .subnav-title { font-size: 13px; font-weight: 600; }
+      .subnav-content { flex: 1; overflow-y: auto; padding: 8px 10px; }
+      .subnav-content ul { display: flex; flex-direction: column; gap: 4px; }
+      .subnav-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 4px 8px; }
+
+      main { grid-area: main; padding: 16px; }
+      .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+      .paper .bd { padding: 12px 14px; }
+      #dashPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+      #dashPanel .bd { flex: 1; }
+      #configPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+      #configPanel .bd { flex: 1; display: flex; flex-direction: column; }
+      .title { font-weight: 700; }
+      .last-updated { color: var(--muted); font-size: 12px; }
+      .toggle { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      .detail { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+      .detail.right-collapsed { grid-template-columns: 1fr max-content; }
+      .detail.right-collapsed #configPanel { overflow: visible; background: transparent; border: 0; box-shadow: none; }
+      .detail.right-collapsed #configPanel .title { display: none; }
+      .detail.right-collapsed #configPanel .bd { display: none; }
+      .detail.right-collapsed #configPanel .hd { padding: 12px 14px; justify-content: center; }
+      .detail.right-collapsed #configPanel .toggle { padding: 4px; border: 0; background: transparent; position: relative; }
+      .detail.right-collapsed #configPanel .toggle:hover::after { content: attr(data-tip); position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); background: #ffffff; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; white-space: nowrap; box-shadow: 0 8px 16px rgba(0,0,0,0.12); z-index: 10; }
+      .orb { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #a7f3d0 0%, #22c55e 35%, #16a34a 65%, #0b1220 100%); box-shadow: 0 0 12px rgba(34,197,94,0.6), inset 0 0 8px rgba(11,93,49,0.6); }
+      @keyframes orbPulse { from { box-shadow: 0 0 8px rgba(34,197,94,0.4), inset 0 0 4px rgba(11,93,49,0.4); } to { box-shadow: 0 0 14px rgba(34,197,94,0.8), inset 0 0 8px rgba(11,93,49,0.7); } }
+      .orb { animation: orbPulse 2.6s ease-in-out infinite alternate; }
+
+      .feature-analytics { display: grid; gap: 10px; }
+      .chart-container { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .chart-container h4 { margin: 0 0 6px; font-size: 14px; }
+      .chart-skeleton { height: 160px; border-radius: 8px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
+      @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+      .chart-canvas { width: 100%; height: 160px; display: block; }
+      .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; gap: 16px; }
+      .chart-card { position: relative; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
+      .card-hd { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+      .card-title { font-size: 14px; font-weight: 700; cursor: pointer; }
+      .card-title:hover { color: #0f766e; }
+      .card-ops { display: inline-flex; gap: 8px; align-items: center; }
+      .card-upd { position: relative; font-size: 11px; color: var(--muted); }
+      .card-upd-pill { border: 0; background: #f1f5f9; color: #64748b; border-radius: 999px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+      .card-upd-label { font-weight: 500; }
+      .card-upd-value { font-variant-numeric: tabular-nums; }
+      .card-upd-pop { position: absolute; top: calc(100% + 6px); right: 0; min-width: 180px; padding: 8px 10px; border-radius: 8px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 40; }
+      .card-upd-pop.open { display: block; }
+      .card-upd-row { font-size: 12px; color: #0f172a; }
+      .card-upd-row + .card-upd-row { margin-top: 4px; }
+      .icon-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; height: 28px; padding: 0 8px; cursor: pointer; }
+      .icon-btn:hover { border-color: #cbd5e1; }
+      .shape-dd { position: relative; }
+      .shape-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; height: 28px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+      .shape-menu { position: absolute; top: calc(100% + 6px); right: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; padding: 6px; z-index: 20; }
+      .shape-menu.open { display: flex; flex-direction: column; gap: 4px; }
+      .shape-item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+      .shape-item:hover { background: #f8fafc; }
+      .shape-ico svg { width: 16px; height: 16px; }
+      .drag-over { outline: 2px dashed #14b8a6; outline-offset: -6px; }
+      .chart-card.drag-over-top::before,
+      .chart-card.drag-over-bottom::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        height: 0;
+        border-top: 2px solid #14b8a6;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      .chart-card.drag-over-top::before { top: 4px; }
+      .chart-card.drag-over-bottom::after { bottom: 4px; }
+      .cfg-card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .cfg-card h3 { margin: 0 0 6px; font-size: 16px; }
+      .btn-activate { width: 100%; border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; margin-top: 8px; }
+      .chat-list { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: auto; margin-top: 8px; }
+      .chat-msg { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; }
+      .chat-role { color: var(--muted); }
+      .msg-ai { background: #ffffff; }
+      .msg-you { background: #f8fafc; }
+      #configPanel .bd { display: flex; flex-direction: column; }
+      .chat-box { display: flex; flex-direction: column; flex: 1; }
+      .chat-compose { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; position: relative; }
+      .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 13px 14px; min-height: 96px; resize: vertical; }
+      .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; }
+      .spin { width: 14px; height: 14px; border: 2px solid #e5e7eb; border-top-color: #a7f3d0; border-right-color: #a7f3d0; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .chat-result-card { display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .chat-result-card .res-title { font-weight: 700; }
+      .chat-result-card .res-meta { color: var(--muted); font-size: 12px; }
+      .chat-result-card .res-actions { display: flex; align-items: center; gap: 8px; }
+      .chat-result-card .btn-view { border: 1px solid var(--border); background: #f8fafc; color: var(--text); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+      .res-thumb { border: 1px dashed var(--border); border-radius: 8px; padding: 6px; background: #f8fafc; }
+      .res-thumb-canvas { width: 100%; height: 42px; display: block; }
+      .chat-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .mode-dd { position: relative; }
+      .mode-btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: #f8fafc; color: var(--text); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+      .mode-ico svg { width: 14px; height: 14px; }
+      .mode-menu { position: absolute; top: calc(100% + 6px); left: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; padding: 6px; z-index: 30; }
+      .mode-menu.open { display: grid; grid-template-columns: 1fr; gap: 6px; }
+      .mode-item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+      .mode-item:hover { background: #f8fafc; }
+      .at-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 8px; cursor: pointer; }
+      .mention-menu { position: absolute; left: 8px; min-width: 240px; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 40; }
+      .mention-menu.open { display: block; }
+      .mention-list { display: flex; flex-direction: column; gap: 4px; padding: 6px; max-height: 240px; overflow: auto; }
+      .mention-item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+      .mention-item:hover { background: #f8fafc; }
+
+      .nav-popover { position: fixed; top: 70px; left: 260px; width: 380px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.12); display: none; z-index: 900; }
+      .nav-popover.open { display: block; }
+      .nav-popover .pop-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); font-weight: 700; }
+      .nav-popover .pop-bd { padding: 12px 14px; }
+      .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+      .action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 10px; padding: 14px 8px; cursor: pointer; text-decoration: none; }
+      .action-btn:hover { border-color: #cbd5e1; }
+      .act-ico { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
+      .act-ico svg { width: 18px; height: 18px; }
+      .ico-orange { background: #5a3a0b; }
+      .ico-green { background: #0b3a2a; }
+      .ico-purple { background: #3a0b55; }
+      .label { font-size: 13px; color: #374151; font-weight: 600; }
+      .popover-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      body.sidebar-collapsed .nav-popover { left: 60px; }
+
+      .search-overlay { position: fixed; inset: 0; background: rgba(2,8,23,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+      .search-overlay.open { display: flex; }
+      .search-modal { width: min(760px, 92vw); border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+      .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+      .modal-title { font-weight: 700; }
+      .modal-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      .modal-body { padding: 12px 14px; }
+      .modal-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: #111827; padding: 10px 12px; margin-bottom: 12px; }
+      .entity-list { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow: auto; }
+      .entity-row { display: grid; grid-template-columns: 80px 1fr 90px 100px; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; }
+      .entity-row:hover { background: #f8fafc; }
+      .sym { font-weight: 600; letter-spacing: 0.4px; }
+      .type { color: var(--muted); font-size: 12px; }
+      .exch { color: #a7f3d0; font-size: 12px; }
+      .detail-page { display: none; }
+      .detail-page.open { display: block; }
+      .detail-modal { max-width: 960px; margin: 0 auto; padding: 12px 0 16px; display: flex; flex-direction: column; gap: 12px; }
+      .detail-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 2px; }
+      .detail-header-left { display: flex; flex-direction: column; gap: 4px; }
+      .detail-breadcrumb { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+      .detail-breadcrumb-back { border: 0; background: transparent; color: #0f766e; padding: 0; cursor: pointer; font-size: 12px; }
+      .detail-breadcrumb-back:hover { text-decoration: underline; }
+      .detail-breadcrumb-current { color: #0f172a; font-weight: 500; }
+      .detail-title { font-size: 18px; font-weight: 700; }
+      .detail-meta { margin-top: 4px; padding: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+      .detail-meta-item span:first-child { margin-right: 4px; color: #6b7280; }
+      .detail-body { margin-top: 10px; display: flex; align-items: flex-start; gap: 16px; }
+      .detail-main { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+      .detail-chart-wrap { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: #f8fafc; }
+      .detail-chart { width: 100%; height: 220px; display: block; }
+      .detail-logic-card { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #f9fafb; display: flex; flex-direction: column; gap: 6px; }
+      .detail-logic-header { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 4px; }
+      .detail-logic-title { font-size: 13px; font-weight: 600; }
+      .detail-desc { font-size: 13px; color: #0f172a; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
+      .detail-desc-main { display: flex; align-items: flex-start; gap: 8px; }
+      .detail-insight { font-size: 12px; color: #0f766e; }
+      .detail-table-wrap { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #ffffff; }
+      .detail-table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .detail-table-title { font-size: 13px; font-weight: 600; }
+      .detail-download { border: 1px solid var(--border); background: #f8fafc; color: #111827; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+      .detail-table { width: 100%; border-collapse: collapse; font-size: 12px; max-height: 220px; overflow: auto; display: block; }
+      .detail-table thead, .detail-table tbody { display: block; }
+      .detail-table tbody { max-height: 220px; overflow-y: auto; }
+      .detail-table tr { display: grid; grid-template-columns: 1fr 1fr; }
+      .detail-table th, .detail-table td { border: 1px solid #e5e7eb; padding: 4px 6px; text-align: right; }
+      .detail-table th:first-child, .detail-table td:first-child { text-align: left; }
+      .detail-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 4px 8px; font-size: 12px; cursor: pointer; }
+      .detail-ds-btn { border: 1px solid #e5e7eb; background: #f3f4f6; color: #4b5563; border-radius: 6px; padding: 0; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+      .detail-ds-icon { font-size: 11px; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .detail-datasource-sidebar { width: 280px; border-radius: 12px; border: 1px solid var(--border); background: #f9fafb; padding: 10px 12px; display: none; flex-direction: column; gap: 8px; }
+      .detail-datasource-sidebar.open { display: flex; }
+      .detail-ds-header { display: flex; align-items: center; justify-content: space-between; }
+      .detail-ds-title { font-size: 13px; font-weight: 600; }
+      .detail-ds-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 2px 8px; font-size: 12px; cursor: pointer; }
+      .detail-ds-body { font-size: 12px; color: #0f172a; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <aside></aside>
+    <aside class="subnav">
+      <div class="subnav-header"><div class="subnav-title">More</div><button class="subnav-close" type="button">Close</button></div>
+      <div id="subnav-content" class="subnav-content"></div>
+    </aside>
+    <div id="searchOverlay" class="search-overlay">
+      <div class="search-modal">
+        <div class="modal-header"><div class="modal-title">Search</div><button id="searchClose" class="modal-close">X</button></div>
+        <div class="modal-body"><input id="searchInput" class="modal-input" placeholder="Try symbol, e.g. AAPL" /><div id="entityList" class="entity-list"></div></div>
+      </div>
+    </div>
+    <div id="navPopover" class="nav-popover" role="dialog" aria-label="New Playbook">
+      <div class="pop-hd"><div>New Playbook</div><button id="popoverClose" class="popover-close">Close</button></div>
+      <div class="pop-bd">
+        <div class="action-grid">
+          <a href="#" class="action-btn" data-act="dashboard"><span class="act-ico ico-orange"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#f59e0b" d="M3 3h8v8H3V3zm10 0h8v5h-8V3zm0 7h8v11h-8V10zm-10 4h8v7H3v-7z"/></svg></span><span class="label">Dashboard</span></a>
+          <a href="#" class="action-btn" data-act="strategy"><span class="act-ico ico-green"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#34d399" d="M12 2l4 8H8l4-8zm-6 18h12v2H6v-2zm1-8h10v2H7v-2z"/></svg></span><span class="label">Trading Strategy</span></a>
+          <a href="#" class="action-btn" data-act="research"><span class="act-ico ico-purple"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#a78bfa" d="M12 3l9 4-9 4-9-4 9-4zm0 6l9 4-9 4-9-4 9-4zm0 8l9 4-9 4-9-4 9-4z"/></svg></span><span class="label">Agentic Research</span></a>
+        </div>
+      </div>
+    </div>
+    <main class="detail">
+      <div id="dashboardView">
+        <section id="dashPanel" class="paper">
+          <div class="hd">
+            <div class="title">Playbook Dashboard</div>
+          </div>
+          <div class="bd">
+            <div id="dashGrid" class="dash-grid">
+              <div class="chart-card" data-w="1" data-h="1" draggable="true">
+                <div class="card-hd">
+                  <div class="card-title">Btc Ma25 Prev</div>
+                  <div class="card-ops">
+                    <div class="card-upd" data-updated="2025-12-06 10:24" data-interval="1w">
+                      <button class="card-upd-pill" type="button">
+                        <span class="card-upd-label">Last</span>
+                        <span class="card-upd-value">12/6 10:24</span>
+                      </button>
+                      <div class="card-upd-pop">
+                        <div class="card-upd-row card-upd-time"></div>
+                        <div class="card-upd-row card-upd-interval"></div>
+                      </div>
+                    </div>
+                    <div class="shape-dd">
+                      <button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button>
+                      <div class="shape-menu">
+                        <button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button>
+                        <button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button>
+                        <button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button>
+                        <button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container"><div class="chart-skeleton"></div></div>
+              </div>
+              <div class="chart-card" data-w="1" data-h="1" draggable="true">
+                <div class="card-hd">
+                  <div class="card-title">Btc Ma25 W</div>
+                  <div class="card-ops">
+                    <div class="card-upd" data-updated="2025-12-06 10:30" data-interval="1w">
+                      <button class="card-upd-pill" type="button">
+                        <span class="card-upd-label">Last</span>
+                        <span class="card-upd-value">12/6 10:30</span>
+                      </button>
+                      <div class="card-upd-pop">
+                        <div class="card-upd-row card-upd-time"></div>
+                        <div class="card-upd-row card-upd-interval"></div>
+                      </div>
+                    </div>
+                    <div class="shape-dd">
+                      <button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button>
+                      <div class="shape-menu">
+                        <button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button>
+                        <button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button>
+                        <button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button>
+                        <button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container"><div class="chart-skeleton"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div id="chartDetailOverlay" class="detail-page">
+        <div class="detail-modal">
+          <div class="detail-header">
+            <div class="detail-header-left">
+              <div class="detail-breadcrumb">
+                <button id="detailBack" class="detail-breadcrumb-back" type="button">Playbook Dashboard</button>
+                <span class="detail-breadcrumb-sep">/</span>
+                <span id="detailBreadcrumbTitle" class="detail-breadcrumb-current"></span>
+              </div>
+              <div id="detailTitle" class="detail-title"></div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <div class="detail-meta-item"><span>Author</span><span id="detailAuthor"></span></div>
+            <div class="detail-meta-item"><span>Created at</span><span id="detailCreated"></span></div>
+            <div class="detail-meta-item"><span>Last updated</span><span id="detailUpdated"></span></div>
+            <div class="detail-meta-item"><span>Refresh interval</span><span id="detailInterval"></span></div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-main">
+              <div class="detail-chart-wrap">
+                <canvas id="detailChartCanvas" class="detail-chart"></canvas>
+              </div>
+              <div class="detail-logic-card">
+                <div class="detail-logic-header">
+                  <div class="detail-logic-title">Generation logic & insight</div>
+                </div>
+                <div id="detailDesc" class="detail-desc">
+                  <div class="detail-desc-main">
+                    <p id="detailLogicText"></p>
+                    <button id="detailDatasourceBtn" class="detail-ds-btn" type="button" aria-label="Datasource">
+                      <span class="detail-ds-icon">&lt;/&gt;</span>
+                    </button>
+                  </div>
+                  <p id="detailInsightText" class="detail-insight"></p>
+                </div>
+              </div>
+              <div class="detail-table-wrap">
+                <div class="detail-table-head">
+                  <div class="detail-table-title">Data table</div>
+                  <button id="detailDownload" class="detail-download" type="button">Download CSV</button>
+                </div>
+                <table class="detail-table">
+                  <thead>
+                    <tr><th>Index</th><th>Value</th></tr>
+                  </thead>
+                  <tbody id="detailTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <aside id="detailDatasourceSidebar" class="detail-datasource-sidebar">
+              <div class="detail-ds-header">
+                <div class="detail-ds-title">Datasource</div>
+                <button id="detailDatasourceClose" class="detail-ds-close" type="button">Close</button>
+              </div>
+              <div id="detailDatasourceContent" class="detail-ds-body"></div>
+            </aside>
+          </div>
+        </div>
+      </div>
+      <div id="configPanel" class="paper">
+        <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
+        <div class="bd">
+          <div class="chat-box">
+            <div id="cfgChatList" class="chat-list"></div>
+            <div class="chat-compose">
+              <textarea id="cfgChatInput" class="chat-input" placeholder="Ask anything about investing" rows="4"></textarea>
+              <div id="mentionMenu" class="mention-menu"><div class="mention-list"></div></div>
+              <div class="chat-toolbar">
+                <div class="mode-dd">
+                  <button id="chatModeBtn" class="mode-btn" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span class="mode-label">Charts</span> ▾</button>
+                  <div id="chatModeMenu" class="mode-menu">
+                    <button class="mode-item" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span>Charts</span></button>
+                    <button class="mode-item" data-mode="strategy"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg></span><span>Strategy</span></button>
+                  </div>
+                </div>
+                <button id="chatAtBtn" class="at-btn">@</button>
+              </div>
+              <button id="cfgChatSend" class="chat-send">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="nav.js"></script>
+    <script>
+      const charts = [];
+      const chartDetails = new Map();
+      function applyLayout() {
+        document.querySelectorAll('#dashGrid .chart-card').forEach(card => {
+          const w = parseInt(card.dataset.w || '6', 10);
+          const h = parseInt(card.dataset.h || '1', 10);
+          card.style.gridColumn = `span ${w}`;
+          card.style.gridRow = `span ${h}`;
+        });
+      }
+      function calcCanvasHeight(cv) {
+        try {
+          const container = cv.parentElement;
+          const card = container.closest('.chart-card');
+          if (!card) {
+            const dh = parseInt(cv.dataset.h || 160, 10);
+            return dh;
+          }
+          const header = card ? card.querySelector('.card-hd') : null;
+          const cardRect = card ? card.getBoundingClientRect() : { height: 160 };
+          const headerRect = header ? header.getBoundingClientRect() : { height: 0 };
+          const cs = container ? getComputedStyle(container) : { paddingTop: '0', paddingBottom: '0' };
+          const paddingV = parseFloat(cs.paddingTop || '0') + parseFloat(cs.paddingBottom || '0');
+          const available = Math.max(100, Math.floor(cardRect.height - headerRect.height - paddingV));
+          return available;
+        } catch { return parseInt(cv.dataset.h || 160, 10); }
+      }
+      function drawLineChart(cv, data, color) {
+        const ctx = cv.getContext('2d');
+        const ratio = window.devicePixelRatio || 1;
+        const w = cv.parentElement.clientWidth || 600;
+        const h = calcCanvasHeight(cv);
+        cv.width = w * ratio;
+        cv.height = h * ratio;
+        cv.style.width = '100%';
+        cv.style.height = h + 'px';
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        if (!data || !data.length) return;
+        let min = Math.min.apply(null, data);
+        let max = Math.max.apply(null, data);
+        if (min === max) { min -= 1; max += 1; }
+        const pad = 10;
+        const xStep = (w - pad * 2) / (data.length - 1);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color || '#22c55e';
+        ctx.beginPath();
+        data.forEach((v, i) => {
+          const x = pad + xStep * i;
+          const y = pad + (h - pad * 2) * (1 - (v - min) / (max - min));
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      }
+      function setupCharts() {
+        document.querySelectorAll('#dashGrid .chart-container .chart-skeleton').forEach((skel, idx) => {
+          const canvas = document.createElement('canvas');
+          canvas.className = 'chart-canvas';
+          canvas.dataset.h = '160';
+          skel.replaceWith(canvas);
+          const series = idx % 2 === 0 ? [30,32,31,35,34,36,38,37,39,41,40,42] : [12,11,13,12,14,13,15,16,15,17,18,17];
+          const color = idx % 2 === 0 ? '#7c3aed' : '#f59e0b';
+          const card = canvas.closest('.chart-card');
+          if (card) {
+            if (!card.id) card.id = 'chart-' + (idx + 1);
+            const titleEl = card.querySelector('.card-title');
+            const title = titleEl ? titleEl.textContent.trim() : 'Chart';
+            const updEl = card.querySelector('.card-upd');
+            const updated = updEl ? updEl.getAttribute('data-updated') || '' : '';
+            const interval = updEl ? updEl.getAttribute('data-interval') || '' : '';
+            chartDetails.set(card.id, {
+              id: card.id,
+              title,
+              author: 'Alva',
+              created: updated || '2025-12-06 10:00',
+              updated,
+              interval,
+              series,
+              color
+            });
+          }
+          charts.push(() => drawLineChart(canvas, series, color));
+        });
+        charts.forEach(fn => fn());
+      }
+      function genSeries() {
+        return Array.from({length: 16}, (_, i) => 50 + Math.sin(i / 2.2) * 8 + (i % 4) - (i % 5) * 0.6);
+      }
+      function initCardUpdate(card) {
+        const upd = card.querySelector('.card-upd');
+        if (!upd) return;
+        const pop = upd.querySelector('.card-upd-pop');
+        const pill = upd.querySelector('.card-upd-pill');
+        const timeRow = upd.querySelector('.card-upd-time');
+        const intvRow = upd.querySelector('.card-upd-interval');
+        const ts = upd.getAttribute('data-updated') || '';
+        const iv = upd.getAttribute('data-interval') || '';
+        if (timeRow) timeRow.textContent = ts ? 'Last Updated: ' + ts : 'Last Updated: -';
+        if (intvRow) intvRow.textContent = iv ? 'Interval: ' + iv : 'Interval: -';
+        if (pill && pop) {
+          pill.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = pop.classList.contains('open');
+            document.querySelectorAll('.card-upd-pop.open').forEach(other => {
+              if (other !== pop) other.classList.remove('open');
+            });
+            pop.classList.toggle('open', !isOpen);
+          });
+        }
+      }
+      let dragEl = null;
+      function bindCardDrag(card) {
+        card.addEventListener('dragstart', () => {
+          dragEl = card;
+          card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', () => {
+          dragEl = null;
+          card.classList.remove('dragging');
+          card.classList.remove('drag-over-top');
+          card.classList.remove('drag-over-bottom');
+        });
+        card.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (!dragEl || dragEl === card) return;
+          const rect = card.getBoundingClientRect();
+          const offset = e.clientY - rect.top;
+          const mid = rect.height / 2;
+          card.classList.remove('drag-over-top', 'drag-over-bottom');
+          if (offset < mid) card.classList.add('drag-over-top'); else card.classList.add('drag-over-bottom');
+        });
+        card.addEventListener('dragleave', () => {
+          card.classList.remove('drag-over-top');
+          card.classList.remove('drag-over-bottom');
+        });
+        card.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const grid = document.getElementById('dashGrid');
+          if (!dragEl || dragEl === card) {
+            card.classList.remove('drag-over-top');
+            card.classList.remove('drag-over-bottom');
+            return;
+          }
+          const items = Array.from(grid.children);
+          const from = items.indexOf(dragEl);
+          const to = items.indexOf(card);
+          if (from === -1 || to === -1) return;
+          if (card.classList.contains('drag-over-bottom')) {
+            grid.insertBefore(dragEl, card.nextSibling);
+          } else {
+            grid.insertBefore(dragEl, card);
+          }
+          card.classList.remove('drag-over-top');
+          card.classList.remove('drag-over-bottom');
+          charts.forEach(fn => fn());
+        });
+      }
+      function initChartCard(card, canvas, series, color) {
+        const dd = card.querySelector('.shape-dd');
+        const btn = dd.querySelector('.shape-btn');
+        const menu = dd.querySelector('.shape-menu');
+        const ico = btn.querySelector('.shape-ico');
+        btn.addEventListener('click', (e) => { e.preventDefault(); menu.classList.toggle('open'); });
+        menu.querySelectorAll('.shape-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const v = item.getAttribute('data-size');
+            const cv = canvas;
+            if (v === 'sq-s') { card.dataset.w = '1'; card.dataset.h = '1'; if (cv) cv.dataset.h = '160'; }
+            if (v === 'sq-l') { card.dataset.w = '2'; card.dataset.h = '2'; if (cv) cv.dataset.h = '320'; }
+            if (v === 'rect-h') { card.dataset.w = '2'; card.dataset.h = '1'; if (cv) cv.dataset.h = '160'; }
+            if (v === 'rect-v') { card.dataset.w = '1'; card.dataset.h = '2'; if (cv) cv.dataset.h = '320'; }
+            ico.setAttribute('data-cur', v);
+            if (v === 'sq-s') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg>';
+            if (v === 'sq-l') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg>';
+            if (v === 'rect-h') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg>';
+            if (v === 'rect-v') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg>';
+            menu.classList.remove('open');
+            applyLayout();
+            charts.forEach(fn => fn());
+          });
+        });
+        document.addEventListener('click', (e) => { if (!dd.contains(e.target)) menu.classList.remove('open'); });
+        bindCardDrag(card);
+        charts.push(() => drawLineChart(canvas, series, color));
+        charts.forEach(fn => fn());
+      }
+      function addChartCard(title) {
+        const grid = document.getElementById('dashGrid');
+        const card = document.createElement('div');
+        card.className = 'chart-card';
+        card.dataset.w = '1';
+        card.dataset.h = '1';
+        card.draggable = true;
+        const id = 'chart-' + Date.now();
+        card.id = id;
+        card.innerHTML = '<div class="card-hd"><div class="card-title"></div><div class="card-ops"><div class="card-upd" data-updated="" data-interval="1w"><button class="card-upd-pill" type="button"><span class="card-upd-label">Last</span><span class="card-upd-value"></span></button><div class="card-upd-pop"><div class="card-upd-row card-upd-time"></div><div class="card-upd-row card-upd-interval"></div></div></div><div class="shape-dd"><button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button><div class="shape-menu"><button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button><button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button><button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button><button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button></div></div></div></div><div class="chart-container"></div>';
+        grid.appendChild(card);
+        const titleEl = card.querySelector('.card-title');
+        if (titleEl) titleEl.textContent = title || 'New Chart';
+        const container = card.querySelector('.chart-container');
+        const canvas = document.createElement('canvas');
+        canvas.className = 'chart-canvas';
+        container.appendChild(canvas);
+        const series = genSeries();
+        const idx = document.querySelectorAll('#dashGrid .chart-card').length;
+        const color = idx % 3 === 0 ? '#0ea5e9' : idx % 3 === 1 ? '#7c3aed' : '#f59e0b';
+        card.setAttribute('data-color', color);
+        const upd = card.querySelector('.card-upd');
+        let detailTs = '';
+        let displayTs = '';
+        if (upd) {
+          const now = new Date();
+          const mm = String(now.getMonth() + 1).padStart(2, '0');
+          const dd = String(now.getDate()).padStart(2, '0');
+          const hh = String(now.getHours()).padStart(2, '0');
+          const mi = String(now.getMinutes()).padStart(2, '0');
+          displayTs = mm.replace(/^0/, '') + '/' + dd.replace(/^0/, '') + ' ' + hh + ':' + mi;
+          detailTs = now.getFullYear() + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
+          upd.setAttribute('data-updated', detailTs);
+          upd.setAttribute('data-interval', '1w');
+          const valEl = upd.querySelector('.card-upd-value');
+          if (valEl) valEl.textContent = displayTs;
+        }
+        const detailTitleEl = card.querySelector('.card-title');
+        const detailTitle = detailTitleEl ? detailTitleEl.textContent.trim() : title || 'New Chart';
+        chartDetails.set(id, {
+          id,
+          title: detailTitle,
+          author: 'Alva',
+          created: detailTs || '',
+          updated: detailTs || '',
+          interval: '1w',
+          series,
+          color
+        });
+        initChartCard(card, canvas, series, color);
+        initCardUpdate(card);
+        applyLayout();
+        return { id, color };
+      }
+      function parseChartCommand(input) {
+        const t = (input || '').trim();
+        let m = t.match(/^(?:add|create)\s+chart\s*:?(.+)$/i);
+        if (!m) m = t.match(/新增图表[:：]?\s*(.+)$/);
+        if (!m) m = t.match(/^(?:add|新增)(?:\s+(.+))?$/i);
+        if (!m) return null;
+        const title = (m[1] || '').trim();
+        return { title: title || 'New Chart' };
+      }
+      function parseStrategyCommand(input) {
+        const t = (input || '').trim();
+        let m = t.match(/^(?:add|create)\s+strategy\s*:?(.+)$/i);
+        if (!m) m = t.match(/新增策略[:：]?\s*(.+)$/);
+        if (!m) return null;
+        const title = (m[1] || '').trim();
+        return { title: title || 'New Strategy' };
+      }
+      function getChartsList() {
+        return Array.from(document.querySelectorAll('#dashGrid .chart-card')).map(card => {
+          const title = (card.querySelector('.card-title')?.textContent || 'Chart').trim();
+          return { id: card.id || '', title };
+        });
+      }
+      function buildMentionMenu() {
+        const menu = document.getElementById('mentionMenu');
+        const listEl = menu.querySelector('.mention-list');
+        const data = getChartsList();
+        listEl.innerHTML = data.map(d => `<button class="mention-item" data-id="${d.id}" data-title="${d.title}"># ${d.title}</button>`).join('');
+        menu.style.display = 'block';
+        const compose = document.querySelector('.chat-compose');
+        const inputRect = cfgChatInput.getBoundingClientRect();
+        const composeRect = compose.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const left = inputRect.left - composeRect.left + 8;
+        const top = inputRect.top - composeRect.top - menuRect.height - 8;
+        menu.style.left = left + 'px';
+        menu.style.top = Math.max(0, top) + 'px';
+        menu.classList.add('open');
+        listEl.querySelectorAll('.mention-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title');
+            insertAtCursor(cfgChatInput, '@' + title + ' ');
+            menu.classList.remove('open');
+            menu.style.display = 'none';
+          });
+        });
+      }
+      function insertAtCursor(el, text) {
+        const start = el.selectionStart || 0;
+        const end = el.selectionEnd || 0;
+        const val = el.value || '';
+        el.value = val.slice(0, start) + text + val.slice(end);
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+      }
+      const dashboardView = document.getElementById('dashboardView');
+      const detailOverlay = document.getElementById('chartDetailOverlay');
+      const detailClose = document.getElementById('detailClose');
+      const detailBack = document.getElementById('detailBack');
+      const detailBreadcrumbTitle = document.getElementById('detailBreadcrumbTitle');
+      const detailTitle = document.getElementById('detailTitle');
+      const detailAuthor = document.getElementById('detailAuthor');
+      const detailCreated = document.getElementById('detailCreated');
+      const detailUpdated = document.getElementById('detailUpdated');
+      const detailInterval = document.getElementById('detailInterval');
+      const detailLogicText = document.getElementById('detailLogicText');
+      const detailInsightText = document.getElementById('detailInsightText');
+      const detailChartCanvas = document.getElementById('detailChartCanvas');
+      const detailTableBody = document.getElementById('detailTableBody');
+      const detailDownload = document.getElementById('detailDownload');
+      const detailDatasourceBtn = document.getElementById('detailDatasourceBtn');
+      const detailDatasourceSidebar = document.getElementById('detailDatasourceSidebar');
+      const detailDatasourceContent = document.getElementById('detailDatasourceContent');
+      const detailDatasourceClose = document.getElementById('detailDatasourceClose');
+      function buildDetailDesc(meta) {
+        const t = (meta.title || '').toLowerCase();
+        if (t.includes('btc') && t.includes('ma25') && (t.includes(' w') || t.endsWith('w'))) {
+          return 'This chart shows the 25‑period moving average of BTC on the weekly timeframe. Each point is the arithmetic mean of the latest 25 weekly closes, smoothing out short‑term noise and highlighting medium‑term trend shifts and key support/resistance areas.';
+        }
+        if (t.includes('btc') && t.includes('ma25')) {
+          return 'This chart shows a 25‑period moving average of BTC on the selected timeframe. It averages the last 25 candle closes to filter out minor fluctuations and focus on the mid‑term structure of price action.';
+        }
+        return 'This chart is built from a time‑series dataset where each point represents the value observed at a fixed interval. It is useful for reading trend direction, rhythm of swings and local extremes, which together help evaluate market regime and strategy performance.';
+      }
+      function buildDetailInsight(meta) {
+        const data = meta.series || [];
+        if (!data.length) return 'There is not enough data yet for a meaningful interpretation. Keep watching as more observations come in.';
+        const last = data[data.length - 1];
+        const prev = data.length > 1 ? data[data.length - 2] : last;
+        const diff = last - prev;
+        const t = (meta.title || '').toUpperCase();
+        const name = t.includes('BTC') ? 'BTC' : 'the instrument';
+        if (diff > 0) {
+          return name + ' has ticked higher at the latest observation, indicating short‑term upward momentum. As long as price stays around or above the average, this can be read as an extension of the prevailing up‑trend, but volume and higher‑timeframe structure still need to confirm.';
+        }
+        if (diff < 0) {
+          return name + ' has pulled back slightly versus the previous observation, suggesting some profit‑taking or a short‑term consolidation. As long as the move does not break decisively below the average and the drawdown remains contained, the broader trend can still be considered healthy.';
+        }
+        return name + ' is almost unchanged over the last two observations, which points to a short consolidation zone. Such sideways phases often act as a staging area before the next leg of trend, so the eventual breakout direction and any volume expansion will be key to watch.';
+      }
+      function buildDatasourceDesc(meta) {
+        const t = (meta.title || '').toLowerCase();
+        if (t.includes('btc')) {
+          return 'Datasource example:\n\n1. Venue: major spot exchanges such as Binance / OKX\n2. Symbol: BTCUSDT spot price\n3. Frequency: weekly close (the last candle close of each week)\n4. Lookback: roughly the last 2–3 years to cover a full bull–bear cycle\n5. Processing: fetch raw OHLC candles in time order, then compute a rolling 25‑period moving average to construct this curve.';
+        }
+        return 'Datasource example:\n\n1. Raw series: a market metric such as price, return or factor value\n2. Frequency: fixed sampling interval, for example daily, weekly or monthly\n3. Cleaning: remove obvious outliers and fill minor gaps in the series\n4. Calculation: apply smoothing or rolling aggregations over a configured window\n5. Storage: write the structured results into an internal metrics store for dashboards and strategies to reuse.';
+      }
+      function showDashboardView() {
+        if (dashboardView) dashboardView.style.display = '';
+        if (detailOverlay) detailOverlay.classList.remove('open');
+      }
+      function openChartDetail(cardId) {
+        const meta = chartDetails.get(cardId);
+        if (!meta || !detailOverlay) return;
+        detailTitle.textContent = meta.title || 'Chart';
+        if (detailBreadcrumbTitle) detailBreadcrumbTitle.textContent = meta.title || 'Chart';
+        detailAuthor.textContent = meta.author || 'Alva';
+        detailCreated.textContent = meta.created || '-';
+        detailUpdated.textContent = meta.updated || '-';
+        detailInterval.textContent = meta.interval || '-';
+        if (detailLogicText) detailLogicText.textContent = buildDetailDesc(meta);
+        if (detailInsightText) detailInsightText.textContent = buildDetailInsight(meta);
+        detailTableBody.innerHTML = '';
+        const arr = meta.series || [];
+        arr.forEach((v, i) => {
+          const tr = document.createElement('tr');
+          const idxTd = document.createElement('td');
+          idxTd.textContent = String(i + 1);
+          const valTd = document.createElement('td');
+          valTd.textContent = typeof v === 'number' && v.toFixed ? v.toFixed(4) : String(v);
+          tr.appendChild(idxTd);
+          tr.appendChild(valTd);
+          detailTableBody.appendChild(tr);
+        });
+        if (detailChartCanvas && meta.series) {
+          drawLineChart(detailChartCanvas, meta.series, meta.color || '#0ea5e9');
+        }
+        if (dashboardView) dashboardView.style.display = 'none';
+        detailOverlay.classList.add('open');
+        detailOverlay.dataset.currentId = cardId;
+        if (detailDatasourceSidebar) detailDatasourceSidebar.classList.remove('open');
+        if (detailDatasourceContent) detailDatasourceContent.textContent = buildDatasourceDesc(meta);
+      }
+      if (detailClose && detailOverlay) {
+        detailClose.addEventListener('click', () => {
+          showDashboardView();
+        });
+      }
+      if (detailBack && detailOverlay) {
+        detailBack.addEventListener('click', () => {
+          showDashboardView();
+        });
+      }
+      if (detailDownload && detailOverlay) {
+        detailDownload.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.series) return;
+          let csv = 'index,value\n';
+          meta.series.forEach((v, i) => {
+            csv += (i + 1) + ',' + v + '\n';
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = (meta.title || 'chart') + '.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      }
+      if (detailDatasourceBtn && detailDatasourceSidebar) {
+        detailDatasourceBtn.addEventListener('click', () => {
+          detailDatasourceSidebar.classList.add('open');
+        });
+      }
+      if (detailDatasourceClose && detailDatasourceSidebar) {
+        detailDatasourceClose.addEventListener('click', () => {
+          detailDatasourceSidebar.classList.remove('open');
+        });
+      }
+      window.addEventListener('resize', () => { charts.forEach(fn => fn()); });
+      applyLayout();
+      setupCharts();
+      document.querySelectorAll('#dashGrid .shape-dd').forEach(dd => {
+        const btn = dd.querySelector('.shape-btn');
+        const menu = dd.querySelector('.shape-menu');
+        const ico = btn.querySelector('.shape-ico');
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          menu.classList.toggle('open');
+        });
+        menu.querySelectorAll('.shape-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const v = item.getAttribute('data-size');
+            const card = dd.closest('.chart-card');
+            const canvas = card.querySelector('canvas.chart-canvas');
+            if (v === 'sq-s') { card.dataset.w = '1'; card.dataset.h = '1'; if (canvas) canvas.dataset.h = '160'; }
+            if (v === 'sq-l') { card.dataset.w = '2'; card.dataset.h = '2'; if (canvas) canvas.dataset.h = '320'; }
+            if (v === 'rect-h') { card.dataset.w = '2'; card.dataset.h = '1'; if (canvas) canvas.dataset.h = '160'; }
+            if (v === 'rect-v') { card.dataset.w = '1'; card.dataset.h = '2'; if (canvas) canvas.dataset.h = '320'; }
+            ico.setAttribute('data-cur', v);
+            // update icon graphic
+            if (v === 'sq-s') ico.innerHTML = '<svg viewBox=\"0 0 16 16\"><rect x=\"4\" y=\"4\" width=\"8\" height=\"8\" fill=\"#9ca3af\"/></svg>';
+            if (v === 'sq-l') ico.innerHTML = '<svg viewBox=\"0 0 16 16\"><rect x=\"2\" y=\"2\" width=\"12\" height=\"12\" fill=\"#9ca3af\"/></svg>';
+            if (v === 'rect-h') ico.innerHTML = '<svg viewBox=\"0 0 16 16\"><rect x=\"2\" y=\"4\" width=\"12\" height=\"8\" fill=\"#9ca3af\"/></svg>';
+            if (v === 'rect-v') ico.innerHTML = '<svg viewBox=\"0 0 16 16\"><rect x=\"4\" y=\"2\" width=\"8\" height=\"12\" fill=\"#9ca3af\"/></svg>';
+            menu.classList.remove('open');
+            applyLayout();
+            charts.forEach(fn => fn());
+          });
+        });
+        document.addEventListener('click', (e) => {
+          if (!dd.contains(e.target)) menu.classList.remove('open');
+        });
+      });
+      document.querySelectorAll('#dashGrid .chart-card').forEach(card => {
+        bindCardDrag(card);
+      });
+      document.querySelectorAll('#dashGrid .chart-card').forEach(card => {
+        initCardUpdate(card);
+      });
+      document.addEventListener('click', (e) => {
+        const titleEl = e.target.closest('.card-title');
+        if (!titleEl) return;
+        const card = titleEl.closest('.chart-card');
+        if (!card) return;
+        if (!card.id) card.id = 'chart-' + Date.now();
+        openChartDetail(card.id);
+      });
+      const panelToggle = document.getElementById('panelToggle');
+      const detailGrid = document.querySelector('.detail');
+      panelToggle.addEventListener('click', () => {
+        const collapsed = detailGrid.classList.toggle('right-collapsed');
+        if (collapsed) {
+          panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
+          panelToggle.setAttribute('aria-label', 'Expand chat panel');
+          panelToggle.setAttribute('data-tip', 'Chat with Alva!');
+        } else {
+          panelToggle.textContent = '▾';
+          panelToggle.setAttribute('aria-label', 'Collapse chat panel');
+          panelToggle.removeAttribute('data-tip');
+        }
+      });
+      const cfgChatList = document.getElementById('cfgChatList');
+      const cfgChatInput = document.getElementById('cfgChatInput');
+      const cfgChatSend = document.getElementById('cfgChatSend');
+      const chatModeBtn = document.getElementById('chatModeBtn');
+      const chatModeMenu = document.getElementById('chatModeMenu');
+      const chatAtBtn = document.getElementById('chatAtBtn');
+      const mentionMenu = document.getElementById('mentionMenu');
+      chatModeBtn.addEventListener('click', (e) => { e.preventDefault(); chatModeMenu.classList.toggle('open'); });
+      chatModeMenu.querySelectorAll('.mode-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const mode = item.getAttribute('data-mode');
+          chatModeBtn.setAttribute('data-mode', mode);
+          const label = mode === 'strategy' ? 'Strategy' : 'Charts';
+          const ico = mode === 'strategy'
+            ? '<svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg>'
+            : '<svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg>';
+          chatModeBtn.innerHTML = '<span class="mode-ico">' + ico + '</span><span class="mode-label">' + label + '</span> ▾';
+          chatModeMenu.classList.remove('open');
+        });
+      });
+      document.addEventListener('click', (e) => {
+        const dd = chatModeBtn.closest('.mode-dd');
+        if (dd && !dd.contains(e.target)) chatModeMenu.classList.remove('open');
+      });
+      chatAtBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mentionMenu && mentionMenu.classList.contains('open')) {
+          mentionMenu.classList.remove('open');
+          mentionMenu.style.display = 'none';
+        } else {
+          buildMentionMenu();
+        }
+      });
+      cfgChatInput.addEventListener('input', () => {
+        try {
+          const pos = cfgChatInput.selectionStart || 0;
+          const prev = cfgChatInput.value.slice(pos - 1, pos);
+          if (prev === '@') buildMentionMenu();
+        } catch {}
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mentionMenu) {
+          mentionMenu.classList.remove('open');
+          mentionMenu.style.display = 'none';
+        }
+      });
+      document.addEventListener('click', (e) => {
+        const compose = document.querySelector('.chat-compose');
+        if (compose && mentionMenu && !compose.contains(e.target)) {
+          mentionMenu.classList.remove('open');
+          mentionMenu.style.display = 'none';
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.card-upd')) {
+          document.querySelectorAll('.card-upd-pop.open').forEach(pop => pop.classList.remove('open'));
+        }
+      });
+      cfgChatSend.addEventListener('click', () => {
+        const text = cfgChatInput.value.trim();
+        if (!text) return;
+        const you = document.createElement('div');
+        you.className = 'chat-msg msg-you';
+        you.innerHTML = '<div class="chat-role">You</div><div>' + text + '</div>';
+        cfgChatList.appendChild(you);
+        cfgChatInput.value = '';
+        setTimeout(() => {
+          const ai = document.createElement('div');
+          ai.className = 'chat-msg msg-ai';
+          const mode = chatModeBtn.getAttribute('data-mode') || 'charts';
+          const cmd = mode === 'strategy' ? parseStrategyCommand(text) : parseChartCommand(text);
+          if (cmd && mode === 'charts') {
+            ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Thinking…</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            setTimeout(() => { ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Analyzing instruction…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 600);
+            setTimeout(() => { ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Generating data series…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 1200);
+            let createdMeta = null;
+            setTimeout(() => { createdMeta = addChartCard(cmd.title); ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Rendering chart…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 1800);
+            setTimeout(() => {
+              const target = (createdMeta && createdMeta.id) || '';
+              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + cmd.title + '</div><div class="res-meta">已创建图表并加入 Dashboard</div><div class="res-thumb"><canvas class="res-thumb-canvas" data-h="42"></canvas></div><div class="res-actions"><button class="btn-view" data-target="' + target + '">在仪表盘定位</button></div></div>';
+              const thumb = ai.querySelector('.res-thumb-canvas');
+              if (thumb) {
+                thumb.dataset.h = '42';
+                const seriesMini = genSeries();
+                const colMini = (createdMeta && createdMeta.color) || '#22c55e';
+                drawLineChart(thumb, seriesMini, colMini);
+              }
+              const btn = ai.querySelector('.btn-view');
+              if (btn) {
+                btn.addEventListener('click', () => {
+                  const el = document.getElementById(btn.getAttribute('data-target'));
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('drag-over');
+                    setTimeout(() => el.classList.remove('drag-over'), 800);
+                  }
+                });
+              }
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 2400);
+          } else if (cmd && mode === 'strategy') {
+            ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Thinking…</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            setTimeout(() => { ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Analyzing instruction…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 600);
+            setTimeout(() => { ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Composing strategy rule set…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 1200);
+            setTimeout(() => {
+              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + cmd.title + '</div><div class="res-meta">已创建策略（模拟）</div></div>';
+              cfgChatList.scrollTop = cfgChatList.scrollHeight;
+            }, 1800);
+          } else {
+            ai.innerHTML = '<div class="chat-role">AI</div><div>Noted. This box is for chatting about the current playbook.</div>';
+            cfgChatList.appendChild(ai);
+            cfgChatList.scrollTop = cfgChatList.scrollHeight;
+          }
+        }, 500);
+      });
+      cfgChatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          cfgChatSend.click();
+        }
+      });
+    </script>
+  </body>
+</html>

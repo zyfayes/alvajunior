@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Alva · Playbook Detail</title>
-    <meta http-equiv="refresh" content="0;url=playbook_strategy.html" />
+    <title>Alva · Playbook Strategy</title>
     <style>
       :root { --bg: #ffffff; --panel: #f8fafc; --text: #111827; --muted: #6b7280; --accent: #14b8a6; --border: #e5e7eb; }
       * { box-sizing: border-box; }
@@ -117,11 +116,13 @@
       .chart-skeleton { height: 160px; border-radius: 8px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
       @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
       .overview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-      .metrics-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 8px 0 12px; }
-      .metric-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-      .metric-title { color: var(--muted); font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-      .metric-value { font-weight: 700; color: #22c55e; margin-bottom: 6px; }
-      .sparkline-skel { height: 42px; border-radius: 8px; background: linear-gradient(90deg, #0b1220 25%, #0d1422 37%, #0b1220 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
+      .overview-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+      .last-updated-pill { color: #111827; font-size: 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; }
+      .metrics-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+      .metric-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+      .metric-title { display: flex; align-items: center; gap: 6px; color: #374151; font-size: 12px; }
+      .metric-info { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid #cbd5e1; color: #64748b; font-size: 11px; }
+      .metric-value { color: #22c55e; font-weight: 700; margin: 4px 0 6px; }
       .equity-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .equity-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
       .equity-title { font-weight: 700; }
@@ -154,7 +155,7 @@
       .feed-change { color: #22c55e; font-weight: 700; }
       .feed-sub { color: var(--muted); font-size: 12px; }
       .feed-time { color: var(--muted); font-size: 12px; }
-    
+      
       .search-overlay { position: fixed; inset: 0; background: rgba(2,8,23,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
       .search-overlay.open { display: flex; }
       .search-modal { width: min(760px, 92vw); border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
@@ -169,8 +170,6 @@
       .sym { font-weight: 600; letter-spacing: 0.4px; }
       .type { color: var(--muted); font-size: 12px; }
       .exch { color: #a7f3d0; font-size: 12px; }
-      .me-icons .icon-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; }
-      .icon-btn svg { width: 16px; height: 16px; fill: #a7f3d0; opacity: 0.9; }
       .chart-canvas { width: 100%; height: 160px; display: block; }
       .equity-canvas { width: 100%; height: 280px; display: block; }
       .sparkline-canvas { width: 100%; height: 42px; display: block; }
@@ -189,6 +188,9 @@
       .ico-purple { background: #3a0b55; }
       .label { font-size: 13px; color: #374151; font-weight: 600; }
       .popover-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      .me-icons { display: flex; gap: 8px; }
+      .nav-bottom .icon-btn { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+      .nav-bottom .icon-btn svg { width: 16px; height: 16px; }
     </style>
   </head>
   <body>
@@ -204,10 +206,10 @@
       <a class="rail-btn" href="#search" title="Search" aria-label="Search">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
       </a>
-      <a class="rail-btn" href="playbook.html" title="Starred" aria-label="Starred">
+      <a class="rail-btn" href="playbook_strategy.html" title="Starred" aria-label="Starred">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
       </a>
-      <a class="rail-btn" href="playbook.html" title="Playbooks" aria-label="Playbooks">
+      <a class="rail-btn" href="playbook_strategy.html" title="Playbooks" aria-label="Playbooks">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V2zm-2 14H8v-2h8v2zm0-4H8V8h8v4z"/></svg>
       </a>
       <a class="rail-btn" href="#threads-more" title="Threads" aria-label="Threads">
@@ -232,18 +234,18 @@
           <div class="section with-divider">
             <div class="section-title">Starred</div>
             <ul>
-              <li><a href="playbook.html">Dashboard-Playbook A</a></li>
-              <li><a href="playbook.html">Strategy-Playbook B</a></li>
-              <li><a href="playbook.html">Research-Playbook C</a></li>
+              <li><a href="playbook_dashboard.html">Dashboard-Playbook A</a></li>
+              <li><a href="playbook_strategy.html">Strategy-Playbook B</a></li>
+              <li><a href="playbook_strategy.html">Research-Playbook C</a></li>
               <li><a class="more" href="#starred-more">··· More</a></li>
             </ul>
           </div>
           <div class="section with-divider">
             <div class="section-title section-title-row"><span>Playbooks</span></div>
             <ul>
-              <li><a href="playbook.html">Dashboard-Playbook A</a></li>
-              <li><a href="playbook.html">Strategy-Playbook B</a></li>
-              <li><a href="playbook.html">Research-Playbook C</a></li>
+              <li><a href="playbook_dashboard.html">Dashboard-Playbook A</a></li>
+              <li><a href="playbook_strategy.html">Strategy-Playbook B</a></li>
+              <li><a href="playbook_strategy.html">Research-Playbook C</a></li>
               <li><a class="more" href="#library-playbooks-more">··· More</a></li>
             </ul>
           </div>
@@ -263,7 +265,7 @@
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 2.239-7 5v2h14v-2c0-2.761-3.134-5-7-5z"/></svg>
             </button>
             <button class="icon-btn" title="Settings" aria-label="Settings">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.14 12.936a7.97 7.97 0 000-1.872l2.037-1.58a.5.5 0 00.12-.64l-1.93-3.343a.5.5 0 00-.6-.22l-2.4.96a7.968 7.968 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.43h-3.86a.5.5 0 00-.5.43l-.36 2.54a7.968 7.968 0 00-1.62.94l-2.4-.96a.5.5 0 00-.6.22L2.7 8.844a.5.5 0 00.12.64l2.037 1.58a7.97 7.97 0 000 1.872L2.82 14.516a.5.5 0 00-.12.64l1.93 3.343a.5.5 0 00.6.22l2.4-.96c.5.38 1.05.7 1.62.94l.36 2.54a.5.5 0 00.5.43h3.86a.5.5 0 00.5-.43l.36-2.54c.57-.24 1.12-.56 1.62-.94l2.4.96a.5.5 0 00.6-.22l1.93-3.343a.5.5 0 00-.12-.64l-2.037-1.58zM12 15a3 3 0 110-6 3 3 0 010 6z"/></svg>
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.14 12.936a7.97 7.97 0 000-1.872l2.037-1.58a.5.5 0 00.12-.64l-1.93-3.343a.5.5 0 00-.6-.22l-2.4.96a7.968 7.968 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.43h-3.86a.5.5 0 00-.5.43l-.36 2.54a7.968 7.968 0 00-1.62.94l-2.4-.96a.5.5 0 00-.6.22L2.7 8.844a.5.5 0 00.12.64l2.037 1.58a7.97 7.97 0 000 1.872L2.82 14.516a.5.5 0 00-.12.64l1.93 3.343a.5.5 0 00.6.22l2.4-.96c.5.38 1.05.7 1.62.94l.36 2.54a.5.5 0 00.5.43h3.86a.5.5 0 0 0 .5-.43l.36-2.54c.57-.24 1.12-.56 1.62-.94l2.4.96a.5.5 0 0 0 .6-.22l1.93-3.343a.5.5 0 0 0-.12-.64l-2.037-1.58zM12 15a3 3 0 110-6 3 3 0 010 6z"/></svg>
             </button>
           </div>
         </div>
@@ -295,36 +297,6 @@
         </div>
       </div>
     </div>
-    <script src="nav.js"></script>
-    <script>
-      (function() {
-        const searchOverlay = document.getElementById('searchOverlay');
-        const searchClose = document.getElementById('searchClose');
-        const searchInput = document.getElementById('searchInput');
-        const entityList = document.getElementById('entityList');
-        const searchLinks = Array.from(document.querySelectorAll('a[href="#search"]'));
-        const entities = [
-          { sym: 'ETH', name: 'Ethereum', type: 'CRYPTO', exch: 'Binance' },
-          { sym: 'BTC', name: 'Bitcoin', type: 'CRYPTO', exch: 'Binance' },
-          { sym: 'NVDA', name: 'NVIDIA Corporation', type: 'STOCK', exch: 'NASDAQ' }
-        ];
-        function renderEntities(filter = '') {
-          const q = filter.trim().toLowerCase();
-          const data = entities.filter(e => !q || e.sym.toLowerCase().includes(q) || e.name.toLowerCase().includes(q));
-          entityList.innerHTML = data.map(e => `<div class="entity-row"><div class="sym">${e.sym}</div><div class="name">${e.name}</div><div class="type">${e.type}</div><div class="exch">${e.exch}</div></div>`).join('');
-        }
-        function openSearch() { searchOverlay.classList.add('open'); renderEntities(''); searchInput.value=''; searchInput.focus(); }
-        function closeSearch() { searchOverlay.classList.remove('open'); }
-        searchLinks.forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); openSearch(); }));
-        searchClose.addEventListener('click', closeSearch);
-        searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) closeSearch(); });
-        document.addEventListener('keydown', (e) => {
-          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
-          if (e.key === 'Escape') closeSearch();
-        });
-        searchInput.addEventListener('input', () => renderEntities(searchInput.value));
-      })();
-    </script>
     <main>
       <div class="detail">
         <div class="paper">
@@ -335,16 +307,19 @@
           <div class="bd">
             <div id="pane-overview" class="tab-pane">
               <div class="overview-header">
-                <div class="section-title-line">Performance Overview</div>
-                <div class="last-updated">Last Updated: 11/28/2025 · Interval: 1w</div>
+                <div>
+                  <div class="section-title-line">Performance Overview</div>
+                  <div class="overview-sub">Start Date: 1/1/2025 • Initial amount: 10M USD</div>
+                </div>
+                <div class="last-updated-pill">Last Updated: 12/4/2025 · Interval: 1w</div>
               </div>
               <div class="metrics-grid">
-                <div class="metric-card"><div class="metric-title">Total Return</div><div class="metric-value">7.06%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Annualized Return</div><div class="metric-value">3.48%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Volatility</div><div class="metric-value">67.64%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Sharpe Ratio</div><div class="metric-value">0.68</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Sortino Ratio</div><div class="metric-value">1.04</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Max Drawdown</div><div class="metric-value">25.27%</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Total Return<span class="metric-info">i</span></div><div class="metric-value">7.06%</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Annualized Return<span class="metric-info">i</span></div><div class="metric-value">3.48%</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Volatility<span class="metric-info">i</span></div><div class="metric-value">67.64%</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Sharpe Ratio<span class="metric-info">i</span></div><div class="metric-value">0.68</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Sortino Ratio<span class="metric-info">i</span></div><div class="metric-value">1.04</div><div class="sparkline-skel"></div></div>
+                <div class="metric-card"><div class="metric-title">Max Drawdown<span class="metric-info">i</span></div><div class="metric-value">25.27%</div><div class="sparkline-skel"></div></div>
               </div>
               <div class="equity-card">
                 <div class="equity-hd"><div class="equity-title">Equity Curve</div><div class="currency-dd">USD ▾</div></div>
@@ -451,6 +426,7 @@
       </div>
     </main>
     
+    <script src="nav.js"></script>
     <script>
       const moreHandlers = {
         '#starred-more': { title: 'Starred · More', items: Array.from({length: 12}, (_, i) => `Starred Item ${i+1}`) },
@@ -472,11 +448,9 @@
       });
       document.querySelector('.subnav-close').addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
 
-      
       const configPanel = document.getElementById('configPanel');
       const panelToggle = document.getElementById('panelToggle');
       const detailGrid = document.querySelector('.detail');
-      // New Playbook popover handled centrally in nav.js
       panelToggle.addEventListener('click', () => {
         const collapsed = detailGrid.classList.toggle('right-collapsed');
         if (collapsed) {
