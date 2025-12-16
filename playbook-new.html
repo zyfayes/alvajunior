@@ -10,6 +10,14 @@
       html, body { height: 100%; }
       body { margin: 0; display: grid; grid-template-columns: 260px 1fr 320px; grid-template-rows: 1fr; grid-template-areas: "sidebar main config"; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
       body.subnav-open { grid-template-columns: 260px 220px 1fr 320px; grid-template-areas: "sidebar subnav main config"; }
+      body.sidebar-collapsed { grid-template-columns: 60px 1fr 320px; }
+      body.sidebar-collapsed.subnav-open { grid-template-columns: 60px 220px 1fr 320px; }
+      body.sidebar-collapsed .name,
+      body.sidebar-collapsed .nav-top,
+      body.sidebar-collapsed .nav-scroll,
+      body.sidebar-collapsed .nav-bottom,
+      body.sidebar-collapsed .nav-new-chat { display: none; }
+      body.sidebar-collapsed .icon-rail { display: flex; }
       aside { grid-area: sidebar; height: 100vh; position: sticky; top: 0; border-right: 1px solid #3a3a48; background: #2A2A38; padding: 12px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
       nav { display: flex; flex-direction: column; gap: 12px; height: 100%; }
       .nav-new-chat { padding: 0 6px 6px; }
@@ -20,6 +28,8 @@
       .side-brand { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-weight: 800; letter-spacing: 0.8px; }
       .side-brand .logo { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), #16a34a); box-shadow: 0 0 0 1px #0b5d31 inset; }
       .side-brand .name { font-size: 13px; color: #e5e7eb; }
+      .collapse-btn { margin-left: auto; border: 1px solid var(--border); background: #ffffff; color: #111827; border-radius: 8px; width: 24px; height: 24px; line-height: 22px; text-align: center; cursor: pointer; }
+      .collapse-btn:hover { border-color: #14b8a6; }
       .icon-rail { display: none; flex-direction: column; gap: 6px; padding: 0 6px; }
       .rail-btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
       .rail-btn:hover { border-color: #24513b; }
@@ -85,6 +95,22 @@
       .card-hd { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); }
       .card-title { font-size: 14px; font-weight: 700; cursor: pointer; }
       .card-title:hover { color: #0f766e; }
+      .card-ops { display: inline-flex; gap: 8px; align-items: center; }
+      .card-upd { position: relative; font-size: 11px; color: var(--muted); }
+      .card-upd-pill { border: 0; background: #f1f5f9; color: #64748b; border-radius: 999px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+      .card-upd-label { font-weight: 500; }
+      .card-upd-value { font-variant-numeric: tabular-nums; }
+      .card-upd-pop { position: absolute; top: calc(100% + 6px); right: 0; min-width: 180px; padding: 8px 10px; border-radius: 8px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 40; }
+      .card-upd-pop.open { display: block; }
+      .card-upd-row { font-size: 12px; color: #0f172a; }
+      .card-upd-row + .card-upd-row { margin-top: 4px; }
+      .shape-dd { position: relative; }
+      .shape-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; height: 28px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+      .shape-menu { position: absolute; top: calc(100% + 6px); right: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; padding: 6px; z-index: 20; }
+      .shape-menu.open { display: flex; flex-direction: column; gap: 4px; }
+      .shape-item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+      .shape-item:hover { background: #f8fafc; }
+      .shape-ico svg { width: 16px; height: 16px; }
       .chart-container { background: #ffffff; padding: 10px; flex: 1; }
       .chart-canvas { width: 100%; height: 160px; display: block; }
       .canvas { min-height: calc(100vh - 32px); border: 2px dashed #e5e7eb; border-radius: 16px; background: #ffffff; display: grid; align-items: center; justify-items: center; padding: 24px; }
@@ -220,7 +246,7 @@
   </head>
   <body>
     <aside>
-      <div class="side-brand"><div class="logo"></div><div class="name">ALVA</div></div>
+      <div class="side-brand"><div class="logo"></div><div class="name">ALVA</div><button id="sidebarToggle" class="collapse-btn" aria-label="Collapse Navigation">«</button></div>
       <div class="icon-rail">
         <a class="rail-btn" href="index.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/></svg></a>
         <a class="rail-btn" href="explore.html" title="Explore" aria-label="Explore"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg></a>
@@ -497,6 +523,53 @@
       function genSeries() {
         return Array.from({ length: 16 }, (_, i) => 50 + Math.sin(i / 2.2) * 8 + (i % 4) - (i % 5) * 0.6);
       }
+      function initCardHeader(card, canvas, series, color, detailTs) {
+        const upd = card.querySelector('.card-upd');
+        if (upd) {
+          upd.setAttribute('data-updated', detailTs);
+          upd.setAttribute('data-interval', '1w');
+          const valEl = upd.querySelector('.card-upd-value');
+          if (valEl) {
+            const dt = new Date(detailTs.replace(' ', 'T').replace(' ', 'T'));
+            if (!isNaN(dt.getTime())) {
+              const mm = String(dt.getMonth() + 1).padStart(2, '0').replace(/^0/, '');
+              const dd = String(dt.getDate()).padStart(2, '0').replace(/^0/, '');
+              const hh = String(dt.getHours()).padStart(2, '0');
+              const mi = String(dt.getMinutes()).padStart(2, '0');
+              valEl.textContent = mm + '/' + dd + ' ' + hh + ':' + mi;
+            }
+          }
+        }
+        const dd = card.querySelector('.shape-dd');
+        if (dd && canvas) {
+          const btn = dd.querySelector('.shape-btn');
+          const menu = dd.querySelector('.shape-menu');
+          const ico = btn ? btn.querySelector('.shape-ico') : null;
+          if (btn && menu && ico) {
+            btn.addEventListener('click', (e) => { e.preventDefault(); menu.classList.toggle('open'); });
+            menu.querySelectorAll('.shape-item').forEach(item => {
+              item.addEventListener('click', () => {
+                const v = item.getAttribute('data-size');
+                if (v === 'sq-s') { card.dataset.w = '1'; card.dataset.h = '1'; canvas.dataset.h = '160'; }
+                if (v === 'sq-l') { card.dataset.w = '2'; card.dataset.h = '2'; canvas.dataset.h = '320'; }
+                if (v === 'rect-h') { card.dataset.w = '2'; card.dataset.h = '1'; canvas.dataset.h = '160'; }
+                if (v === 'rect-v') { card.dataset.w = '1'; card.dataset.h = '2'; canvas.dataset.h = '320'; }
+                ico.setAttribute('data-cur', v);
+                if (v === 'sq-s') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg>';
+                if (v === 'sq-l') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg>';
+                if (v === 'rect-h') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg>';
+                if (v === 'rect-v') ico.innerHTML = '<svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg>';
+                menu.classList.remove('open');
+                applyLayout();
+                charts.forEach(fn => fn());
+              });
+            });
+            document.addEventListener('click', (e) => { if (!dd.contains(e.target)) menu.classList.remove('open'); });
+          }
+        }
+        charts.push(() => drawLineChart(canvas, series, color));
+        charts.forEach(fn => fn());
+      }
       function addChartCard(title) {
         const grid = document.getElementById('dashGrid');
         if (!grid) return null;
@@ -508,7 +581,7 @@
         card.dataset.h = '1';
         const id = 'chart-' + Date.now();
         card.id = id;
-        card.innerHTML = '<div class="card-hd"><div class="card-title"></div></div><div class="chart-container"></div>';
+        card.innerHTML = '<div class="card-hd"><div class="card-title"></div><div class="card-ops"><div class="card-upd" data-updated="" data-interval="1w"><button class="card-upd-pill" type="button"><span class="card-upd-label">Last</span><span class="card-upd-value"></span></button><div class="card-upd-pop"><div class="card-upd-row card-upd-time"></div><div class="card-upd-row card-upd-interval"></div></div></div><div class="shape-dd"><button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button><div class="shape-menu"><button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button><button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button><button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button><button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button></div></div></div></div><div class="chart-container"></div>';
         grid.appendChild(card);
         const titleEl = card.querySelector('.card-title');
         if (titleEl) titleEl.textContent = title || 'New Chart';
@@ -520,8 +593,6 @@
         const colors = ['#0ea5e9', '#7c3aed', '#f59e0b', '#22c55e'];
         const idx = document.querySelectorAll('#dashGrid .chart-card').length;
         const color = colors[(idx - 1) % colors.length];
-        charts.push(() => drawLineChart(canvas, series, color));
-        charts.forEach(fn => fn());
         const detailTitleEl = card.querySelector('.card-title');
         const detailTitle = detailTitleEl ? detailTitleEl.textContent.trim() : title || 'New Chart';
         const now = new Date();
@@ -530,6 +601,7 @@
         const hh = String(now.getHours()).padStart(2, '0');
         const mi = String(now.getMinutes()).padStart(2, '0');
         const detailTs = now.getFullYear() + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
+        initCardHeader(card, canvas, series, color, detailTs);
         chartDetails.set(id, {
           id,
           title: detailTitle,
