@@ -1015,7 +1015,7 @@
             setTimeout(() => { createdMeta = addChartCard(cmd.title); ai.innerHTML = '<div class="chat-role">AI</div><div><span class="spin"></span>Rendering chart…</div>'; cfgChatList.scrollTop = cfgChatList.scrollHeight; }, 1800);
             setTimeout(() => {
               const target = (createdMeta && createdMeta.id) || '';
-              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + cmd.title + '</div><div class="res-meta">已创建图表并加入 Dashboard</div><div class="res-thumb"><canvas class="res-thumb-canvas" data-h="42"></canvas></div><div class="res-actions"><button class="btn-view" data-target="' + target + '">在仪表盘定位</button></div></div>';
+              ai.innerHTML = '<div class="chat-role">AI</div><div class="chat-result-card"><div class="res-title">' + cmd.title + '</div><div class="res-meta">已创建图表并加入 Dashboard</div><div class="res-thumb"><canvas class="res-thumb-canvas" data-h="42"></canvas></div><div class="res-actions"><button class="btn-view" data-target="' + target + '">View Detail</button></div></div>';
               const thumb = ai.querySelector('.res-thumb-canvas');
               if (thumb) {
                 thumb.dataset.h = '42';
