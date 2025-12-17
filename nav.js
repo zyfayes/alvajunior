@@ -103,7 +103,7 @@
   function detectActive() {
     const p = location.pathname.split('/').pop() || 'index.html';
     if (p === '' || p === 'index.html') return 'home';
-    if (p === 'community.html' || p === 'explore.html') return 'explore';
+    if (p === 'explore.html') return 'explore';
     return '';
   }
   function applyCollapsedFromStorage() {
