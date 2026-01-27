@@ -704,16 +704,6 @@ The strategy inherently manages risk through:
     <div id="chatPanel" class="chat-panel">
       <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
       <div class="bd">
-        <div class="bullet">Schedule: 00:00 UTC every Sunday on new weekly candle.</div>
-        <div class="bullet">Start timestamp: 1701302400000</div>
-        <div class="bullet">Initial capital: 1,000,000 (base currency)</div>
-        <div class="bullet">Changelog: Initial strategy based on specified rules.</div>
-        <div class="cfg-card">
-          <h3>BTC Weekly MA7—MA25 Crossover Allocator</h3>
-          <div class="bullet">Execution interval: 12:00 AM, only on Sunday</div>
-          <div class="bullet">Backtest Results: totalReturn 70.6%, sharpeRatio 0.68</div>
-          <button class="btn-activate">Activate</button>
-        </div>
         <div class="chat-box">
           <div id="cfgChatList" class="chat-list"></div>
           <div class="chat-compose">
@@ -770,6 +760,7 @@ The strategy inherently manages risk through:
       </div>
     </div>
     <script src="nav.js"></script>
+    <script src="chat-panel.js"></script>
     <script>
       const moreHandlers = {
         '#starred-more': { title: 'Starred · More', items: Array.from({length: 12}, (_, i) => `Starred Item ${i+1}`) },
@@ -791,22 +782,6 @@ The strategy inherently manages risk through:
       });
       document.querySelector('.subnav-close').addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
 
-      // Chat panel toggle
-      const chatPanel = document.getElementById('chatPanel');
-      const panelToggle = document.getElementById('panelToggle');
-      panelToggle.addEventListener('click', () => {
-        const collapsed = chatPanel.classList.toggle('collapsed');
-        document.body.classList.toggle('chat-collapsed', collapsed);
-        if (collapsed) {
-          panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
-          panelToggle.setAttribute('aria-label', 'Expand chat panel');
-          panelToggle.setAttribute('data-tip', 'Chat with Alva！');
-        } else {
-          panelToggle.textContent = '▾';
-          panelToggle.setAttribute('aria-label', 'Collapse chat panel');
-          panelToggle.removeAttribute('data-tip');
-        }
-      });
 
       const sidebarToggle = document.getElementById('sidebarToggle');
       sidebarToggle.addEventListener('click', () => {
@@ -1163,8 +1138,8 @@ return ma;`;
           const id = detailOverlay.dataset.currentId;
           const meta = chartDetails.get(id);
           if (!meta || !meta.title) return;
-          if (typeof addMention === 'function') {
-            addMention(meta.title);
+          if (window.addMention) {
+            window.addMention(meta.title);
           }
           const cfgChatInput = document.getElementById('cfgChatInput');
           if (cfgChatInput) {
@@ -1177,8 +1152,8 @@ return ma;`;
           const id = detailOverlay.dataset.currentId;
           const meta = chartDetails.get(id);
           if (!meta || !meta.title) return;
-          if (typeof addMention === 'function') {
-            addMention(meta.title);
+          if (window.addMention) {
+            window.addMention(meta.title);
           }
           const cfgChatInput = document.getElementById('cfgChatInput');
           if (cfgChatInput) {
@@ -1187,62 +1162,7 @@ return ma;`;
         });
       }
 
-      // Chat
-      const cfgChatList = document.getElementById('cfgChatList');
-      const cfgChatInput = document.getElementById('cfgChatInput');
-      const cfgChatSend = document.getElementById('cfgChatSend');
-      const chatAtBtn = document.getElementById('chatAtBtn');
-      const addContextMenu = document.getElementById('addContextMenu');
-      const addContextBody = document.getElementById('addContextBody');
-      
-      function insertAtCursor(el, text) {
-        const start = el.selectionStart || 0;
-        const end = el.selectionEnd || 0;
-        const val = el.value || '';
-        el.value = val.slice(0, start) + text + val.slice(end);
-        el.selectionStart = el.selectionEnd = start + text.length;
-        el.focus();
-        // Trigger input event to update mention chips (this will call renderMentionChips)
-        el.dispatchEvent(new Event('input', { bubbles: true }));
-        // Also call directly to ensure it runs
-        setTimeout(() => renderMentionChips(), 0);
-      }
-      
-      // Build button dropdown
-      const buildModeBtn = document.getElementById('buildModeBtn');
-      const buildMenu = document.getElementById('buildMenu');
-      if (buildModeBtn && buildMenu) {
-        buildModeBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          buildMenu.classList.toggle('open');
-        });
-        buildMenu.querySelectorAll('.build-menu-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const mode = item.getAttribute('data-mode');
-            buildModeBtn.setAttribute('data-mode', mode);
-            const label = mode === 'ask' ? 'Ask' : 'Build';
-            const ico = mode === 'ask'
-              ? '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 008 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1a2 2 0 110 4 2 2 0 010-4z" fill="currentColor"/></svg>'
-              : '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
-            buildModeBtn.innerHTML = ico + ' ' + label + ' <span>▾</span>';
-            buildMenu.querySelectorAll('.build-menu-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            buildMenu.classList.remove('open');
-            if (mode === 'ask') {
-              cfgChatInput.placeholder = 'Ask anything about investing';
-            } else {
-              cfgChatInput.placeholder = 'Build an investing playbook from your ideas';
-            }
-          });
-        });
-        document.addEventListener('click', (e) => {
-          const dd = buildModeBtn.closest('.build-btn-dd');
-          if (dd && !dd.contains(e.target)) buildMenu.classList.remove('open');
-        });
-      }
-      
-      // Add Context menu data
+      // Chat Panel - using shared component
       const contextData = {
         playbooks: [
           { label: 'Attribution Analysis Strategy for Price Trends', badge: 'Current', icon: 'chart' },
@@ -1268,245 +1188,38 @@ return ma;`;
           { label: 'chart_nvda_core_segments_trend', icon: 'widget' }
         ]
       };
-      
-      // Store active mentions separately from textarea content
-      let activeMentions = [];
-      
-      // Add a mention to the active list (without inserting text into textarea)
-      function addMention(label) {
-        if (!activeMentions.includes(label)) {
-          activeMentions.push(label);
-          renderMentionChips();
-        }
-      }
-      
-      // Remove a mention from the active list
-      function removeMentionFromList(label) {
-        activeMentions = activeMentions.filter(m => m !== label);
-        renderMentionChips();
-      }
-      
-      // Get final text with mentions appended
-      function getFinalInputText() {
-        const text = cfgChatInput.value.trim();
-        const mentionTexts = activeMentions.map(label => '@`' + label + '`').join(' ');
-        return text + (text && mentionTexts ? ' ' : '') + mentionTexts;
-      }
-      
-      // Get mention item info from contextData
-      function getMentionItem(label) {
-        for (const category of Object.keys(contextData)) {
-          const item = contextData[category].find(i => i.label === label);
-          if (item) return item;
-        }
-        return null;
-      }
-      
-      // Get icon SVG based on icon type
-      function getIconSvg(iconType) {
-        if (iconType === 'chart') {
-          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
-        } else if (iconType === 'list') {
-          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
-        } else if (iconType === 'refresh') {
-          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
-        } else if (iconType === 'widget') {
-          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M4 10l2-2 2 2 4-4 2 2v2H4z" fill="currentColor" opacity="0.6"/><circle cx="5" cy="6" r="0.8" fill="currentColor"/></svg>';
-        }
-        return '';
-      }
-      
-      // Render mention chips
-      function renderMentionChips() {
-        const container = document.getElementById('mentionChipsContainer');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        // Toggle class on parent card based on whether there are mentions
-        const card = container.closest('.chat-input-card');
-        if (card) {
-          if (activeMentions.length > 0) {
-            card.classList.add('has-mentions');
-          } else {
-            card.classList.remove('has-mentions');
-          }
-        }
-        
-        activeMentions.forEach(label => {
-          const item = getMentionItem(label);
-          const chip = document.createElement('div');
-          chip.className = 'mention-chip';
-          
-          const icon = document.createElement('div');
-          icon.className = 'mention-chip-icon';
-          icon.innerHTML = getIconSvg(item ? item.icon : 'widget');
-          
-          const labelEl = document.createElement('span');
-          labelEl.className = 'mention-chip-label';
-          labelEl.textContent = label;
-          
-          const removeBtn = document.createElement('button');
-          removeBtn.className = 'mention-chip-remove';
-          removeBtn.type = 'button';
-          removeBtn.setAttribute('aria-label', 'Remove');
-          removeBtn.innerHTML = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-          removeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            removeMentionFromList(label);
-          });
-          
-          chip.appendChild(icon);
-          chip.appendChild(labelEl);
-          chip.appendChild(removeBtn);
-          container.appendChild(chip);
-        });
-      }
-      
-      function buildAddContextMenu() {
-        if (!addContextBody) return;
-        addContextBody.innerHTML = '';
-        Object.keys(contextData).forEach(category => {
-          const categoryDiv = document.createElement('div');
-          categoryDiv.className = 'add-context-category';
-          const title = document.createElement('div');
-          title.className = 'add-context-category-title';
-          title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-          categoryDiv.appendChild(title);
-          contextData[category].forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'add-context-item';
-            const icon = document.createElement('div');
-            icon.className = 'add-context-item-icon';
-            let iconSvg = '';
-            if (item.icon === 'chart') {
-              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
-            } else if (item.icon === 'list') {
-              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
-            } else if (item.icon === 'refresh') {
-              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
-            } else {
-              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1"/></svg>';
+
+      const chatPanel = new ChatPanel('chatPanel', {
+        showConfigArea: true,
+        configItems: [
+          { type: 'bullet', text: 'Schedule: 00:00 UTC every Sunday on new weekly candle.' },
+          { type: 'bullet', text: 'Start timestamp: 1701302400000' },
+          { type: 'bullet', text: 'Initial capital: 1,000,000 (base currency)' },
+          { type: 'bullet', text: 'Changelog: Initial strategy based on specified rules.' },
+          {
+            type: 'card',
+            title: 'BTC Weekly MA7—MA25 Crossover Allocator',
+            bullets: [
+              'Execution interval: 12:00 AM, only on Sunday',
+              'Backtest Results: totalReturn 70.6%, sharpeRatio 0.68'
+            ],
+            activateButton: {
+              text: 'Activate',
+              onClick: () => {
+                console.log('Activate button clicked');
+              }
             }
-            icon.innerHTML = iconSvg;
-            const content = document.createElement('div');
-            content.className = 'add-context-item-content';
-            const label = document.createElement('div');
-            label.className = 'add-context-item-label';
-            label.textContent = item.label;
-            content.appendChild(label);
-            if (item.badge) {
-              const badge = document.createElement('div');
-              badge.className = 'add-context-item-badge';
-              badge.textContent = item.badge;
-              content.appendChild(badge);
-            }
-            itemDiv.appendChild(icon);
-            itemDiv.appendChild(content);
-            itemDiv.addEventListener('click', () => {
-              addMention(item.label);
-              hideAddContextMenu();
-            });
-            categoryDiv.appendChild(itemDiv);
-          });
-          addContextBody.appendChild(categoryDiv);
-        });
-      }
-      
-      function showAddContextMenu() {
-        if (!addContextMenu) return;
-        buildAddContextMenu();
-        const inputRect = cfgChatInput.getBoundingClientRect();
-        
-        // Temporarily show menu to get its dimensions
-        addContextMenu.style.visibility = 'hidden';
-        addContextMenu.style.display = 'flex';
-        const menuRect = addContextMenu.getBoundingClientRect();
-        
-        // Use fixed positioning relative to viewport
-        const left = inputRect.left + 6;
-        // Position menu so its bottom aligns with input top, expand upwards
-        const top = inputRect.top - menuRect.height - 4;
-        
-        addContextMenu.style.left = left + 'px';
-        addContextMenu.style.top = Math.max(4, top) + 'px';
-        addContextMenu.style.visibility = 'visible';
-        addContextMenu.classList.add('open');
-      }
-      
-      function hideAddContextMenu() {
-        if (!addContextMenu) return;
-        addContextMenu.classList.remove('open');
-        addContextMenu.style.visibility = '';
-        addContextMenu.style.display = '';
-      }
-      
-      if (chatAtBtn) {
-        chatAtBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (addContextMenu && addContextMenu.classList.contains('open')) {
-            hideAddContextMenu();
-          } else {
-            showAddContextMenu();
           }
-        });
-      }
-      
-      cfgChatInput.addEventListener('input', (e) => {
-        // Remove any @`...` text that might have been typed or pasted
-        const text = cfgChatInput.value;
-        const cleanedText = text.replace(/@`([^`]+)`/g, '');
-        if (cleanedText !== text) {
-          const cursorPos = cfgChatInput.selectionStart;
-          cfgChatInput.value = cleanedText;
-          cfgChatInput.selectionStart = cfgChatInput.selectionEnd = Math.min(cursorPos, cleanedText.length);
+        ],
+        contextData: contextData
+      });
+
+      // Expose addMention for use by detail page buttons
+      window.addMention = (label) => {
+        if (chatPanel) {
+          chatPanel.addMentionFromExternal(label);
         }
-        
-        // Check if user typed '@' to show menu
-        try {
-          const pos = cfgChatInput.selectionStart || 0;
-          const prev = cfgChatInput.value.slice(pos - 1, pos);
-          if (prev === '@') {
-            showAddContextMenu();
-          }
-        } catch {}
-      });
-      
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && addContextMenu) {
-          hideAddContextMenu();
-        }
-      });
-      
-      document.addEventListener('click', (e) => {
-        const compose = document.querySelector('.chat-compose');
-        if (compose && addContextMenu && !compose.contains(e.target) && !addContextMenu.contains(e.target)) {
-          hideAddContextMenu();
-        }
-      });
-      
-      cfgChatSend.addEventListener('click', () => {
-        const text = getFinalInputText();
-        if (!text.trim()) return;
-        const you = document.createElement('div');
-        you.className = 'chat-msg msg-you';
-        you.innerHTML = '<div class="chat-role">You</div><div>' + text + '</div>';
-        cfgChatList.appendChild(you);
-        cfgChatInput.value = '';
-        activeMentions = [];
-        renderMentionChips();
-        setTimeout(() => {
-          const ai = document.createElement('div');
-          ai.className = 'chat-msg msg-ai';
-          ai.innerHTML = '<div class="chat-role">AI</div><div>Noted. This box is for chatting about the current playbook.</div>';
-          cfgChatList.appendChild(ai);
-          cfgChatList.scrollTop = cfgChatList.scrollHeight;
-        }, 500);
-      });
-      
-      // Initialize mention chips on page load
-      renderMentionChips();
+      };
 
       // Edit History Panel
       const editHistoryBtn = document.getElementById('editHistoryBtn');
