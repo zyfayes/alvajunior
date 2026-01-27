@@ -1,0 +1,16 @@
+{
+  "name": "alva-navbar",
+  "version": "1.0.0",
+  "description": "Alva Navbar Prototype",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx http-server . -p 8080 -o"
+  },
+  "keywords": [
+    "navbar",
+    "prototype"
+  ],
+  "author": "",
+  "license": "ISC"
+}

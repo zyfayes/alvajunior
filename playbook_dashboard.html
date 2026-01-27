@@ -4,82 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Alva · Playbook Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
     <style>
-      :root { --bg: #ffffff; --panel: #f8fafc; --text: #111827; --muted: #6b7280; --accent: #14b8a6; --border: #e5e7eb; }
-      * { box-sizing: border-box; }
-      html, body { height: 100%; }
-      body { margin: 0; display: grid; grid-template-columns: 260px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar main"; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
-      body.subnav-open { grid-template-columns: 260px 220px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar subnav main"; }
-      body.sidebar-collapsed { grid-template-columns: 60px 1fr; }
-      body.sidebar-collapsed .name, body.sidebar-collapsed .nav-top, body.sidebar-collapsed .nav-scroll, body.sidebar-collapsed .nav-bottom, body.sidebar-collapsed .nav-new-chat { display: none; }
-      body.sidebar-collapsed .icon-rail { display: flex; }
-
-      aside { grid-area: sidebar; height: 100vh; position: sticky; top: 0; border-right: 1px solid #3a3a48; background: #2A2A38; padding: 12px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-      nav { display: flex; flex-direction: column; gap: 12px; height: 100%; }
-      .nav-new-chat { padding: 0 6px 6px; }
-      .new-chat-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e5e7eb; background: #f8fafc; color: #111827; border-radius: 10px; padding: 8px 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-      .new-chat-btn:hover { background: #ffffff; }
-      .new-chat-btn svg { width: 14px; height: 14px; fill: #374151; }
-      .nav-top { padding: 4px 0; }
-      .nav-scroll { flex: 1; overflow-y: auto; padding-right: 4px; }
-      .nav-bottom { padding-top: 12px; border-top: 1px solid #3a3a48; position: sticky; bottom: 0; background: #2A2A38; }
-      .me-icons { display: flex; gap: 8px; }
-      .nav-bottom .icon-btn { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-      .nav-bottom .icon-btn svg { width: 16px; height: 16px; }
-      .icon-rail { display: none; flex-direction: column; gap: 6px; padding: 0 6px; }
-      .rail-btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-      .rail-btn:hover { border-color: #24513b; }
-      .rail-btn svg { width: 18px; height: 18px; fill: #a7f3d0; opacity: 0.9; }
-      .side-brand { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-weight: 800; letter-spacing: 0.8px; }
-      .side-brand .logo { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), #16a34a); box-shadow: 0 0 0 1px #0b5d31 inset; }
-      .side-brand .name { font-size: 13px; color: #e5e7eb; }
-      .collapse-btn { margin-left: auto; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; width: 24px; height: 24px; line-height: 22px; text-align: center; cursor: pointer; }
-      .collapse-btn:hover { border-color: #14b8a6; }
-      .section { display: flex; flex-direction: column; gap: 6px; }
-      .section-title { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.6px; padding: 0 6px; }
-      .section-title-row { display: flex; align-items: center; justify-content: space-between; }
-      .with-divider { border-top: 1px solid #182030; padding-top: 8px; margin-top: 4px; }
-      ul { list-style: none; margin: 0; padding: 0; }
-      li { display: block; }
-      a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 1px 0; border-radius: 8px; color: var(--text); text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
-      a:hover { background: #e2e8f0; }
-      aside a { color: #e5e7eb; }
-      aside a:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
-      aside a.active { background: rgba(255,255,255,0.10); color: #ffffff; }
-      .badge { margin-left: auto; font-size: 10px; color: var(--muted); }
-      .more { color: var(--muted); }
-      .more:hover { color: var(--text); }
-      .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 6px; box-shadow: 0 0 0 2px #ffffff; }
-
-      .subnav { grid-area: subnav; height: 100vh; position: sticky; top: 0; border-right: 1px solid var(--border); background: #ffffff; display: none; flex-direction: column; }
-      .subnav a { color: #111827; }
-      .subnav a:hover { background: #f1f5f9; color: #111827; }
-      body.subnav-open .subnav { display: flex; }
-      .subnav-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--border); }
-      .subnav-title { font-size: 13px; font-weight: 600; }
-      .subnav-content { flex: 1; overflow-y: auto; padding: 8px 10px; }
-      .subnav-content ul { display: flex; flex-direction: column; gap: 4px; }
-      .subnav-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 4px 8px; }
-
-      main { grid-area: main; padding: 16px; }
+      /* Page-specific styles for dashboard */
       .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
       .paper .bd { padding: 12px 14px; }
-      #dashPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; position: relative; }
+      #dashPanel { display: flex; flex-direction: column; position: relative; }
       #dashPanel .bd { flex: 1; }
-      #configPanel { min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
-      #configPanel .bd { flex: 1; display: flex; flex-direction: column; }
       .title { font-weight: 700; }
       .last-updated { color: var(--muted); font-size: 12px; }
       .toggle { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
-      .detail { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
-      .detail.right-collapsed { grid-template-columns: 1fr max-content; }
-      .detail.right-collapsed #configPanel { overflow: visible; background: transparent; border: 0; box-shadow: none; }
-      .detail.right-collapsed #configPanel .title { display: none; }
-      .detail.right-collapsed #configPanel .bd { display: none; }
-      .detail.right-collapsed #configPanel .hd { padding: 12px 14px; justify-content: center; }
-      .detail.right-collapsed #configPanel .toggle { padding: 4px; border: 0; background: transparent; position: relative; }
-      .detail.right-collapsed #configPanel .toggle:hover::after { content: attr(data-tip); position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); background: #ffffff; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; white-space: nowrap; box-shadow: 0 8px 16px rgba(0,0,0,0.12); z-index: 10; }
       .orb { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #a7f3d0 0%, #22c55e 35%, #16a34a 65%, #0b1220 100%); box-shadow: 0 0 12px rgba(34,197,94,0.6), inset 0 0 8px rgba(11,93,49,0.6); }
       @keyframes orbPulse { from { box-shadow: 0 0 8px rgba(34,197,94,0.4), inset 0 0 4px rgba(11,93,49,0.4); } to { box-shadow: 0 0 14px rgba(34,197,94,0.8), inset 0 0 8px rgba(11,93,49,0.7); } }
       .orb { animation: orbPulse 2.6s ease-in-out infinite alternate; }
@@ -136,9 +71,9 @@
       .chat-msg code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; background: #f3f4f6; border-radius: 4px; padding: 0 4px; }
       .msg-ai { background: #ffffff; }
       .msg-you { background: #f8fafc; }
-      #configPanel .bd { display: flex; flex-direction: column; }
-      .chat-box { display: flex; flex-direction: column; flex: 1; }
-      .chat-compose { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; position: relative; }
+      #configPanel .bd { display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
+      .chat-box { display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; }
+      .chat-compose { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); position: relative; width: 100%; box-sizing: border-box; }
       .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 13px 14px; min-height: 96px; resize: vertical; }
       .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; }
       .spin { width: 14px; height: 14px; border: 2px solid #e5e7eb; border-top-color: #a7f3d0; border-right-color: #a7f3d0; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 6px; }
@@ -214,23 +149,73 @@
       .detail-modal { max-width: 960px; margin: 0 auto; padding: 12px 0 16px; display: flex; flex-direction: column; gap: 12px; }
       .detail-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 2px; }
       .detail-header-left { display: flex; flex-direction: column; gap: 4px; }
+      .detail-header-actions { display: flex; align-items: center; gap: 8px; }
+      .detail-action-btn { border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s ease; }
+      .detail-action-btn-primary { background: #14b8a6; color: #ffffff; border-color: #14b8a6; }
+      .detail-action-btn-primary:hover { background: #0f766e; border-color: #0f766e; }
+      .detail-action-btn-secondary { background: #ffffff; color: #374151; border-color: var(--border); }
+      .detail-action-btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+      .detail-action-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        color: #374151;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+      }
+      .detail-action-icon-btn:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+      .detail-action-icon-btn svg {
+        width: 18px;
+        height: 18px;
+      }
       .detail-breadcrumb { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
       .detail-breadcrumb-back { border: 0; background: transparent; color: #0f766e; padding: 0; cursor: pointer; font-size: 12px; }
       .detail-breadcrumb-back:hover { text-decoration: underline; }
       .detail-breadcrumb-current { color: #0f172a; font-weight: 500; }
       .detail-title { font-size: 18px; font-weight: 700; }
+      .detail-subtitle { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+      .detail-subtitle-book-icon { display: inline-flex; align-items: center; width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+      .detail-status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-left: 4px; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(34,197,94,0.2); animation: statusPulse 2s ease-in-out infinite; }
+      @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
       .detail-meta { margin-top: 4px; padding: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
       .detail-meta-item span:first-child { margin-right: 4px; color: #6b7280; }
+      .detail-meta-clickable { position: relative; cursor: pointer; color: #0f766e; display: flex; align-items: center; gap: 5px; }
+      .detail-meta-clickable:hover { color: #14b8a6; }
+      .detail-meta-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.8; }
+      .detail-meta-clickable:hover .detail-meta-icon { opacity: 1; }
+      .detail-meta-popover { position: absolute; top: calc(100% + 8px); left: 0; min-width: 280px; max-width: 400px; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 50; }
+      .detail-meta-popover.open { display: block; }
+      .detail-meta-popover-header { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; color: #0f172a; }
+      .detail-meta-popover-list { max-height: 300px; overflow-y: auto; padding: 6px; }
+      .detail-meta-popover-item { padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #0f172a; cursor: pointer; }
+      .detail-meta-popover-item:hover { background: #f8fafc; }
       .detail-body { margin-top: 10px; display: flex; align-items: flex-start; gap: 16px; }
       .detail-main { flex: 1; display: flex; flex-direction: column; gap: 12px; }
       .detail-chart-wrap { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: #f8fafc; }
       .detail-chart { width: 100%; height: 220px; display: block; }
       .detail-logic-card { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #f9fafb; display: flex; flex-direction: column; gap: 6px; }
-      .detail-logic-header { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 4px; }
+      .detail-logic-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
       .detail-logic-title { font-size: 13px; font-weight: 600; }
       .detail-desc { font-size: 13px; color: #0f172a; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
       .detail-desc-main { display: flex; align-items: flex-start; gap: 8px; }
-      .detail-insight { font-size: 12px; color: #0f766e; }
+      .detail-content-view { margin: 0; width: 100%; }
+      .detail-content-view code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; background: #e5e7eb; border: 1px solid #d1d5db; border-radius: 4px; padding: 3px 8px; color: #111827; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: inline-block; }
+      .detail-content-view code span { display: inline-flex; align-items: center; white-space: nowrap; }
+      #detailCodeText { background: #1e293b; color: #e2e8f0; border-radius: 6px; padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 0; width: 100%; box-sizing: border-box; }
+      #detailCodeText code { background: transparent; color: inherit; padding: 0; font-size: inherit; display: block; width: 100%; white-space: pre; }
+      .detail-view-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; background: #ffffff; padding: 2px; gap: 2px; }
+      .detail-view-toggle-btn { border: 0; background: transparent; color: #6b7280; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: all 0.2s ease; }
+      .detail-view-toggle-btn:hover { background: #f8fafc; color: #374151; }
+      .detail-view-toggle-btn.active { background: #f3f4f6; color: #0f172a; font-weight: 600; }
       .detail-table-wrap { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #ffffff; }
       .detail-table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
       .detail-table-title { font-size: 13px; font-weight: 600; }
@@ -252,7 +237,7 @@
       .detail-ds-body { font-size: 12px; color: #0f172a; line-height: 1.5; }
     </style>
   </head>
-  <body>
+  <body class="has-chat-panel">
     <aside></aside>
     <aside class="subnav">
       <div class="subnav-header"><div class="subnav-title">More</div><button class="subnav-close" type="button">Close</button></div>
@@ -274,7 +259,7 @@
         </div>
       </div>
     </div>
-    <main class="detail">
+    <main>
       <div id="dashboardView">
         <section id="dashPanel" class="paper">
           <div class="hd">
@@ -282,9 +267,9 @@
           </div>
           <div class="bd">
             <div id="dashGrid" class="dash-grid">
-              <div class="chart-card" data-w="1" data-h="1" draggable="true">
+              <div class="chart-card" id="chart-btc-ma25-prev" data-w="1" data-h="1" draggable="true">
                 <div class="card-hd">
-                  <div class="card-title">Btc Ma25 Prev</div>
+                  <div class="card-title" onclick="openChartDetail('chart-btc-ma25-prev')">Btc Ma25 Prev</div>
                   <div class="card-ops">
                     <div class="card-upd" data-updated="2025-12-06 10:24" data-interval="1w">
                       <button class="card-upd-pill" type="button">
@@ -361,16 +346,36 @@
         <div class="detail-modal">
           <div class="detail-header">
             <div class="detail-header-left">
-              <div class="detail-breadcrumb">
-                <button id="detailBack" class="detail-breadcrumb-back" type="button">Playbook Dashboard</button>
-                <span class="detail-breadcrumb-sep">/</span>
-                <span id="detailBreadcrumbTitle" class="detail-breadcrumb-current"></span>
-              </div>
               <div id="detailTitle" class="detail-title"></div>
+              <div id="detailSubtitle" class="detail-subtitle"></div>
+            </div>
+            <div class="detail-header-actions">
+              <button id="detailSaveBtn" class="detail-action-icon-btn" type="button" title="Save to Library" aria-label="Save to Library">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 4h10a1 1 0 0 1 1 1v14l-6-3-6 3V5a1 1 0 0 1 1-1z"/>
+                </svg>
+              </button>
+              <button id="detailUseBtn" class="detail-action-btn detail-action-btn-secondary" type="button" title="Use creates a live reference in your Playbook.">Use</button>
+              <button id="detailRemixBtn" class="detail-action-btn detail-action-btn-primary" type="button" title="Remix creates an editable copy. No live dependency.">Remix</button>
             </div>
           </div>
           <div class="detail-meta">
-            <div class="detail-meta-item"><span>Author</span><span id="detailAuthor"></span></div>
+            <div class="detail-meta-item detail-meta-clickable" id="detailReferences">
+              <svg class="detail-meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8h8M8 4v8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6 6l4 4M10 6l-4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              <span id="detailReferencesCount">17</span> <span>References</span>
+              <div class="detail-meta-popover" id="referencesPopover">
+                <div class="detail-meta-popover-header">Referenced by Playbooks</div>
+                <div class="detail-meta-popover-list" id="referencesList"></div>
+              </div>
+            </div>
+            <div class="detail-meta-item detail-meta-clickable" id="detailRemixs">
+              <svg class="detail-meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4C2.5 4 5 2 8 6C8 6 11 10 13.5 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 12C2.5 12 5 14 8 10C8 10 11 6 13.5 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polygon points="13.5,8 14.8,8.8 13.5,9.6" fill="currentColor"/><polygon points="13.5,8 14.8,7.2 13.5,6.4" fill="currentColor"/></svg>
+              <span id="detailRemixsCount">42</span> <span>Remixs</span>
+              <div class="detail-meta-popover" id="remixsPopover">
+                <div class="detail-meta-popover-header">Remix Records</div>
+                <div class="detail-meta-popover-list" id="remixsList"></div>
+              </div>
+            </div>
             <div class="detail-meta-item"><span>Created at</span><span id="detailCreated"></span></div>
             <div class="detail-meta-item"><span>Last updated</span><span id="detailUpdated"></span></div>
             <div class="detail-meta-item"><span>Refresh interval</span><span id="detailInterval"></span></div>
@@ -382,16 +387,21 @@
               </div>
               <div class="detail-logic-card">
                 <div class="detail-logic-header">
-                  <div class="detail-logic-title">Generation logic & insight</div>
+                  <div class="detail-logic-title">Logic</div>
+                  <div class="detail-view-toggle">
+                    <button class="detail-view-toggle-btn active" data-view="idea" type="button" aria-label="Idea view">
+                      <span>Idea</span>
+                    </button>
+                    <button class="detail-view-toggle-btn" data-view="code" type="button" aria-label="Code view">
+                      <span>Code</span>
+                    </button>
+                  </div>
                 </div>
                 <div id="detailDesc" class="detail-desc">
                   <div class="detail-desc-main">
-                    <p id="detailLogicText"></p>
-                    <button id="detailDatasourceBtn" class="detail-ds-btn" type="button" aria-label="Datasource">
-                      <span class="detail-ds-icon">&lt;/&gt;</span>
-                    </button>
+                    <p id="detailLogicText" class="detail-content-view"></p>
+                    <pre id="detailCodeText" class="detail-content-view" style="display: none;"><code id="detailCodeContent"></code></pre>
                   </div>
-                  <p id="detailInsightText" class="detail-insight"></p>
                 </div>
               </div>
               <div class="detail-table-wrap">
@@ -417,30 +427,66 @@
           </div>
         </div>
       </div>
-      <div id="configPanel" class="paper">
-        <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
-        <div class="bd">
-          <div class="chat-box">
-            <div id="cfgChatList" class="chat-list"></div>
-            <div class="chat-compose">
-              <textarea id="cfgChatInput" class="chat-input" placeholder="Ask anything about investing" rows="4"></textarea>
+    </main>
+    <div id="configPanel" class="chat-panel">
+      <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
+      <div class="bd">
+        <div class="chat-box">
+          <div id="cfgChatList" class="chat-list"></div>
+          <div class="chat-compose">
+            <div class="chat-input-card">
+              <textarea id="cfgChatInput" class="chat-textarea" placeholder="Build an investing playbook from your ideas"></textarea>
+              <div id="mentionChipsContainer" class="mention-chips-container"></div>
               <div id="mentionMenu" class="mention-menu"><div class="mention-list"></div></div>
+              <div id="addContextMenu" class="add-context-menu">
+                <div class="add-context-header">Add Context</div>
+                <div class="add-context-body" id="addContextBody"></div>
+              </div>
               <div class="chat-toolbar">
-                <div class="mode-dd">
-                  <button id="chatModeBtn" class="mode-btn" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span class="mode-label">Charts</span> ▾</button>
-                  <div id="chatModeMenu" class="mode-menu">
-                    <button class="mode-item" data-mode="charts"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg></span><span>Charts</span></button>
-                    <button class="mode-item" data-mode="strategy"><span class="mode-ico"><svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg></span><span>Strategy</span></button>
+                <div class="build-btn-dd">
+                  <button id="buildModeBtn" class="build-btn" type="button" data-mode="build">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/>
+                    </svg>
+                    Build
+                    <span>▾</span>
+                  </button>
+                  <div id="buildMenu" class="build-menu">
+                    <button class="build-menu-item" data-mode="ask">
+                      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 008 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1a2 2 0 110 4 2 2 0 010-4z" fill="currentColor"/>
+                      </svg>
+                      Ask
+                    </button>
+                    <button class="build-menu-item active" data-mode="build">
+                      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/>
+                      </svg>
+                      Build
+                    </button>
                   </div>
                 </div>
-                <button id="chatAtBtn" class="at-btn">@</button>
+                <div class="toolbar-right">
+                  <button id="chatAtBtn" class="toolbar-icon-btn" type="button" aria-label="Mention">@</button>
+                  <button class="toolbar-icon-btn" type="button" aria-label="Upload image">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <path d="M4 10l2-2 2 2 4-4 2 2v2H4z" fill="currentColor" opacity="0.6"/>
+                      <circle cx="5" cy="6" r="0.8" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button id="cfgChatSend" class="toolbar-icon-btn send-btn" type="button" aria-label="Send">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 8l12-6-6 6 6 6L2 8z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
-              <button id="cfgChatSend" class="chat-send">Send</button>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
     <script src="nav.js"></script>
     <script>
       const charts = [];
@@ -516,7 +562,7 @@
             chartDetails.set(card.id, {
               id: card.id,
               title,
-              author: 'Alva',
+              author: '@Sheer',
               created: updated || '2025-12-06 10:00',
               updated,
               interval,
@@ -672,7 +718,7 @@
         chartDetails.set(id, {
           id,
           title: detailTitle,
-          author: 'Alva',
+          author: '@Sheer',
           created: detailTs || '',
           updated: detailTs || '',
           interval: '1w',
@@ -725,7 +771,7 @@
         listEl.querySelectorAll('.mention-item').forEach(btn => {
           btn.addEventListener('click', () => {
             const title = btn.getAttribute('data-title');
-            insertAtCursor(cfgChatInput, '@`' + title + '` ');
+            addMention(title);
             menu.classList.remove('open');
             menu.style.display = 'none';
           });
@@ -738,65 +784,96 @@
         el.value = val.slice(0, start) + text + val.slice(end);
         el.selectionStart = el.selectionEnd = start + text.length;
         el.focus();
+        // Trigger input event to update mention chips (this will call renderMentionChips)
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        // Also call directly to ensure it runs
+        setTimeout(() => renderMentionChips(), 0);
       }
       function escapeHtml(text) {
         return (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
       function renderInlineMarkdown(text) {
+        if (!text) return '';
+        // First escape HTML to prevent XSS
         const esc = escapeHtml(text);
-        return esc.replace(/`([^`]+)`/g, '<code>$1</code>');
+        // Then convert markdown code blocks (backticks) to HTML code tags with table icon
+        // Match backticks that are not already escaped
+        const tableIcon = '<svg style="display: inline-block; width: 11px; height: 11px; vertical-align: middle; margin-right: 5px; opacity: 0.75; flex-shrink: 0;" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="12" height="12" stroke="currentColor" stroke-width="1" fill="none"/><line x1="2" y1="6" x2="14" y2="6" stroke="currentColor" stroke-width="1"/><line x1="2" y1="10" x2="14" y2="10" stroke="currentColor" stroke-width="1"/><line x1="6" y1="2" x2="6" y2="14" stroke="currentColor" stroke-width="1"/><line x1="10" y1="2" x2="10" y2="14" stroke="currentColor" stroke-width="1"/></svg>';
+        return esc.replace(/`([^`]+)`/g, '<code style="white-space: nowrap;"><span style="display: inline-flex; align-items: center;">' + tableIcon + '<span>$1</span></span></code>');
       }
       const dashboardView = document.getElementById('dashboardView');
       const detailOverlay = document.getElementById('chartDetailOverlay');
       const detailClose = document.getElementById('detailClose');
-      const detailBack = document.getElementById('detailBack');
-      const detailBreadcrumbTitle = document.getElementById('detailBreadcrumbTitle');
       const detailTitle = document.getElementById('detailTitle');
+      const detailSubtitle = document.getElementById('detailSubtitle');
       const detailAuthor = document.getElementById('detailAuthor');
       const detailCreated = document.getElementById('detailCreated');
       const detailUpdated = document.getElementById('detailUpdated');
       const detailInterval = document.getElementById('detailInterval');
       const detailLogicText = document.getElementById('detailLogicText');
-      const detailInsightText = document.getElementById('detailInsightText');
       const detailChartCanvas = document.getElementById('detailChartCanvas');
       const detailTableBody = document.getElementById('detailTableBody');
       const detailDownload = document.getElementById('detailDownload');
-      const detailDatasourceBtn = document.getElementById('detailDatasourceBtn');
-      const detailDatasourceSidebar = document.getElementById('detailDatasourceSidebar');
-      const detailDatasourceContent = document.getElementById('detailDatasourceContent');
-      const detailDatasourceClose = document.getElementById('detailDatasourceClose');
       function buildDetailDesc(meta) {
         const t = (meta.title || '').toLowerCase();
+        let baseText = '';
+        let dataStream = 'BTC 价格';
         if (t.includes('btc') && t.includes('ma25') && (t.includes(' w') || t.endsWith('w'))) {
-          return 'This chart shows the 25‑period moving average of BTC on the weekly timeframe. Each point is the arithmetic mean of the latest 25 weekly closes, smoothing out short‑term noise and highlighting medium‑term trend shifts and key support/resistance areas.';
+          baseText = 'This chart shows the 25‑period moving average of BTC on the weekly timeframe. Each point is the arithmetic mean of the latest 25 weekly closes, smoothing out short‑term noise and highlighting medium‑term trend shifts and key support/resistance areas.';
+        } else if (t.includes('btc') && t.includes('ma25')) {
+          baseText = 'This chart shows a 25‑period moving average of BTC on the selected timeframe. It averages the last 25 candle closes to filter out minor fluctuations and focus on the mid‑term structure of price action.';
+        } else {
+          baseText = 'This chart is built from a time‑series dataset where each point represents the value observed at a fixed interval. It is useful for reading trend direction, rhythm of swings and local extremes, which together help evaluate market regime and strategy performance.';
+          dataStream = 'data stream';
         }
-        if (t.includes('btc') && t.includes('ma25')) {
-          return 'This chart shows a 25‑period moving average of BTC on the selected timeframe. It averages the last 25 candle closes to filter out minor fluctuations and focus on the mid‑term structure of price action.';
-        }
-        return 'This chart is built from a time‑series dataset where each point represents the value observed at a fixed interval. It is useful for reading trend direction, rhythm of swings and local extremes, which together help evaluate market regime and strategy performance.';
+        return baseText + ' Referenced from the `' + dataStream + '` data stream.';
       }
-      function buildDetailInsight(meta) {
-        const data = meta.series || [];
-        if (!data.length) return 'There is not enough data yet for a meaningful interpretation. Keep watching as more observations come in.';
-        const last = data[data.length - 1];
-        const prev = data.length > 1 ? data[data.length - 2] : last;
-        const diff = last - prev;
-        const t = (meta.title || '').toUpperCase();
-        const name = t.includes('BTC') ? 'BTC' : 'the instrument';
-        if (diff > 0) {
-          return name + ' has ticked higher at the latest observation, indicating short‑term upward momentum. As long as price stays around or above the average, this can be read as an extension of the prevailing up‑trend, but volume and higher‑timeframe structure still need to confirm.';
+      function buildSubtitle(meta) {
+        const bookIcon = '<svg class="detail-subtitle-book-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 2h10v12H3V2zm1 1v10h8V3H4z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M5 3h6M5 5h6M5 7h4" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>';
+        const title = meta.title || 'Chart';
+        let description = title;
+        const t = title.toLowerCase();
+        if (t.includes('btc') && t.includes('ma')) {
+          if (t.includes('weekly') || t.includes(' w') || t.endsWith('w')) {
+            description = 'BTC Weekly MA7–MA25 Crossover Allocator';
+          } else {
+            description = 'BTC MA7–MA25 Crossover Allocator';
+          }
         }
-        if (diff < 0) {
-          return name + ' has pulled back slightly versus the previous observation, suggesting some profit‑taking or a short‑term consolidation. As long as the move does not break decisively below the average and the drawdown remains contained, the broader trend can still be considered healthy.';
-        }
-        return name + ' is almost unchanged over the last two observations, which points to a short consolidation zone. Such sideways phases often act as a staging area before the next leg of trend, so the eventual breakout direction and any volume expansion will be key to watch.';
+        const runningDot = '<span class="detail-status-dot" title="Running" aria-label="Running"></span>';
+        return 'Created by @Sheer · ' + bookIcon + ' ' + description + ' ' + runningDot;
       }
-      function buildDatasourceDesc(meta) {
+      function buildCodeContent(meta) {
         const t = (meta.title || '').toLowerCase();
-        if (t.includes('btc')) {
-          return 'Datasource example:\n\n1. Venue: major spot exchanges such as Binance / OKX\n2. Symbol: BTCUSDT spot price\n3. Frequency: weekly close (the last candle close of each week)\n4. Lookback: roughly the last 2–3 years to cover a full bull–bear cycle\n5. Processing: fetch raw OHLC candles in time order, then compute a rolling 25‑period moving average to construct this curve.';
+        if (t.includes('btc') && t.includes('ma25')) {
+          return `// BTC 25-period Moving Average
+const symbol = 'BTCUSDT';
+const period = 25;
+const timeframe = '1w';
+
+// Fetch historical data
+const candles = await fetchOHLC({
+  symbol: symbol,
+  timeframe: timeframe,
+  limit: 100
+});
+
+// Calculate moving average
+const closes = candles.map(c => c.close);
+const ma25 = calculateMA(closes, period);
+
+// Return the latest MA value
+return ma25[ma25.length - 1];`;
         }
-        return 'Datasource example:\n\n1. Raw series: a market metric such as price, return or factor value\n2. Frequency: fixed sampling interval, for example daily, weekly or monthly\n3. Cleaning: remove obvious outliers and fill minor gaps in the series\n4. Calculation: apply smoothing or rolling aggregations over a configured window\n5. Storage: write the structured results into an internal metrics store for dashboards and strategies to reuse.';
+        return `// Generic Moving Average Calculation
+const period = 25;
+const data = await fetchDataStream('data_stream');
+
+// Calculate moving average
+const ma = calculateMovingAverage(data, period);
+
+// Return result
+return ma;`;
       }
       function showDashboardView() {
         if (dashboardView) dashboardView.style.display = '';
@@ -806,13 +883,24 @@
         const meta = chartDetails.get(cardId);
         if (!meta || !detailOverlay) return;
         detailTitle.textContent = meta.title || 'Chart';
-        if (detailBreadcrumbTitle) detailBreadcrumbTitle.textContent = meta.title || 'Chart';
-        detailAuthor.textContent = meta.author || 'Alva';
+        if (detailSubtitle) {
+          detailSubtitle.innerHTML = buildSubtitle(meta);
+        }
         detailCreated.textContent = meta.created || '-';
         detailUpdated.textContent = meta.updated || '-';
         detailInterval.textContent = meta.interval || '-';
-        if (detailLogicText) detailLogicText.textContent = buildDetailDesc(meta);
-        if (detailInsightText) detailInsightText.textContent = buildDetailInsight(meta);
+        const detailLogicTextEl = document.getElementById('detailLogicText');
+        const detailCodeTextEl = document.getElementById('detailCodeText');
+        const detailCodeContentEl = document.getElementById('detailCodeContent');
+        if (detailLogicTextEl) {
+          const desc = buildDetailDesc(meta);
+          detailLogicTextEl.innerHTML = renderInlineMarkdown(desc);
+          detailLogicTextEl.style.display = 'block';
+        }
+        if (detailCodeTextEl && detailCodeContentEl) {
+          detailCodeContentEl.textContent = buildCodeContent(meta);
+          detailCodeTextEl.style.display = 'none';
+        }
         detailTableBody.innerHTML = '';
         const arr = meta.series || [];
         arr.forEach((v, i) => {
@@ -831,17 +919,13 @@
         if (dashboardView) dashboardView.style.display = 'none';
         detailOverlay.classList.add('open');
         detailOverlay.dataset.currentId = cardId;
-        if (detailDatasourceSidebar) detailDatasourceSidebar.classList.remove('open');
-        if (detailDatasourceContent) detailDatasourceContent.textContent = buildDatasourceDesc(meta);
-      }
-      if (detailClose && detailOverlay) {
-        detailClose.addEventListener('click', () => {
-          showDashboardView();
-        });
-      }
-      if (detailBack && detailOverlay) {
-        detailBack.addEventListener('click', () => {
-          showDashboardView();
+        const toggleBtns = document.querySelectorAll('.detail-view-toggle-btn');
+        toggleBtns.forEach(b => {
+          if (b.getAttribute('data-view') === 'idea') {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
         });
       }
       if (detailDownload && detailOverlay) {
@@ -864,19 +948,149 @@
           URL.revokeObjectURL(url);
         });
       }
-      if (detailDatasourceBtn && detailDatasourceSidebar) {
-        detailDatasourceBtn.addEventListener('click', () => {
-          detailDatasourceSidebar.classList.add('open');
+      const detailUseBtn = document.getElementById('detailUseBtn');
+      const detailRemixBtn = document.getElementById('detailRemixBtn');
+      if (detailUseBtn && detailOverlay) {
+        detailUseBtn.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.title) return;
+          addMention(meta.title);
+          const cfgChatInput = document.getElementById('cfgChatInput');
+          if (cfgChatInput) {
+            cfgChatInput.value = 'Add this Data Stream to the current Playbook';
+          }
         });
       }
-      if (detailDatasourceClose && detailDatasourceSidebar) {
-        detailDatasourceClose.addEventListener('click', () => {
-          detailDatasourceSidebar.classList.remove('open');
+      if (detailRemixBtn && detailOverlay) {
+        detailRemixBtn.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.title) return;
+          addMention(meta.title);
+          const cfgChatInput = document.getElementById('cfgChatInput');
+          if (cfgChatInput) {
+            cfgChatInput.value = 'How to modify based on this Data Stream';
+          }
         });
       }
+      document.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('.detail-view-toggle-btn');
+        if (!toggleBtn) return;
+        const view = toggleBtn.getAttribute('data-view');
+        const allBtns = document.querySelectorAll('.detail-view-toggle-btn');
+        allBtns.forEach(b => b.classList.remove('active'));
+        toggleBtn.classList.add('active');
+        const id = detailOverlay.dataset.currentId;
+        const meta = chartDetails.get(id);
+        const detailLogicText = document.getElementById('detailLogicText');
+        const detailCodeText = document.getElementById('detailCodeText');
+        const detailCodeContent = document.getElementById('detailCodeContent');
+        if (view === 'code') {
+          if (detailLogicText) detailLogicText.style.display = 'none';
+          if (detailCodeText && detailCodeContent && meta) {
+            detailCodeContent.textContent = buildCodeContent(meta);
+            detailCodeText.style.display = 'block';
+          }
+        } else {
+          if (detailLogicText) detailLogicText.style.display = 'block';
+          if (detailCodeText) detailCodeText.style.display = 'none';
+        }
+      });
+      const detailReferences = document.getElementById('detailReferences');
+      const referencesPopover = document.getElementById('referencesPopover');
+      const referencesList = document.getElementById('referencesList');
+      const detailRemixs = document.getElementById('detailRemixs');
+      const remixsPopover = document.getElementById('remixsPopover');
+      const remixsList = document.getElementById('remixsList');
+      const mockReferences = [
+        'Dashboard-Playbook A',
+        'Strategy-Playbook B',
+        'Research-Playbook C',
+        'Portfolio Lens',
+        'Smart Screener',
+        'Risk Monitors',
+        'Macro Pulse',
+        'Quant Signals',
+        'Crypto Intel',
+        'Asset Tracker',
+        'Social Insight',
+        'US Crypto DAT Monitor',
+        'US Crypto ETF Monitor',
+        'Factor Tilt Analysis',
+        'Tail Risk Indicators',
+        'AI Revenue Exposure',
+        'Momentum Screener'
+      ];
+      const mockRemixs = [
+        { user: '@alice', time: '2025-12-05 14:30', title: 'Btc Ma25 Prev (Custom)' },
+        { user: '@bob', time: '2025-12-04 09:15', title: 'BTC MA25 Weekly' },
+        { user: '@charlie', time: '2025-12-03 16:45', title: 'Btc Ma25 Extended' },
+        { user: '@diana', time: '2025-12-02 11:20', title: 'BTC Moving Average 25' },
+        { user: '@eve', time: '2025-12-01 13:10', title: 'Btc Ma25 Prev v2' }
+      ];
+      function buildReferencesList() {
+        if (!referencesList) return;
+        referencesList.innerHTML = mockReferences.map(ref => 
+          `<div class="detail-meta-popover-item">${ref}</div>`
+        ).join('');
+      }
+      function buildRemixsList() {
+        if (!remixsList) return;
+        remixsList.innerHTML = mockRemixs.map(remix => 
+          `<div class="detail-meta-popover-item">
+            <div style="font-weight: 600; margin-bottom: 2px;">${remix.title}</div>
+            <div style="font-size: 11px; color: var(--muted);">${remix.user} · ${remix.time}</div>
+          </div>`
+        ).join('');
+      }
+      if (detailReferences && referencesPopover) {
+        detailReferences.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = referencesPopover.classList.contains('open');
+          document.querySelectorAll('.detail-meta-popover.open').forEach(pop => {
+            if (pop !== referencesPopover) pop.classList.remove('open');
+          });
+          referencesPopover.classList.toggle('open', !isOpen);
+          if (!isOpen) buildReferencesList();
+        });
+      }
+      if (detailRemixs && remixsPopover) {
+        detailRemixs.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = remixsPopover.classList.contains('open');
+          document.querySelectorAll('.detail-meta-popover.open').forEach(pop => {
+            if (pop !== remixsPopover) pop.classList.remove('open');
+          });
+          remixsPopover.classList.toggle('open', !isOpen);
+          if (!isOpen) buildRemixsList();
+        });
+      }
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.detail-meta-clickable')) {
+          document.querySelectorAll('.detail-meta-popover.open').forEach(pop => {
+            pop.classList.remove('open');
+          });
+        }
+      });
       window.addEventListener('resize', () => { charts.forEach(fn => fn()); });
       applyLayout();
       setupCharts();
+      
+      // Handle URL parameter to open chart detail from other pages
+      const urlParams = new URLSearchParams(window.location.search);
+      const openChartTitle = urlParams.get('openChart');
+      if (openChartTitle) {
+        // Find chart by title and open its detail
+        setTimeout(() => {
+          for (const [cardId, meta] of chartDetails.entries()) {
+            if (meta.title && meta.title.toLowerCase().includes(openChartTitle.toLowerCase())) {
+              openChartDetail(cardId);
+              break;
+            }
+          }
+        }, 100);
+      }
       document.querySelectorAll('#dashGrid .shape-dd').forEach(dd => {
         const btn = dd.querySelector('.shape-btn');
         const menu = dd.querySelector('.shape-menu');
@@ -924,9 +1138,10 @@
         openChartDetail(card.id);
       });
       const panelToggle = document.getElementById('panelToggle');
-      const detailGrid = document.querySelector('.detail');
+      const configPanel = document.getElementById('configPanel');
       panelToggle.addEventListener('click', () => {
-        const collapsed = detailGrid.classList.toggle('right-collapsed');
+        const collapsed = configPanel.classList.toggle('collapsed');
+        document.body.classList.toggle('chat-collapsed', collapsed);
         if (collapsed) {
           panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
           panelToggle.setAttribute('aria-label', 'Expand chat panel');
@@ -940,54 +1155,307 @@
       const cfgChatList = document.getElementById('cfgChatList');
       const cfgChatInput = document.getElementById('cfgChatInput');
       const cfgChatSend = document.getElementById('cfgChatSend');
-      const chatModeBtn = document.getElementById('chatModeBtn');
-      const chatModeMenu = document.getElementById('chatModeMenu');
       const chatAtBtn = document.getElementById('chatAtBtn');
       const mentionMenu = document.getElementById('mentionMenu');
-      chatModeBtn.addEventListener('click', (e) => { e.preventDefault(); chatModeMenu.classList.toggle('open'); });
-      chatModeMenu.querySelectorAll('.mode-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const mode = item.getAttribute('data-mode');
-          chatModeBtn.setAttribute('data-mode', mode);
-          const label = mode === 'strategy' ? 'Strategy' : 'Charts';
-          const ico = mode === 'strategy'
-            ? '<svg viewBox="0 0 16 16"><path d="M2 3h12v2H2V3zm0 4h10v2H2V7zm0 4h8v2H2v-2z" fill="#64748b"/></svg>'
-            : '<svg viewBox="0 0 16 16"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="#64748b"/></svg>';
-          chatModeBtn.innerHTML = '<span class="mode-ico">' + ico + '</span><span class="mode-label">' + label + '</span> ▾';
-          chatModeMenu.classList.remove('open');
+      const addContextMenu = document.getElementById('addContextMenu');
+      const addContextBody = document.getElementById('addContextBody');
+      
+      // Build button dropdown
+      const buildModeBtn = document.getElementById('buildModeBtn');
+      const buildMenu = document.getElementById('buildMenu');
+      if (buildModeBtn && buildMenu) {
+        buildModeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          buildMenu.classList.toggle('open');
         });
-      });
-      document.addEventListener('click', (e) => {
-        const dd = chatModeBtn.closest('.mode-dd');
-        if (dd && !dd.contains(e.target)) chatModeMenu.classList.remove('open');
-      });
+        buildMenu.querySelectorAll('.build-menu-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const mode = item.getAttribute('data-mode');
+            buildModeBtn.setAttribute('data-mode', mode);
+            const label = mode === 'ask' ? 'Ask' : 'Build';
+            const ico = mode === 'ask'
+              ? '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 008 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1a2 2 0 110 4 2 2 0 010-4z" fill="currentColor"/></svg>'
+              : '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+            buildModeBtn.innerHTML = ico + ' ' + label + ' <span>▾</span>';
+            buildMenu.querySelectorAll('.build-menu-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            buildMenu.classList.remove('open');
+            // Update placeholder based on mode
+            if (mode === 'ask') {
+              cfgChatInput.placeholder = 'Ask anything about investing';
+            } else {
+              cfgChatInput.placeholder = 'Build an investing playbook from your ideas';
+            }
+          });
+        });
+        document.addEventListener('click', (e) => {
+          const dd = buildModeBtn.closest('.build-btn-dd');
+          if (dd && !dd.contains(e.target)) buildMenu.classList.remove('open');
+        });
+      }
+      
+      // Add Context menu data
+      const contextData = {
+        playbooks: [
+          { label: 'Attribution Analysis Strategy for Price Trends', badge: 'Current', icon: 'chart' },
+          { label: 'NVDA Price Fetcher', icon: 'chart' },
+          { label: 'BTC Dip Mean-Reversion RSI Bollinger v2', icon: 'refresh' }
+        ],
+        threads: [
+          { label: 'TSLA Financial Trends and Charts Analysis', icon: 'list' },
+          { label: 'US Treasury Yield and Bitcoin Correlation Analysis', icon: 'list' }
+        ],
+        widgets: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' },
+          { label: 'nvda_quarterly_revenue_change_chart', icon: 'widget' },
+          { label: 'nvda_price_volatility_chart', icon: 'widget' }
+        ],
+        dataStream: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' }
+        ],
+        universe: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' }
+        ]
+      };
+      
+      // Store active mentions separately from textarea content
+      let activeMentions = [];
+      
+      // Add a mention to the active list (without inserting text into textarea)
+      function addMention(label) {
+        if (!activeMentions.includes(label)) {
+          activeMentions.push(label);
+          renderMentionChips();
+        }
+      }
+      
+      // Remove a mention from the active list
+      function removeMentionFromList(label) {
+        activeMentions = activeMentions.filter(m => m !== label);
+        renderMentionChips();
+      }
+      
+      // Get final text with mentions appended
+      function getFinalInputText() {
+        const text = cfgChatInput.value.trim();
+        const mentionTexts = activeMentions.map(label => '@`' + label + '`').join(' ');
+        return text + (text && mentionTexts ? ' ' : '') + mentionTexts;
+      }
+      
+      // Get mention item info from contextData
+      function getMentionItem(label) {
+        for (const category of Object.keys(contextData)) {
+          const item = contextData[category].find(i => i.label === label);
+          if (item) return item;
+        }
+        return null;
+      }
+      
+      // Get icon SVG based on icon type
+      function getIconSvg(iconType) {
+        if (iconType === 'chart') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+        } else if (iconType === 'list') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
+        } else if (iconType === 'refresh') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
+        } else if (iconType === 'widget') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M4 10l2-2 2 2 4-4 2 2v2H4z" fill="currentColor" opacity="0.6"/><circle cx="5" cy="6" r="0.8" fill="currentColor"/></svg>';
+        }
+        return '';
+      }
+      
+      
+      // Render mention chips
+      function renderMentionChips() {
+        const container = document.getElementById('mentionChipsContainer');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        // Toggle class on parent card based on whether there are mentions
+        const card = container.closest('.chat-input-card');
+        if (card) {
+          if (activeMentions.length > 0) {
+            card.classList.add('has-mentions');
+          } else {
+            card.classList.remove('has-mentions');
+          }
+        }
+        
+        activeMentions.forEach(label => {
+          const item = getMentionItem(label);
+          const chip = document.createElement('div');
+          chip.className = 'mention-chip';
+          
+          const icon = document.createElement('div');
+          icon.className = 'mention-chip-icon';
+          icon.innerHTML = getIconSvg(item ? item.icon : 'widget');
+          
+          const labelEl = document.createElement('span');
+          labelEl.className = 'mention-chip-label';
+          labelEl.textContent = label;
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'mention-chip-remove';
+          removeBtn.type = 'button';
+          removeBtn.setAttribute('aria-label', 'Remove');
+          removeBtn.innerHTML = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            removeMentionFromList(label);
+          });
+          
+          chip.appendChild(icon);
+          chip.appendChild(labelEl);
+          chip.appendChild(removeBtn);
+          container.appendChild(chip);
+        });
+      }
+      
+      function buildAddContextMenu() {
+        if (!addContextBody) return;
+        addContextBody.innerHTML = '';
+        
+        Object.keys(contextData).forEach(category => {
+          const categoryDiv = document.createElement('div');
+          categoryDiv.className = 'add-context-category';
+          
+          const title = document.createElement('div');
+          title.className = 'add-context-category-title';
+          title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+          categoryDiv.appendChild(title);
+          
+          contextData[category].forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'add-context-item';
+            
+            const icon = document.createElement('div');
+            icon.className = 'add-context-item-icon';
+            let iconSvg = '';
+            if (item.icon === 'chart') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+            } else if (item.icon === 'list') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
+            } else if (item.icon === 'refresh') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
+            } else {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1"/></svg>';
+            }
+            icon.innerHTML = iconSvg;
+            
+            const content = document.createElement('div');
+            content.className = 'add-context-item-content';
+            
+            const label = document.createElement('div');
+            label.className = 'add-context-item-label';
+            label.textContent = item.label;
+            
+            content.appendChild(label);
+            
+            if (item.badge) {
+              const badge = document.createElement('div');
+              badge.className = 'add-context-item-badge';
+              badge.textContent = item.badge;
+              content.appendChild(badge);
+            }
+            
+            itemDiv.appendChild(icon);
+            itemDiv.appendChild(content);
+            
+            itemDiv.addEventListener('click', () => {
+              addMention(item.label);
+              hideAddContextMenu();
+            });
+            
+            categoryDiv.appendChild(itemDiv);
+          });
+          
+          addContextBody.appendChild(categoryDiv);
+        });
+      }
+      
+      function showAddContextMenu() {
+        if (!addContextMenu) return;
+        buildAddContextMenu();
+        const inputRect = cfgChatInput.getBoundingClientRect();
+        
+        // Temporarily show menu to get its dimensions
+        addContextMenu.style.visibility = 'hidden';
+        addContextMenu.style.display = 'flex';
+        const menuRect = addContextMenu.getBoundingClientRect();
+        
+        // Use fixed positioning relative to viewport
+        const left = inputRect.left + 6;
+        // Position menu so its bottom aligns with input top, expand upwards
+        const top = inputRect.top - menuRect.height - 4;
+        
+        addContextMenu.style.left = left + 'px';
+        addContextMenu.style.top = Math.max(4, top) + 'px';
+        addContextMenu.style.visibility = 'visible';
+        addContextMenu.classList.add('open');
+      }
+      
+      function hideAddContextMenu() {
+        if (!addContextMenu) return;
+        addContextMenu.classList.remove('open');
+        addContextMenu.style.visibility = '';
+        addContextMenu.style.display = '';
+      }
+      
       chatAtBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        if (mentionMenu && mentionMenu.classList.contains('open')) {
-          mentionMenu.classList.remove('open');
-          mentionMenu.style.display = 'none';
+        if (addContextMenu && addContextMenu.classList.contains('open')) {
+          hideAddContextMenu();
         } else {
-          buildMentionMenu();
+          showAddContextMenu();
         }
       });
-      cfgChatInput.addEventListener('input', () => {
+      cfgChatInput.addEventListener('input', (e) => {
+        // Remove any @`...` text that might have been typed or pasted
+        const text = cfgChatInput.value;
+        const cleanedText = text.replace(/@`([^`]+)`/g, '');
+        if (cleanedText !== text) {
+          const cursorPos = cfgChatInput.selectionStart;
+          cfgChatInput.value = cleanedText;
+          cfgChatInput.selectionStart = cfgChatInput.selectionEnd = Math.min(cursorPos, cleanedText.length);
+        }
+        
+        // Check if user typed '@' to show menu
         try {
           const pos = cfgChatInput.selectionStart || 0;
           const prev = cfgChatInput.value.slice(pos - 1, pos);
-          if (prev === '@') buildMentionMenu();
+          if (prev === '@') {
+            showAddContextMenu();
+          }
         } catch {}
       });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mentionMenu) {
-          mentionMenu.classList.remove('open');
-          mentionMenu.style.display = 'none';
+        if (e.key === 'Escape') {
+          if (addContextMenu) {
+            hideAddContextMenu();
+          }
+          if (mentionMenu) {
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          }
         }
       });
       document.addEventListener('click', (e) => {
         const compose = document.querySelector('.chat-compose');
-        if (compose && mentionMenu && !compose.contains(e.target)) {
-          mentionMenu.classList.remove('open');
-          mentionMenu.style.display = 'none';
+        if (compose) {
+          if (addContextMenu && !compose.contains(e.target) && !addContextMenu.contains(e.target)) {
+            hideAddContextMenu();
+          }
+          if (mentionMenu && !compose.contains(e.target)) {
+            mentionMenu.classList.remove('open');
+            mentionMenu.style.display = 'none';
+          }
         }
       });
       document.addEventListener('click', (e) => {
@@ -1054,9 +1522,11 @@
         }, 500);
       }
       cfgChatSend.addEventListener('click', () => {
-        const text = cfgChatInput.value.trim();
-        if (!text) return;
+        const text = getFinalInputText();
+        if (!text.trim()) return;
         cfgChatInput.value = '';
+        activeMentions = [];
+        renderMentionChips();
         runChatFlow(text);
       });
       cfgChatInput.addEventListener('keydown', (e) => {
@@ -1065,6 +1535,9 @@
           cfgChatSend.click();
         }
       });
+      
+      // Initialize mention chips on page load
+      renderMentionChips();
       const miniChatBtn = document.getElementById('miniChatBtn');
       const miniChat = document.getElementById('miniChat');
       const miniChatClose = document.getElementById('miniChatClose');
@@ -1142,6 +1615,9 @@
           closeMiniChat();
         }
       });
+    </script>
+    <script>
+      // Global tooltip system moved to nav.js
     </script>
   </body>
 </html>

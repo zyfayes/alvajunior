@@ -4,67 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Alva · Playbook Strategy</title>
+    <link rel="stylesheet" href="styles.css" />
     <style>
-      :root { --bg: #ffffff; --panel: #f8fafc; --text: #111827; --muted: #6b7280; --accent: #14b8a6; --border: #e5e7eb; }
-      * { box-sizing: border-box; }
-      html, body { height: 100%; }
-      body { margin: 0; display: grid; grid-template-columns: 260px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar main"; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
-      body.subnav-open { grid-template-columns: 260px 220px 1fr; grid-template-rows: 1fr; grid-template-areas: "sidebar subnav main"; }
-      body.sidebar-collapsed { grid-template-columns: 60px 1fr; }
-      body.sidebar-collapsed.subnav-open { grid-template-columns: 60px 220px 1fr; }
-      body.sidebar-collapsed .name, body.sidebar-collapsed .nav-top, body.sidebar-collapsed .nav-scroll, body.sidebar-collapsed .nav-bottom, body.sidebar-collapsed .nav-new-chat { display: none; }
-      body.sidebar-collapsed .icon-rail { display: flex; }
+      /* ============================================
+         Page-Specific Styles for Playbook Strategy
+         ============================================ */
 
-      aside { grid-area: sidebar; height: 100vh; position: sticky; top: 0; border-right: 1px solid #3a3a48; background: #2A2A38; padding: 12px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-      nav { display: flex; flex-direction: column; gap: 12px; height: 100%; }
-      .nav-new-chat { padding: 0 6px 6px; }
-      .new-chat-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e5e7eb; background: #f8fafc; color: #111827; border-radius: 10px; padding: 8px 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-      .new-chat-btn:hover { background: #ffffff; }
-      .new-chat-btn svg { width: 14px; height: 14px; fill: #374151; }
-      .nav-top { padding: 4px 0; }
-      .nav-scroll { flex: 1; overflow-y: auto; padding-right: 4px; }
-      .nav-bottom { padding-top: 12px; border-top: 1px solid #3a3a48; position: sticky; bottom: 0; background: #2A2A38; }
-      .side-brand { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-weight: 800; letter-spacing: 0.8px; }
-      .side-brand .logo { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), #16a34a); box-shadow: 0 0 0 1px #0b5d31 inset; }
-      .side-brand .name { font-size: 13px; color: #e5e7eb; }
-      .collapse-btn { margin-left: auto; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; width: 24px; height: 24px; line-height: 22px; text-align: center; cursor: pointer; }
-      .collapse-btn:hover { border-color: #14b8a6; }
-      .icon-rail { display: none; flex-direction: column; gap: 6px; padding: 0 6px; }
-      .rail-btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-      .rail-btn:hover { border-color: #24513b; }
-      .rail-btn svg { width: 18px; height: 18px; fill: #a7f3d0; opacity: 0.9; }
-      .section { display: flex; flex-direction: column; gap: 6px; }
-      .section-title { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.6px; padding: 0 6px; }
-      .section-title-row { display: flex; align-items: center; justify-content: space-between; }
-      .title-plus { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; width: 20px; height: 20px; font-size: 14px; line-height: 18px; text-align: center; cursor: pointer; }
-      .title-plus:hover { border-color: #14b8a6; color: #0f766e; }
-      .with-divider { border-top: 1px solid #182030; padding-top: 8px; margin-top: 4px; }
-      ul { list-style: none; margin: 0; padding: 0; }
-      li { display: block; }
-      a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 1px 0; border-radius: 8px; color: var(--text); text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
-      a:hover { background: #e2e8f0; }
-      aside a { color: #e5e7eb; }
-      aside a:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
-      aside a.active { background: rgba(255,255,255,0.10); color: #ffffff; }
-      aside .section-title { color: #cbd5e1; }
-      aside .badge, aside .more { color: #9ca3af; }
-      .badge { margin-left: auto; font-size: 10px; color: var(--muted); }
-      .more { color: var(--muted); }
-      .more:hover { color: var(--text); }
-      .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 6px; box-shadow: 0 0 0 2px #ffffff; }
-
-      .subnav { grid-area: subnav; height: 100vh; position: sticky; top: 0; border-right: 1px solid var(--border); background: #ffffff; display: none; flex-direction: column; }
-      .subnav a { color: #111827; }
-      .subnav a:hover { background: #f1f5f9; color: #111827; }
-      body.subnav-open .subnav { display: flex; }
-      .subnav-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--border); }
-      .subnav-title { font-size: 13px; font-weight: 600; }
-      .subnav-content { flex: 1; overflow-y: auto; padding: 8px 10px; }
-      .subnav-content ul { display: flex; flex-direction: column; gap: 4px; }
-      .subnav-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 6px; padding: 4px 8px; }
-
-      main { grid-area: main; padding: 16px; }
-      .detail { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+      /* Paper & Tabs */
       .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
       .paper .bd { padding: 12px 14px; }
@@ -72,57 +18,25 @@
       .tab { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: #ffffff; color: var(--text); font-size: 12px; cursor: pointer; }
       .tab.active { border-color: #14b8a6; color: #0f766e; }
       .title { font-weight: 700; }
-      .objective { margin-bottom: 12px; }
-      .feat-list { display: grid; gap: 8px; }
-      .feat-item { display: grid; grid-template-columns: 1fr 28px 28px; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-      .feat-name { font-weight: 600; }
-      .feat-desc { color: var(--muted); font-size: 12px; }
-      .icon-btn { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; height: 28px; }
-      .section-title-line { font-weight: 700; margin: 12px 0 8px; }
-      .kv { display: grid; grid-template-columns: 160px 1fr; gap: 8px; margin: 6px 0; }
-      .kv .k { color: var(--muted); }
-      .bullet { margin: 6px 0; }
-      .cfg-card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-      .cfg-card h3 { margin: 0 0 6px; font-size: 16px; }
-      .btn-activate { width: 100%; border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; margin-top: 8px; }
-      .toggle { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
-      .paper.collapsed .bd { display: none; }
-      .detail.right-collapsed { grid-template-columns: 1fr max-content; }
-      .detail.right-collapsed #configPanel { overflow: visible; background: transparent; border: 0; box-shadow: none; }
-      .detail.right-collapsed #configPanel .title { display: none; }
-      .detail.right-collapsed #configPanel .bd { display: none; }
-      .detail.right-collapsed #configPanel .hd { padding: 12px 14px; justify-content: center; }
-      .detail.right-collapsed #configPanel .toggle { padding: 4px; border: 0; background: transparent; position: relative; }
-      .detail.right-collapsed #configPanel .toggle:hover::after { content: attr(data-tip); position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); background: #ffffff; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; white-space: nowrap; box-shadow: 0 8px 16px rgba(0,0,0,0.12); z-index: 10; }
-      .orb { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #a7f3d0 0%, #22c55e 35%, #16a34a 65%, #0b1220 100%); box-shadow: 0 0 12px rgba(34,197,94,0.6), inset 0 0 8px rgba(11,93,49,0.6); }
-      @keyframes orbPulse { from { box-shadow: 0 0 8px rgba(34,197,94,0.4), inset 0 0 4px rgba(11,93,49,0.4); } to { box-shadow: 0 0 14px rgba(34,197,94,0.8), inset 0 0 8px rgba(11,93,49,0.7); } }
-      .orb { animation: orbPulse 2.6s ease-in-out infinite alternate; }
-      .chat-list { display: flex; flex-direction: column; gap: 8px; max-height: 32vh; overflow: auto; margin-top: 8px; }
-      .chat-msg { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; }
-      .chat-role { color: var(--muted); }
-      .msg-ai { background: #ffffff; }
-      .msg-you { background: #f8fafc; }
-      #configPanel .bd { display: flex; flex-direction: column; }
-      .chat-box { display: flex; flex-direction: column; margin-top: auto; }
-      .chat-compose { display: grid; grid-template-columns: 1fr 110px; gap: 10px; margin-top: 8px; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; }
-      .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 13px 14px; }
-      .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; }
+      .tab-pane { display: block; }
+      .tab-pane.hidden { display: none; }
 
-      .hidden { display: none; }
-      .feature-analytics { display: grid; gap: 10px; }
-      .last-updated { color: var(--muted); font-size: 12px; }
-      .chart-container { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-      .chart-container h4 { margin: 0 0 6px; font-size: 14px; }
-      .chart-skeleton { height: 160px; border-radius: 8px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
-      @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+      /* Overview Section */
       .overview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+      .section-title-line { font-weight: 700; margin: 12px 0 8px; }
       .overview-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
       .last-updated-pill { color: #111827; font-size: 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; }
-      .metrics-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+
+      .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      @media (min-width: 1400px) { .metrics-grid { grid-template-columns: repeat(6, 1fr); } }
       .metric-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
       .metric-title { display: flex; align-items: center; gap: 6px; color: #374151; font-size: 12px; }
       .metric-info { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid #cbd5e1; color: #64748b; font-size: 11px; }
       .metric-value { color: #22c55e; font-weight: 700; margin: 4px 0 6px; }
+      .sparkline-skel { height: 42px; border-radius: 6px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
+      @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+      /* Equity Card */
       .equity-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .equity-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
       .equity-title { font-weight: 700; }
@@ -134,10 +48,21 @@
       .swatch-purple { background: #7c3aed; }
       .swatch-orange { background: #f59e0b; }
       .equity-skeleton { height: 280px; border-radius: 8px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
+
+      /* Traded Symbols */
       .traded-symbols { margin-top: 12px; }
       .symbol-row { display: grid; grid-template-columns: 1fr max-content; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
       .symbol-name { font-weight: 700; }
       .symbol-extra { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 6px; }
+
+      /* Analytics Section */
+      .feature-analytics { display: grid; gap: 10px; }
+      .last-updated { color: var(--muted); font-size: 12px; }
+      .chart-container { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .chart-container h4 { margin: 0 0 6px; font-size: 14px; }
+      .chart-skeleton { height: 160px; border-radius: 8px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.8s ease-in-out infinite; }
+
+      /* Feed Section */
       .feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
       .asset-left { display: flex; align-items: center; gap: 8px; }
       .asset-pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: #0e1626; color: #a7f3d0; border-radius: 999px; padding: 4px 8px; font-size: 12px; }
@@ -155,45 +80,143 @@
       .feed-change { color: #22c55e; font-weight: 700; }
       .feed-sub { color: var(--muted); font-size: 12px; }
       .feed-time { color: var(--muted); font-size: 12px; }
-      
-      .search-overlay { position: fixed; inset: 0; background: rgba(2,8,23,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
-      .search-overlay.open { display: flex; }
-      .search-modal { width: min(760px, 92vw); border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
-      .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
-      .modal-title { font-weight: 700; }
-      .modal-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
-      .modal-body { padding: 12px 14px; }
-      .modal-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: #111827; padding: 10px 12px; margin-bottom: 12px; }
-      .entity-list { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow: auto; }
-      .entity-row { display: grid; grid-template-columns: 80px 1fr 90px 100px; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; }
-      .entity-row:hover { background: #f8fafc; }
-      .sym { font-weight: 600; letter-spacing: 0.4px; }
-      .type { color: var(--muted); font-size: 12px; }
-      .exch { color: #a7f3d0; font-size: 12px; }
+
+      /* Strategy Sections */
+      .strategy-sections { display: flex; flex-direction: column; gap: 20px; }
+      .section-header { font-size: 15px; font-weight: 600; color: #111827; }
+      .objective-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; line-height: 1.6; color: #374151; }
+
+      /* Universe Section */
+      .universe-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .universe-desc { color: #374151; margin-bottom: 14px; }
+      .ticker-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+      .ticker-block { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; color: #111827; font-weight: 600; font-size: 13px; letter-spacing: 0.3px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: all 0.2s ease; }
+      .ticker-block:hover { border-color: #14b8a6; background: #ecfdf5; transform: translateY(-1px); box-shadow: 0 2px 6px rgba(20,184,166,0.15); }
+
+      /* Features */
+      .feat-list { display: grid; gap: 8px; }
+      .feat-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .feat-main { flex: 1; }
+      .feat-name { font-weight: 600; color: #111827; margin-bottom: 4px; }
+      .feat-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
+      .feat-actions { display: flex; gap: 6px; flex-shrink: 0; }
+      .feat-action-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+      .feat-action-btn svg { width: 18px; height: 18px; fill: #9ca3af; }
+      .feat-action-btn:hover svg { fill: #6b7280; }
+
+      /* Strategy Inner Tabs */
+      .strategy-inner-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+      .strategy-inner-tab { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; color: #6b7280; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+      .strategy-inner-tab:hover { border-color: #d1d5db; color: #374151; }
+      .strategy-inner-tab.active { border-color: #14b8a6; background: #ecfdf5; color: #0f766e; }
+      .strategy-content-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .strategy-idea-content { color: #374151; line-height: 1.7; white-space: pre-line; }
+      .strategy-code-content { display: none; }
+      .strategy-code-content.active { display: block; }
+      .strategy-idea-content.hidden { display: none; }
+      .code-block { background: #1e293b; border-radius: 8px; padding: 16px; overflow-x: auto; }
+      .code-block pre { margin: 0; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.6; color: #e2e8f0; }
+      .code-keyword { color: #c084fc; }
+      .code-function { color: #60a5fa; }
+      .code-string { color: #4ade80; }
+      .code-comment { color: #64748b; }
+      .code-number { color: #fbbf24; }
+      .code-param { color: #f472b6; }
+
+      /* Chat Panel */
+      .bullet { margin: 6px 0; }
+      .cfg-card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+      .cfg-card h3 { margin: 0 0 6px; font-size: 16px; }
+      .btn-activate { width: 100%; border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 10px; margin-top: 8px; }
+      .toggle { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
+      .orb { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #a7f3d0 0%, #22c55e 35%, #16a34a 65%, #0b1220 100%); box-shadow: 0 0 12px rgba(34,197,94,0.6), inset 0 0 8px rgba(11,93,49,0.6); }
+      @keyframes orbPulse { from { box-shadow: 0 0 8px rgba(34,197,94,0.4), inset 0 0 4px rgba(11,93,49,0.4); } to { box-shadow: 0 0 14px rgba(34,197,94,0.8), inset 0 0 8px rgba(11,93,49,0.7); } }
+      .orb { animation: orbPulse 2.6s ease-in-out infinite alternate; }
+      .chat-list { display: flex; flex-direction: column; gap: 8px; max-height: 40vh; overflow-y: auto; }
+      .chat-msg { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; }
+      .chat-role { color: var(--muted); }
+      .msg-ai { background: #ffffff; }
+      .msg-you { background: #f8fafc; }
+      .chat-box { display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; }
+      .chat-compose { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding: 8px; background: #f8fafc; border-top: 1px solid var(--border); position: relative; width: 100%; box-sizing: border-box; }
+      .chat-input { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; color: var(--text); padding: 13px 14px; }
+      .chat-send { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; }
+
+      /* Chart Canvas */
       .chart-canvas { width: 100%; height: 160px; display: block; }
       .equity-canvas { width: 100%; height: 280px; display: block; }
       .sparkline-canvas { width: 100%; height: 42px; display: block; }
-      .nav-popover { position: fixed; top: 70px; left: 260px; width: 380px; border-radius: 12px; background: #ffffff; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.12); display: none; z-index: 900; }
-      .nav-popover.open { display: block; }
-      .nav-popover .pop-hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); font-weight: 700; }
-      .nav-popover .pop-bd { padding: 12px 14px; }
-      .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-      .action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 10px; padding: 14px 8px; cursor: pointer; text-decoration: none; }
-      .action-btn:hover { border-color: #cbd5e1; }
-      .act-ico { width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
-      .act-ico svg { width: 18px; height: 18px; }
-      .ico-blue { background: #0b3a55; }
-      .ico-orange { background: #5a3a0b; }
-      .ico-green { background: #0b3a2a; }
-      .ico-purple { background: #3a0b55; }
-      .label { font-size: 13px; color: #374151; font-weight: 600; }
-      .popover-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 6px 10px; }
-      .me-icons { display: flex; gap: 8px; }
-      .nav-bottom .icon-btn { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-      .nav-bottom .icon-btn svg { width: 16px; height: 16px; }
+
+      /* Detail Page - same as Dashboard */
+      .detail-page { position: fixed; inset: 0; background: rgba(2,8,23,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; overflow-y: auto; padding: 20px; }
+      .detail-page.open { display: flex; }
+      .detail-modal { max-width: 960px; margin: 0 auto; padding: 12px 0 16px; display: flex; flex-direction: column; gap: 12px; }
+      .detail-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 2px; }
+      .detail-header-left { display: flex; flex-direction: column; gap: 4px; }
+      .detail-header-actions { display: flex; align-items: center; gap: 8px; }
+      .detail-action-btn { border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s ease; }
+      .detail-action-btn-primary { background: #14b8a6; color: #ffffff; border-color: #14b8a6; }
+      .detail-action-btn-primary:hover { background: #0f766e; border-color: #0f766e; }
+      .detail-action-btn-secondary { background: #ffffff; color: #374151; border-color: var(--border); }
+      .detail-action-btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+      .detail-action-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        color: #374151;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+      }
+      .detail-action-icon-btn:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+      .detail-action-icon-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .detail-title { font-size: 18px; font-weight: 700; }
+      .detail-subtitle { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+      .detail-meta { margin-top: 4px; padding: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+      .detail-meta-item span:first-child { margin-right: 4px; color: #6b7280; }
+      .detail-body { margin-top: 10px; display: flex; align-items: flex-start; gap: 16px; }
+      .detail-main { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+      .detail-chart-wrap { border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: #f8fafc; }
+      .detail-chart { width: 100%; height: 220px; display: block; }
+      .detail-logic-card { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #f9fafb; display: flex; flex-direction: column; gap: 6px; }
+      .detail-logic-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+      .detail-logic-title { font-size: 13px; font-weight: 600; }
+      .detail-view-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; background: #ffffff; padding: 2px; gap: 2px; }
+      .detail-view-toggle-btn { border: 0; background: transparent; color: #6b7280; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: all 0.2s ease; }
+      .detail-view-toggle-btn:hover { background: #f8fafc; color: #374151; }
+      .detail-view-toggle-btn.active { background: #f3f4f6; color: #0f172a; font-weight: 600; }
+      .detail-desc { font-size: 13px; color: #0f172a; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
+      .detail-desc-main { display: flex; align-items: flex-start; gap: 8px; }
+      .detail-content-view { margin: 0; width: 100%; }
+      .detail-content-view code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; background: #e5e7eb; border: 1px solid #d1d5db; border-radius: 4px; padding: 3px 8px; color: #111827; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: inline-block; }
+      #detailCodeText { background: #1e293b; color: #e2e8f0; border-radius: 6px; padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 0; width: 100%; box-sizing: border-box; }
+      #detailCodeText code { background: transparent; color: inherit; padding: 0; font-size: inherit; display: block; width: 100%; white-space: pre; }
+      .detail-table-wrap { border-radius: 10px; border: 1px solid var(--border); padding: 10px 12px; background: #ffffff; }
+      .detail-table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .detail-table-title { font-size: 13px; font-weight: 600; }
+      .detail-download { border: 1px solid var(--border); background: #f8fafc; color: #111827; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+      .detail-table { width: 100%; border-collapse: collapse; font-size: 12px; max-height: 220px; overflow: auto; display: block; }
+      .detail-table thead, .detail-table tbody { display: block; }
+      .detail-table tbody { max-height: 220px; overflow-y: auto; }
+      .detail-table tr { display: grid; grid-template-columns: 1fr 1fr; }
+      .detail-table th, .detail-table td { border: 1px solid #e5e7eb; padding: 4px 6px; text-align: right; }
+      .detail-table th:first-child, .detail-table td:first-child { text-align: left; }
+      .chart-container h4 { cursor: pointer; }
+      .chart-container h4:hover { color: #0f766e; }
     </style>
   </head>
-  <body>
+  <body class="has-chat-panel">
     <aside>
       <div class="side-brand"><div class="logo"></div><div class="name">ALVA</div><button id="sidebarToggle" class="collapse-btn" aria-label="Collapse Navigation">«</button></div>
       <div class="icon-rail">
@@ -203,18 +226,21 @@
         <a class="rail-btn" href="explore.html" title="Explore" aria-label="Explore">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg>
         </a>
-      <a class="rail-btn" href="#search" title="Search" aria-label="Search">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
-      </a>
-      <a class="rail-btn" href="playbook_strategy.html" title="Starred" aria-label="Starred">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-      </a>
-      <a class="rail-btn" href="playbook_strategy.html" title="Playbooks" aria-label="Playbooks">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V2zm-2 14H8v-2h8v2zm0-4H8V8h8v4z"/></svg>
-      </a>
-      <a class="rail-btn" href="#threads-more" title="Threads" aria-label="Threads">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v10H5.17L4 15.17V4zm0 12h12v4H4v-4z"/></svg>
-      </a>
+        <a class="rail-btn" href="#search" title="Search" aria-label="Search">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+        </a>
+        <a class="rail-btn" href="library.html" title="Library" aria-label="Library">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-2-9h-4v4h-2v-4H8V9h4V5h2v4h4v2z"/></svg>
+        </a>
+        <a class="rail-btn" href="playbook_strategy.html" title="Starred" aria-label="Starred">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        </a>
+        <a class="rail-btn" href="playbook_strategy.html" title="Playbooks" aria-label="Playbooks">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V2zm-2 14H8v-2h8v2zm0-4H8V8h8v4z"/></svg>
+        </a>
+        <a class="rail-btn" href="#threads-more" title="Threads" aria-label="Threads">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v10H5.17L4 15.17V4zm0 12h12v4H4v-4z"/></svg>
+        </a>
       </div>
       <nav>
         <div class="nav-new-chat">
@@ -227,7 +253,19 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="explore.html">Explore</a></li>
+            <li><a href="library.html">Library</a></li>
             <li><a href="#search">Search</a></li>
+            <li>
+              <a href="https://stg.alva.xyz/landing" target="_blank" rel="noopener noreferrer">
+                <span>About</span>
+                <span class="nav-external-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 5h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 11l6-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            </li>
           </ul>
         </div>
         <div class="nav-scroll">
@@ -298,134 +336,383 @@
       </div>
     </div>
     <main>
-      <div class="detail">
-        <div class="paper">
-          <div class="hd">
-            <div class="title">BTC Weekly MA7—MA25 Crossover Allocator</div>
-            <div class="tabs"><span class="tab active" data-target="overview">Overview</span><span class="tab" data-target="analytics">Analytics</span><span class="tab" data-target="strategy">Strategy</span><span class="tab" data-target="feed">Feed</span></div>
+      <div class="paper">
+        <div class="hd">
+          <div class="title">BTC Weekly MA7—MA25 Crossover Allocator</div>
+          <div class="tabs"><span class="tab active" data-target="overview">Overview</span><span class="tab" data-target="analytics">Analytics</span><span class="tab" data-target="strategy">Strategy</span><span class="tab" data-target="feed">Feed</span></div>
+        </div>
+        <div class="bd">
+          <div id="pane-overview" class="tab-pane">
+            <div class="overview-header">
+              <div>
+                <div class="section-title-line">Performance Overview</div>
+                <div class="overview-sub">Start Date: 1/1/2025 • Initial amount: 10M USD</div>
+              </div>
+              <div class="last-updated-pill">Last Updated: 12/4/2025 · Interval: 1w</div>
+            </div>
+            <div class="metrics-grid">
+              <div class="metric-card"><div class="metric-title">Total Return<span class="metric-info">i</span></div><div class="metric-value">7.06%</div><div class="sparkline-skel"></div></div>
+              <div class="metric-card"><div class="metric-title">Annualized Return<span class="metric-info">i</span></div><div class="metric-value">3.48%</div><div class="sparkline-skel"></div></div>
+              <div class="metric-card"><div class="metric-title">Volatility<span class="metric-info">i</span></div><div class="metric-value">67.64%</div><div class="sparkline-skel"></div></div>
+              <div class="metric-card"><div class="metric-title">Sharpe Ratio<span class="metric-info">i</span></div><div class="metric-value">0.68</div><div class="sparkline-skel"></div></div>
+              <div class="metric-card"><div class="metric-title">Sortino Ratio<span class="metric-info">i</span></div><div class="metric-value">1.04</div><div class="sparkline-skel"></div></div>
+              <div class="metric-card"><div class="metric-title">Max Drawdown<span class="metric-info">i</span></div><div class="metric-value">25.27%</div><div class="sparkline-skel"></div></div>
+            </div>
+            <div class="equity-card">
+              <div class="equity-hd"><div class="equity-title">Equity Curve</div><div class="currency-dd">USD ▾</div></div>
+              <div class="equity-legend">
+                <div class="legend-item"><span class="legend-swatch swatch-gray"></span>Initial Amount</div>
+                <div class="legend-item"><span class="legend-swatch swatch-purple"></span>This Playbook</div>
+                <div class="legend-item"><span class="legend-swatch swatch-orange"></span>BTC</div>
+              </div>
+              <div class="equity-skeleton"></div>
+            </div>
+            <div class="traded-symbols">
+              <div class="section-title-line">Traded Symbols</div>
+              <div class="symbol-row"><div><div class="symbol-name">Bitcoin</div><div class="symbol-extra">0 USD</div></div><div class="symbol-extra">Binance ↗</div></div>
+            </div>
           </div>
-          <div class="bd">
-            <div id="pane-overview" class="tab-pane">
-              <div class="overview-header">
-                <div>
-                  <div class="section-title-line">Performance Overview</div>
-                  <div class="overview-sub">Start Date: 1/1/2025 • Initial amount: 10M USD</div>
-                </div>
-                <div class="last-updated-pill">Last Updated: 12/4/2025 · Interval: 1w</div>
+          <div id="pane-analytics" class="tab-pane hidden">
+            <div class="feature-analytics">
+              <div class="section-title-line">Feature Analytics</div>
+              <div class="last-updated">Last Updated: 12/6/2025 · Interval: 1w</div>
+              <div class="chart-container">
+                <h4>Btc Ma25 Prev</h4>
+                <div class="chart-skeleton"></div>
               </div>
-              <div class="metrics-grid">
-                <div class="metric-card"><div class="metric-title">Total Return<span class="metric-info">i</span></div><div class="metric-value">7.06%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Annualized Return<span class="metric-info">i</span></div><div class="metric-value">3.48%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Volatility<span class="metric-info">i</span></div><div class="metric-value">67.64%</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Sharpe Ratio<span class="metric-info">i</span></div><div class="metric-value">0.68</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Sortino Ratio<span class="metric-info">i</span></div><div class="metric-value">1.04</div><div class="sparkline-skel"></div></div>
-                <div class="metric-card"><div class="metric-title">Max Drawdown<span class="metric-info">i</span></div><div class="metric-value">25.27%</div><div class="sparkline-skel"></div></div>
-              </div>
-              <div class="equity-card">
-                <div class="equity-hd"><div class="equity-title">Equity Curve</div><div class="currency-dd">USD ▾</div></div>
-                <div class="equity-legend">
-                  <div class="legend-item"><span class="legend-swatch swatch-gray"></span>Initial Amount</div>
-                  <div class="legend-item"><span class="legend-swatch swatch-purple"></span>This Playbook</div>
-                  <div class="legend-item"><span class="legend-swatch swatch-orange"></span>BTC</div>
-                </div>
-                <div class="equity-skeleton"></div>
-              </div>
-              <div class="traded-symbols">
-                <div class="section-title-line">Traded Symbols</div>
-                <div class="symbol-row"><div><div class="symbol-name">Bitcoin</div><div class="symbol-extra">0 USD</div></div><div class="symbol-extra">Binance ↗</div></div>
+              <div class="chart-container">
+                <h4>Btc Ma25 W</h4>
+                <div class="chart-skeleton"></div>
               </div>
             </div>
-            <div id="pane-analytics" class="tab-pane hidden">
-              <div class="feature-analytics">
-                <div class="section-title-line">Feature Analytics</div>
-                <div class="last-updated">Last Updated: 12/6/2025 · Interval: 1w</div>
-                <div class="chart-container">
-                  <h4>Btc Ma25 Prev</h4>
-                  <div class="chart-skeleton"></div>
-                </div>
-                <div class="chart-container">
-                  <h4>Btc Ma25 W</h4>
-                  <div class="chart-skeleton"></div>
+          </div>
+          <div id="pane-strategy" class="tab-pane hidden">
+            <div class="strategy-sections">
+              <div class="section-header">Strategy Objective</div>
+              <div class="objective-card">Capture medium-term BTC/USD trends using weekly MA7/MA25 crossovers, switching between 100% long and cash-only exposure at weekly closes.</div>
+
+              <div class="section-header">Universe</div>
+              <div class="universe-card">
+                <div class="universe-desc">Top 10 cryptocurrencies by market cap on Binance</div>
+                <div class="ticker-grid">
+                  <span class="ticker-block">BTC</span>
+                  <span class="ticker-block">ETH</span>
+                  <span class="ticker-block">BNB</span>
+                  <span class="ticker-block">SOL</span>
+                  <span class="ticker-block">XRP</span>
+                  <span class="ticker-block">ADA</span>
+                  <span class="ticker-block">DOGE</span>
+                  <span class="ticker-block">AVAX</span>
+                  <span class="ticker-block">DOT</span>
+                  <span class="ticker-block">LINK</span>
                 </div>
               </div>
-            </div>
-            <div id="pane-strategy" class="tab-pane hidden">
-              <div class="objective">Capture medium-term BTC/USD trends using weekly MA7/MA25 crossovers, switching between 100% long and cash-only exposure at weekly closes.</div>
-              <div class="section-title-line">Features</div>
+
+              <div class="section-header">Features</div>
               <div class="feat-list">
-                <div class="feat-item"><div><div class="feat-name">Btc Ma25 Prev</div><div class="feat-desc">Previous week value of the 25-period weekly SMA for detecting crossovers.</div></div><button class="icon-btn">=</button><button class="icon-btn">≡</button></div>
-                <div class="feat-item"><div><div class="feat-name">Btc Ma25 W</div><div class="feat-desc">25-period simple moving average of weekly closing prices to represent medium-term trend.</div></div><button class="icon-btn">=</button><button class="icon-btn">≡</button></div>
-                <div class="feat-item"><div><div class="feat-name">Btc Ma7 Prev</div><div class="feat-desc">Previous week value of the 7-period weekly SMA for detecting crossovers.</div></div><button class="icon-btn">=</button><button class="icon-btn">≡</button></div>
-                <div class="feat-item"><div><div class="feat-name">Btc Ma7 W</div><div class="feat-desc">7-period simple moving average of weekly closing prices to represent short-term trend.</div></div><button class="icon-btn">=</button><button class="icon-btn">≡</button></div>
+                <div class="feat-item">
+                  <div class="feat-main">
+                    <div class="feat-name">Btc Ma25 Prev</div>
+                    <div class="feat-desc">Previous week value of the 25-period weekly SMA for detecting crossovers.</div>
+                  </div>
+                  <div class="feat-actions">
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    </button>
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="feat-item">
+                  <div class="feat-main">
+                    <div class="feat-name">Btc Ma25 W</div>
+                    <div class="feat-desc">25-period simple moving average of weekly closing prices to represent medium-term trend.</div>
+                  </div>
+                  <div class="feat-actions">
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    </button>
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="feat-item">
+                  <div class="feat-main">
+                    <div class="feat-name">Btc Ma7 Prev</div>
+                    <div class="feat-desc">Previous week value of the 7-period weekly SMA for detecting crossovers.</div>
+                  </div>
+                  <div class="feat-actions">
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    </button>
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="feat-item">
+                  <div class="feat-main">
+                    <div class="feat-name">Btc Ma7 W</div>
+                    <div class="feat-desc">7-period simple moving average of weekly closing prices to represent short-term trend.</div>
+                  </div>
+                  <div class="feat-actions">
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    </button>
+                    <button class="icon-btn feat-action-btn">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div class="section-title-line">Strategy</div>
-              <div class="kv"><div class="k">Trading Pairs</div><div>BINANCE_SPOT_BTC_USDT</div></div>
-              <div class="kv"><div class="k">Interval</div><div>Weekly (1w) candles</div></div>
-              <div class="kv"><div class="k">Backtest Period</div><div>1 year (up to 2 years for MA25 warm-up)</div></div>
-              <div class="section-title-line">Signal Generation</div>
-              <div class="bullet">Entry when short-term (MA7) bullishly crosses above medium-term (MA25) on weekly close.</div>
-              <div class="bullet">Exit when MA7 bearishly crosses below MA25 on weekly close.</div>
+
+              <div class="section-header">Strategy</div>
+              <div class="strategy-inner-tabs">
+                <span class="strategy-inner-tab active" data-strategy-tab="idea">Idea</span>
+                <span class="strategy-inner-tab" data-strategy-tab="code">Code</span>
+              </div>
+              <div class="strategy-content-card">
+                <div id="strategy-idea" class="strategy-idea-content">
+## Strategy Overview
+
+This playbook implements a classic dual moving average crossover system optimized for Bitcoin. The strategy captures medium-term trends by comparing short-term (MA7) and medium-term (MA25) moving averages on weekly timeframes.
+
+## Trading Logic
+
+**Entry Condition:** When MA7 crosses above MA25 (golden crossover) on weekly close, allocate 100% to BTC.
+
+**Exit Condition:** When MA7 crosses below MA25 (death crossover) on weekly close, move to 100% cash position.
+
+## Parameters
+
+- **Trading Pair:** BINANCE_SPOT_BTC_USDT
+- **Timeframe:** Weekly (1w) candles
+- **Execution:** Every Sunday at 00:00 UTC
+- **Initial Capital:** 1,000,000 USD
+- **Warm-up Period:** 25 weeks for MA25 calculation
+
+## Risk Management
+
+The strategy inherently manages risk through:
+- Trend-following approach (only long positions)
+- Cash preservation during downtrends
+- No leverage usage
+                </div>
+                <div id="strategy-code" class="strategy-code-content">
+                  <div class="code-block"><pre><span class="code-comment"># BTC Weekly MA7/MA25 Crossover Strategy</span>
+<span class="code-keyword">from</span> alva.core <span class="code-keyword">import</span> Strategy, Signal
+<span class="code-keyword">from</span> alva.indicators <span class="code-keyword">import</span> sma
+
+<span class="code-keyword">class</span> <span class="code-function">BTCMACrossover</span>(<span class="code-param">Strategy</span>):
+    <span class="code-string">"""Weekly MA7/MA25 crossover allocator for BTC"""</span>
+
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-param">self</span>):
+        <span class="code-keyword">super</span>().__init__(
+            symbol=<span class="code-string">"BINANCE_SPOT_BTC_USDT"</span>,
+            interval=<span class="code-string">"1w"</span>,
+            initial_capital=<span class="code-number">1_000_000</span>
+        )
+
+    <span class="code-keyword">def</span> <span class="code-function">compute_features</span>(<span class="code-param">self, df</span>):
+        <span class="code-comment"># Calculate moving averages</span>
+        df[<span class="code-string">"ma7"</span>] = sma(df[<span class="code-string">"close"</span>], <span class="code-number">7</span>)
+        df[<span class="code-string">"ma25"</span>] = sma(df[<span class="code-string">"close"</span>], <span class="code-number">25</span>)
+
+        <span class="code-comment"># Previous week values for crossover detection</span>
+        df[<span class="code-string">"ma7_prev"</span>] = df[<span class="code-string">"ma7"</span>].shift(<span class="code-number">1</span>)
+        df[<span class="code-string">"ma25_prev"</span>] = df[<span class="code-string">"ma25"</span>].shift(<span class="code-number">1</span>)
+
+        <span class="code-keyword">return</span> df
+
+    <span class="code-keyword">def</span> <span class="code-function">generate_signal</span>(<span class="code-param">self, df</span>):
+        <span class="code-comment"># Detect crossover</span>
+        bullish_cross = (
+            (df[<span class="code-string">"ma7_prev"</span>] <= df[<span class="code-string">"ma25_prev"</span>]) &
+            (df[<span class="code-string">"ma7"</span>] > df[<span class="code-string">"ma25"</span>])
+        )
+        bearish_cross = (
+            (df[<span class="code-string">"ma7_prev"</span>] >= df[<span class="code-string">"ma25_prev"</span>]) &
+            (df[<span class="code-string">"ma7"</span>] < df[<span class="code-string">"ma25"</span>])
+        )
+
+        <span class="code-keyword">if</span> bullish_cross.iloc[-<span class="code-number">1</span>]:
+            <span class="code-keyword">return</span> Signal.LONG, <span class="code-number">1.0</span>
+        <span class="code-keyword">elif</span> bearish_cross.iloc[-<span class="code-number">1</span>]:
+            <span class="code-keyword">return</span> Signal.EXIT, <span class="code-number">0.0</span>
+        <span class="code-keyword">else</span>:
+            <span class="code-keyword">return</span> Signal.HOLD, <span class="code-keyword">None</span></pre></div>
+                </div>
+              </div>
             </div>
-            <div id="pane-feed" class="tab-pane hidden">
-              <div class="feed-header">
-                <div class="asset-left">
-                  <span class="asset-pill">BTC</span>
-                  <div>
-                    <div class="asset-name">Bitcoin</div>
-                    <div class="asset-extra">0 USD</div>
-                  </div>
+          </div>
+          <div id="pane-feed" class="tab-pane hidden">
+            <div class="feed-header">
+              <div class="asset-left">
+                <span class="asset-pill">BTC</span>
+                <div>
+                  <div class="asset-name">Bitcoin</div>
+                  <div class="asset-extra">0 USD</div>
                 </div>
-                <div class="asset-right">Binance ↗</div>
               </div>
-              <div class="kline-card"><div class="spinner"></div></div>
-              <div class="feed-list">
-                <div class="feed-item">
-                  <div class="avatar"></div>
-                  <div>
-                    <div class="feed-title">Leoz · BTC Weekly MA7—MA25 Crossover</div>
-                    <div class="feed-tag"><span class="asset-pill">BTC</span><span class="feed-change">Increase from 0% → 100.00%</span><span>↗</span></div>
-                    <div class="feed-sub">Bullish MA7/MA25 crossover</div>
-                  </div>
-                  <div class="feed-time">05/29/2025 08:00</div>
+              <div class="asset-right">Binance ↗</div>
+            </div>
+            <div class="kline-card"><div class="spinner"></div></div>
+            <div class="feed-list">
+              <div class="feed-item">
+                <div class="avatar"></div>
+                <div>
+                  <div class="feed-title">Leoz · BTC Weekly MA7—MA25 Crossover</div>
+                  <div class="feed-tag"><span class="asset-pill">BTC</span><span class="feed-change">Increase from 0% → 100.00%</span><span>↗</span></div>
+                  <div class="feed-sub">Bullish MA7/MA25 crossover</div>
                 </div>
-                <div class="feed-item">
-                  <div class="avatar"></div>
-                  <div>
-                    <div class="feed-title">Leoz · BTC Weekly MA7—MA25 Crossover</div>
-                    <div class="feed-tag"><span class="asset-pill">BTC</span><span class="feed-change">Add & short from 0 → 100.00%</span></div>
-                    <div class="feed-sub">Bullish MA7/MA25 crossover</div>
-                  </div>
-                  <div class="feed-time">10/31/2024 08:00</div>
+                <div class="feed-time">05/29/2025 08:00</div>
+              </div>
+              <div class="feed-item">
+                <div class="avatar"></div>
+                <div>
+                  <div class="feed-title">Leoz · BTC Weekly MA7—MA25 Crossover</div>
+                  <div class="feed-tag"><span class="asset-pill">BTC</span><span class="feed-change">Add & short from 0 → 100.00%</span></div>
+                  <div class="feed-sub">Bullish MA7/MA25 crossover</div>
                 </div>
+                <div class="feed-time">10/31/2024 08:00</div>
               </div>
             </div>
           </div>
         </div>
-        <div id="configPanel" class="paper">
-          <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
-          <div class="bd">
-            <div class="bullet">Schedule: 00:00 UTC every Sunday on new weekly candle.</div>
-            <div class="bullet">Start timestamp: 1701302400000</div>
-            <div class="bullet">Initial capital: 1,000,000 (base currency)</div>
-            <div class="bullet">Changelog: Initial strategy based on specified rules.</div>
-            <div class="cfg-card">
-              <h3>BTC Weekly MA7—MA25 Crossover Allocator</h3>
-              <div class="bullet">Execution interval: 12:00 AM, only on Sunday</div>
-              <div class="bullet">Backtest Results: totalReturn 70.6%, sharpeRatio 0.68</div>
-              <button class="btn-activate">Activate</button>
+      </div>
+      <div id="chartDetailOverlay" class="detail-page">
+        <div class="detail-modal">
+          <div class="detail-header">
+            <div class="detail-header-left">
+              <div id="detailTitle" class="detail-title"></div>
+              <div id="detailSubtitle" class="detail-subtitle"></div>
             </div>
-            <div class="chat-box">
-              <div id="cfgChatList" class="chat-list"></div>
-              <div class="chat-compose">
-                <input id="cfgChatInput" class="chat-input" placeholder="Ask about this playbook" />
-                <button id="cfgChatSend" class="chat-send">Send</button>
+            <div class="detail-header-actions">
+              <button id="detailSaveBtn" class="detail-action-icon-btn" type="button" title="Save to Library" aria-label="Save to Library">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 4h10a1 1 0 0 1 1 1v14l-6-3-6 3V5a1 1 0 0 1 1-1z"/>
+                </svg>
+              </button>
+              <button id="detailUseBtn" class="detail-action-btn detail-action-btn-secondary" type="button" title="Use creates a live reference in your Playbook.">Use</button>
+              <button id="detailRemixBtn" class="detail-action-btn detail-action-btn-primary" type="button" title="Remix creates an editable copy. No live dependency.">Remix</button>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <div class="detail-meta-item"><span>Created at</span><span id="detailCreated"></span></div>
+            <div class="detail-meta-item"><span>Last updated</span><span id="detailUpdated"></span></div>
+            <div class="detail-meta-item"><span>Refresh interval</span><span id="detailInterval"></span></div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-main">
+              <div class="detail-chart-wrap">
+                <canvas id="detailChartCanvas" class="detail-chart"></canvas>
+              </div>
+              <div class="detail-logic-card">
+                <div class="detail-logic-header">
+                  <div class="detail-logic-title">Logic</div>
+                  <div class="detail-view-toggle">
+                    <button class="detail-view-toggle-btn active" data-view="idea" type="button" aria-label="Idea view">
+                      <span>Idea</span>
+                    </button>
+                    <button class="detail-view-toggle-btn" data-view="code" type="button" aria-label="Code view">
+                      <span>Code</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="detailDesc" class="detail-desc">
+                  <div class="detail-desc-main">
+                    <p id="detailLogicText" class="detail-content-view"></p>
+                    <pre id="detailCodeText" class="detail-content-view" style="display: none;"><code id="detailCodeContent"></code></pre>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-table-wrap">
+                <div class="detail-table-head">
+                  <div class="detail-table-title">Data table</div>
+                  <button id="detailDownload" class="detail-download" type="button">Download CSV</button>
+                </div>
+                <table class="detail-table">
+                  <thead>
+                    <tr><th>Index</th><th>Value</th></tr>
+                  </thead>
+                  <tbody id="detailTableBody"></tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
     </main>
-    
+    <div id="chatPanel" class="chat-panel">
+      <div class="hd"><div class="title">chat</div><div><button id="panelToggle" class="toggle">▾</button></div></div>
+      <div class="bd">
+        <div class="bullet">Schedule: 00:00 UTC every Sunday on new weekly candle.</div>
+        <div class="bullet">Start timestamp: 1701302400000</div>
+        <div class="bullet">Initial capital: 1,000,000 (base currency)</div>
+        <div class="bullet">Changelog: Initial strategy based on specified rules.</div>
+        <div class="cfg-card">
+          <h3>BTC Weekly MA7—MA25 Crossover Allocator</h3>
+          <div class="bullet">Execution interval: 12:00 AM, only on Sunday</div>
+          <div class="bullet">Backtest Results: totalReturn 70.6%, sharpeRatio 0.68</div>
+          <button class="btn-activate">Activate</button>
+        </div>
+        <div class="chat-box">
+          <div id="cfgChatList" class="chat-list"></div>
+          <div class="chat-compose">
+            <div class="chat-input-card">
+              <textarea id="cfgChatInput" class="chat-textarea" placeholder="Build an investing playbook from your ideas"></textarea>
+              <div id="mentionChipsContainer" class="mention-chips-container"></div>
+              <div id="addContextMenu" class="add-context-menu">
+                <div class="add-context-header">Add Context</div>
+                <div class="add-context-body" id="addContextBody"></div>
+              </div>
+              <div class="chat-toolbar">
+                <div class="build-btn-dd">
+                  <button id="buildModeBtn" class="build-btn" type="button" data-mode="build">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/>
+                    </svg>
+                    Build
+                    <span>▾</span>
+                  </button>
+                  <div id="buildMenu" class="build-menu">
+                    <button class="build-menu-item" data-mode="ask">
+                      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 008 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1a2 2 0 110 4 2 2 0 010-4z" fill="currentColor"/>
+                      </svg>
+                      Ask
+                    </button>
+                    <button class="build-menu-item active" data-mode="build">
+                      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/>
+                      </svg>
+                      Build
+                    </button>
+                  </div>
+                </div>
+                <div class="toolbar-right">
+                  <button id="chatAtBtn" class="toolbar-icon-btn" type="button" aria-label="Mention">@</button>
+                  <button class="toolbar-icon-btn" type="button" aria-label="Upload image">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <path d="M4 10l2-2 2 2 4-4 2 2v2H4z" fill="currentColor" opacity="0.6"/>
+                      <circle cx="5" cy="6" r="0.8" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button id="cfgChatSend" class="toolbar-icon-btn send-btn" type="button" aria-label="Send">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 8l12-6-6 6 6 6L2 8z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="nav.js"></script>
     <script>
       const moreHandlers = {
@@ -442,17 +729,18 @@
           const cfg = moreHandlers[key] || { title: 'More', items: [] };
           document.body.classList.add('subnav-open');
           const container = document.getElementById('subnav-content');
-          container.innerHTML = `<ul>${cfg.items.map(item => `<li><a href=\"#\">${item}</a></li>`).join('')}</ul>`;
+          container.innerHTML = `<ul>${cfg.items.map(item => `<li><a href="#">${item}</a></li>`).join('')}</ul>`;
           document.querySelector('.subnav-title').textContent = cfg.title;
         });
       });
       document.querySelector('.subnav-close').addEventListener('click', () => { document.body.classList.remove('subnav-open'); });
 
-      const configPanel = document.getElementById('configPanel');
+      // Chat panel toggle
+      const chatPanel = document.getElementById('chatPanel');
       const panelToggle = document.getElementById('panelToggle');
-      const detailGrid = document.querySelector('.detail');
       panelToggle.addEventListener('click', () => {
-        const collapsed = detailGrid.classList.toggle('right-collapsed');
+        const collapsed = chatPanel.classList.toggle('collapsed');
+        document.body.classList.toggle('chat-collapsed', collapsed);
         if (collapsed) {
           panelToggle.innerHTML = '<span class="orb" aria-hidden="true"></span>';
           panelToggle.setAttribute('aria-label', 'Expand chat panel');
@@ -463,6 +751,7 @@
           panelToggle.removeAttribute('data-tip');
         }
       });
+
       const sidebarToggle = document.getElementById('sidebarToggle');
       sidebarToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('sidebar-collapsed');
@@ -474,12 +763,14 @@
           const cfg = moreHandlers['#threads-more'];
           document.body.classList.add('subnav-open');
           const container = document.getElementById('subnav-content');
-          container.innerHTML = `<ul>${cfg.items.map(item => `<li><a href=\"#\">${item}</a></li>`).join('')}</ul>`;
+          container.innerHTML = `<ul>${cfg.items.map(item => `<li><a href="#">${item}</a></li>`).join('')}</ul>`;
           document.querySelector('.subnav-title').textContent = cfg.title;
         });
       });
-      
+
+      // Charts
       const charts = [];
+      const chartDetails = new Map();
       function drawLineChart(cv, data, color) {
         const ctx = cv.getContext('2d');
         const ratio = window.devicePixelRatio || 1;
@@ -554,6 +845,12 @@
           charts.push(() => drawLineChart(canvas, equityData, '#22c55e'));
         }
         document.querySelectorAll('.chart-container .chart-skeleton').forEach((skel, idx) => {
+          // Get parent container and h4 BEFORE replacing skel
+          const container = skel.closest('.chart-container');
+          const h4 = container ? container.querySelector('h4') : null;
+          const title = h4 ? h4.textContent.trim() : 'Chart ' + (idx + 1);
+          const chartId = 'chart-' + (idx + 1);
+          
           const canvas = document.createElement('canvas');
           canvas.className = 'chart-canvas';
           canvas.dataset.h = '160';
@@ -561,6 +858,27 @@
           const series = idx % 2 === 0 ? [30,32,31,35,34,36,38,37,39,41,40,42] : [12,11,13,12,14,13,15,16,15,17,18,17];
           const color = idx % 2 === 0 ? '#7c3aed' : '#f59e0b';
           charts.push(() => drawLineChart(canvas, series, color));
+          
+          // Initialize chartDetails for detail page
+          chartDetails.set(chartId, {
+            id: chartId,
+            title: title,
+            author: '@Sheer',
+            created: '2025-12-06 10:00',
+            updated: '2025-12-06 10:24',
+            interval: '1w',
+            series: series,
+            color: color
+          });
+          
+          // Add click event to h4 - redirect to Dashboard detail page
+          if (h4) {
+            h4.style.cursor = 'pointer';
+            h4.addEventListener('click', () => {
+              // Navigate to Dashboard page with chart detail
+              window.location.href = 'playbook_dashboard.html?openChart=' + encodeURIComponent(title);
+            });
+          }
         });
         document.querySelectorAll('.metrics-grid .sparkline-skel').forEach(skel => {
           const cv = document.createElement('canvas');
@@ -585,18 +903,543 @@
         charts.forEach(fn => fn());
       }
       window.addEventListener('resize', () => { charts.forEach(fn => fn()); });
+      
+      // Initialize detail page elements before setupCharts
+      const detailOverlay = document.getElementById('chartDetailOverlay');
+      const detailTitle = document.getElementById('detailTitle');
+      const detailSubtitle = document.getElementById('detailSubtitle');
+      const detailCreated = document.getElementById('detailCreated');
+      const detailUpdated = document.getElementById('detailUpdated');
+      const detailInterval = document.getElementById('detailInterval');
+      const detailLogicText = document.getElementById('detailLogicText');
+      const detailCodeText = document.getElementById('detailCodeText');
+      const detailCodeContent = document.getElementById('detailCodeContent');
+      const detailChartCanvas = document.getElementById('detailChartCanvas');
+      const detailTableBody = document.getElementById('detailTableBody');
+      const detailDownload = document.getElementById('detailDownload');
+
+      function escapeHtml(text) {
+        return (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function renderInlineMarkdown(text) {
+        if (!text) return '';
+        const esc = escapeHtml(text);
+        const tableIcon = '<svg style="display: inline-block; width: 11px; height: 11px; vertical-align: middle; margin-right: 5px; opacity: 0.75; flex-shrink: 0;" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="12" height="12" stroke="currentColor" stroke-width="1" fill="none"/><line x1="2" y1="6" x2="14" y2="6" stroke="currentColor" stroke-width="1"/><line x1="2" y1="10" x2="14" y2="10" stroke="currentColor" stroke-width="1"/><line x1="6" y1="2" x2="6" y2="14" stroke="currentColor" stroke-width="1"/><line x1="10" y1="2" x2="10" y2="14" stroke="currentColor" stroke-width="1"/></svg>';
+        return esc.replace(/`([^`]+)`/g, '<code style="white-space: nowrap;"><span style="display: inline-flex; align-items: center;">' + tableIcon + '<span>$1</span></span></code>');
+      }
+
+      function buildSubtitle(meta) {
+        const bookIcon = '<svg class="detail-subtitle-book-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 2h10v12H3V2zm1 1v10h8V3H4z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M5 3h6M5 5h6M5 7h4" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>';
+        const title = meta.title || 'Chart';
+        let description = title;
+        const t = title.toLowerCase();
+        if (t.includes('btc') && t.includes('ma')) {
+          if (t.includes('weekly') || t.includes(' w') || t.endsWith('w')) {
+            description = 'BTC Weekly MA7–MA25 Crossover Allocator';
+          } else {
+            description = 'BTC MA7–MA25 Crossover Allocator';
+          }
+        }
+        const runningDot = '<span class="detail-status-dot" title="Running" aria-label="Running"></span>';
+        return 'Created by @Sheer · ' + bookIcon + ' ' + description + ' ' + runningDot;
+      }
+
+      function buildDetailDesc(meta) {
+        const t = (meta.title || '').toLowerCase();
+        let baseText = '';
+        let dataStream = 'BTC 价格';
+        if (t.includes('btc') && t.includes('ma25') && (t.includes(' w') || t.endsWith('w'))) {
+          baseText = 'This chart shows the 25‑period moving average of BTC on the weekly timeframe. Each point is the arithmetic mean of the latest 25 weekly closes, smoothing out short‑term noise and highlighting medium‑term trend shifts and key support/resistance areas.';
+        } else if (t.includes('btc') && t.includes('ma25')) {
+          baseText = 'This chart shows a 25‑period moving average of BTC on the selected timeframe. It averages the last 25 candle closes to filter out minor fluctuations and focus on the mid‑term structure of price action.';
+        } else {
+          baseText = 'This chart is built from a time‑series dataset where each point represents the value observed at a fixed interval. It is useful for reading trend direction, rhythm of swings and local extremes, which together help evaluate market regime and strategy performance.';
+          dataStream = 'data stream';
+        }
+        return baseText + ' Referenced from the `' + dataStream + '` data stream.';
+      }
+
+      function buildCodeContent(meta) {
+        const t = (meta.title || '').toLowerCase();
+        if (t.includes('btc') && t.includes('ma25')) {
+          return `// BTC 25-period Moving Average
+const symbol = 'BTCUSDT';
+const period = 25;
+const timeframe = '1w';
+
+// Fetch historical data
+const candles = await fetchOHLC({
+  symbol: symbol,
+  timeframe: timeframe,
+  limit: 100
+});
+
+// Calculate moving average
+const closes = candles.map(c => c.close);
+const ma25 = calculateMA(closes, period);
+
+// Return the latest MA value
+return ma25[ma25.length - 1];`;
+        }
+        return `// Generic Moving Average Calculation
+const period = 25;
+const data = await fetchDataStream('data_stream');
+
+// Calculate moving average
+const ma = calculateMovingAverage(data, period);
+
+// Return result
+return ma;`;
+      }
+
+      function openChartDetail(cardId) {
+        const meta = chartDetails.get(cardId);
+        if (!meta || !detailOverlay) return;
+        if (detailTitle) detailTitle.textContent = meta.title || 'Chart';
+        if (detailSubtitle) {
+          detailSubtitle.innerHTML = buildSubtitle(meta);
+        }
+        if (detailCreated) detailCreated.textContent = meta.created || '-';
+        if (detailUpdated) detailUpdated.textContent = meta.updated || '-';
+        if (detailInterval) detailInterval.textContent = meta.interval || '-';
+        if (detailLogicText) {
+          const desc = buildDetailDesc(meta);
+          detailLogicText.innerHTML = renderInlineMarkdown(desc);
+          detailLogicText.style.display = 'block';
+        }
+        if (detailCodeText && detailCodeContent) {
+          detailCodeContent.textContent = buildCodeContent(meta);
+          detailCodeText.style.display = 'none';
+        }
+        if (detailTableBody) {
+          detailTableBody.innerHTML = '';
+          const arr = meta.series || [];
+          arr.forEach((v, i) => {
+            const tr = document.createElement('tr');
+            const idxTd = document.createElement('td');
+            idxTd.textContent = String(i + 1);
+            const valTd = document.createElement('td');
+            valTd.textContent = typeof v === 'number' && v.toFixed ? v.toFixed(4) : String(v);
+            tr.appendChild(idxTd);
+            tr.appendChild(valTd);
+            detailTableBody.appendChild(tr);
+          });
+        }
+        if (detailChartCanvas && meta.series) {
+          drawLineChart(detailChartCanvas, meta.series, meta.color || '#0ea5e9');
+        }
+        detailOverlay.classList.add('open');
+        detailOverlay.dataset.currentId = cardId;
+        const toggleBtns = document.querySelectorAll('.detail-view-toggle-btn');
+        toggleBtns.forEach(b => {
+          if (b.getAttribute('data-view') === 'idea') {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      }
+      
       setupCharts();
+
+      // Close detail overlay on click outside
+      if (detailOverlay) {
+        detailOverlay.addEventListener('click', (e) => {
+          if (e.target === detailOverlay) {
+            detailOverlay.classList.remove('open');
+          }
+        });
+      }
+
+      // Detail view toggle
+      document.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('.detail-view-toggle-btn');
+        if (!toggleBtn) return;
+        const view = toggleBtn.getAttribute('data-view');
+        const allBtns = document.querySelectorAll('.detail-view-toggle-btn');
+        allBtns.forEach(b => b.classList.remove('active'));
+        toggleBtn.classList.add('active');
+        const id = detailOverlay.dataset.currentId;
+        const meta = chartDetails.get(id);
+        const detailLogicTextEl = document.getElementById('detailLogicText');
+        const detailCodeTextEl = document.getElementById('detailCodeText');
+        const detailCodeContentEl = document.getElementById('detailCodeContent');
+        if (view === 'code') {
+          if (detailLogicTextEl) detailLogicTextEl.style.display = 'none';
+          if (detailCodeTextEl && detailCodeContentEl) {
+            detailCodeContentEl.textContent = buildCodeContent(meta);
+            detailCodeTextEl.style.display = 'block';
+          }
+        } else {
+          if (detailLogicTextEl) detailLogicTextEl.style.display = 'block';
+          if (detailCodeTextEl) detailCodeTextEl.style.display = 'none';
+        }
+      });
+
+      // Download CSV
+      if (detailDownload && detailOverlay) {
+        detailDownload.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.series) return;
+          let csv = 'index,value\n';
+          meta.series.forEach((v, i) => {
+            csv += (i + 1) + ',' + v + '\n';
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = (meta.title || 'chart') + '.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      }
+
+      // Use and Remix buttons
+      const detailUseBtn = document.getElementById('detailUseBtn');
+      const detailRemixBtn = document.getElementById('detailRemixBtn');
+      if (detailUseBtn && detailOverlay) {
+        detailUseBtn.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.title) return;
+          if (typeof addMention === 'function') {
+            addMention(meta.title);
+          }
+          const cfgChatInput = document.getElementById('cfgChatInput');
+          if (cfgChatInput) {
+            cfgChatInput.value = 'Add this Data Stream to the current Playbook';
+          }
+        });
+      }
+      if (detailRemixBtn && detailOverlay) {
+        detailRemixBtn.addEventListener('click', () => {
+          const id = detailOverlay.dataset.currentId;
+          const meta = chartDetails.get(id);
+          if (!meta || !meta.title) return;
+          if (typeof addMention === 'function') {
+            addMention(meta.title);
+          }
+          const cfgChatInput = document.getElementById('cfgChatInput');
+          if (cfgChatInput) {
+            cfgChatInput.value = 'How to modify based on this Data Stream';
+          }
+        });
+      }
+
+      // Chat
       const cfgChatList = document.getElementById('cfgChatList');
       const cfgChatInput = document.getElementById('cfgChatInput');
       const cfgChatSend = document.getElementById('cfgChatSend');
-      cfgChatSend.addEventListener('click', () => {
+      const chatAtBtn = document.getElementById('chatAtBtn');
+      const addContextMenu = document.getElementById('addContextMenu');
+      const addContextBody = document.getElementById('addContextBody');
+      
+      function insertAtCursor(el, text) {
+        const start = el.selectionStart || 0;
+        const end = el.selectionEnd || 0;
+        const val = el.value || '';
+        el.value = val.slice(0, start) + text + val.slice(end);
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+        // Trigger input event to update mention chips (this will call renderMentionChips)
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        // Also call directly to ensure it runs
+        setTimeout(() => renderMentionChips(), 0);
+      }
+      
+      // Build button dropdown
+      const buildModeBtn = document.getElementById('buildModeBtn');
+      const buildMenu = document.getElementById('buildMenu');
+      if (buildModeBtn && buildMenu) {
+        buildModeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          buildMenu.classList.toggle('open');
+        });
+        buildMenu.querySelectorAll('.build-menu-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const mode = item.getAttribute('data-mode');
+            buildModeBtn.setAttribute('data-mode', mode);
+            const label = mode === 'ask' ? 'Ask' : 'Build';
+            const ico = mode === 'ask'
+              ? '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 008 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1a2 2 0 110 4 2 2 0 010-4z" fill="currentColor"/></svg>'
+              : '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+            buildModeBtn.innerHTML = ico + ' ' + label + ' <span>▾</span>';
+            buildMenu.querySelectorAll('.build-menu-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            buildMenu.classList.remove('open');
+            if (mode === 'ask') {
+              cfgChatInput.placeholder = 'Ask anything about investing';
+            } else {
+              cfgChatInput.placeholder = 'Build an investing playbook from your ideas';
+            }
+          });
+        });
+        document.addEventListener('click', (e) => {
+          const dd = buildModeBtn.closest('.build-btn-dd');
+          if (dd && !dd.contains(e.target)) buildMenu.classList.remove('open');
+        });
+      }
+      
+      // Add Context menu data
+      const contextData = {
+        playbooks: [
+          { label: 'Attribution Analysis Strategy for Price Trends', badge: 'Current', icon: 'chart' },
+          { label: 'NVDA Price Fetcher', icon: 'chart' },
+          { label: 'BTC Dip Mean-Reversion RSI Bollinger v2', icon: 'refresh' }
+        ],
+        threads: [
+          { label: 'TSLA Financial Trends and Charts Analysis', icon: 'list' },
+          { label: 'US Treasury Yield and Bitcoin Correlation Analysis', icon: 'list' }
+        ],
+        widgets: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' },
+          { label: 'nvda_quarterly_revenue_change_chart', icon: 'widget' },
+          { label: 'nvda_price_volatility_chart', icon: 'widget' }
+        ],
+        dataStream: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' }
+        ],
+        universe: [
+          { label: 'chart_nvda_revenue_qoq_yoy', icon: 'widget' },
+          { label: 'chart_nvda_core_segments_trend', icon: 'widget' }
+        ]
+      };
+      
+      // Store active mentions separately from textarea content
+      let activeMentions = [];
+      
+      // Add a mention to the active list (without inserting text into textarea)
+      function addMention(label) {
+        if (!activeMentions.includes(label)) {
+          activeMentions.push(label);
+          renderMentionChips();
+        }
+      }
+      
+      // Remove a mention from the active list
+      function removeMentionFromList(label) {
+        activeMentions = activeMentions.filter(m => m !== label);
+        renderMentionChips();
+      }
+      
+      // Get final text with mentions appended
+      function getFinalInputText() {
         const text = cfgChatInput.value.trim();
-        if (!text) return;
+        const mentionTexts = activeMentions.map(label => '@`' + label + '`').join(' ');
+        return text + (text && mentionTexts ? ' ' : '') + mentionTexts;
+      }
+      
+      // Get mention item info from contextData
+      function getMentionItem(label) {
+        for (const category of Object.keys(contextData)) {
+          const item = contextData[category].find(i => i.label === label);
+          if (item) return item;
+        }
+        return null;
+      }
+      
+      // Get icon SVG based on icon type
+      function getIconSvg(iconType) {
+        if (iconType === 'chart') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+        } else if (iconType === 'list') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
+        } else if (iconType === 'refresh') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
+        } else if (iconType === 'widget') {
+          return '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M4 10l2-2 2 2 4-4 2 2v2H4z" fill="currentColor" opacity="0.6"/><circle cx="5" cy="6" r="0.8" fill="currentColor"/></svg>';
+        }
+        return '';
+      }
+      
+      // Render mention chips
+      function renderMentionChips() {
+        const container = document.getElementById('mentionChipsContainer');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        // Toggle class on parent card based on whether there are mentions
+        const card = container.closest('.chat-input-card');
+        if (card) {
+          if (activeMentions.length > 0) {
+            card.classList.add('has-mentions');
+          } else {
+            card.classList.remove('has-mentions');
+          }
+        }
+        
+        activeMentions.forEach(label => {
+          const item = getMentionItem(label);
+          const chip = document.createElement('div');
+          chip.className = 'mention-chip';
+          
+          const icon = document.createElement('div');
+          icon.className = 'mention-chip-icon';
+          icon.innerHTML = getIconSvg(item ? item.icon : 'widget');
+          
+          const labelEl = document.createElement('span');
+          labelEl.className = 'mention-chip-label';
+          labelEl.textContent = label;
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'mention-chip-remove';
+          removeBtn.type = 'button';
+          removeBtn.setAttribute('aria-label', 'Remove');
+          removeBtn.innerHTML = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            removeMentionFromList(label);
+          });
+          
+          chip.appendChild(icon);
+          chip.appendChild(labelEl);
+          chip.appendChild(removeBtn);
+          container.appendChild(chip);
+        });
+      }
+      
+      function buildAddContextMenu() {
+        if (!addContextBody) return;
+        addContextBody.innerHTML = '';
+        Object.keys(contextData).forEach(category => {
+          const categoryDiv = document.createElement('div');
+          categoryDiv.className = 'add-context-category';
+          const title = document.createElement('div');
+          title.className = 'add-context-category-title';
+          title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+          categoryDiv.appendChild(title);
+          contextData[category].forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'add-context-item';
+            const icon = document.createElement('div');
+            icon.className = 'add-context-item-icon';
+            let iconSvg = '';
+            if (item.icon === 'chart') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12h12v2H2v-2zm0-8h2v6H2V4zm4 2h2v4H6V6zm4-4h2v8h-2V2z" fill="currentColor"/></svg>';
+            } else if (item.icon === 'list') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h8v2H2v-2z" fill="currentColor"/></svg>';
+            } else if (item.icon === 'refresh') {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1a6 6 0 110 12A6 6 0 008 2zm0 2v2h2l-2-2zm0 4v2h2l-2-2z" fill="currentColor"/><path d="M8 3l2 2-2 2M8 9l2 2-2 2" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/></svg>';
+            } else {
+              iconSvg = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1"/></svg>';
+            }
+            icon.innerHTML = iconSvg;
+            const content = document.createElement('div');
+            content.className = 'add-context-item-content';
+            const label = document.createElement('div');
+            label.className = 'add-context-item-label';
+            label.textContent = item.label;
+            content.appendChild(label);
+            if (item.badge) {
+              const badge = document.createElement('div');
+              badge.className = 'add-context-item-badge';
+              badge.textContent = item.badge;
+              content.appendChild(badge);
+            }
+            itemDiv.appendChild(icon);
+            itemDiv.appendChild(content);
+            itemDiv.addEventListener('click', () => {
+              addMention(item.label);
+              hideAddContextMenu();
+            });
+            categoryDiv.appendChild(itemDiv);
+          });
+          addContextBody.appendChild(categoryDiv);
+        });
+      }
+      
+      function showAddContextMenu() {
+        if (!addContextMenu) return;
+        buildAddContextMenu();
+        const inputRect = cfgChatInput.getBoundingClientRect();
+        
+        // Temporarily show menu to get its dimensions
+        addContextMenu.style.visibility = 'hidden';
+        addContextMenu.style.display = 'flex';
+        const menuRect = addContextMenu.getBoundingClientRect();
+        
+        // Use fixed positioning relative to viewport
+        const left = inputRect.left + 6;
+        // Position menu so its bottom aligns with input top, expand upwards
+        const top = inputRect.top - menuRect.height - 4;
+        
+        addContextMenu.style.left = left + 'px';
+        addContextMenu.style.top = Math.max(4, top) + 'px';
+        addContextMenu.style.visibility = 'visible';
+        addContextMenu.classList.add('open');
+      }
+      
+      function hideAddContextMenu() {
+        if (!addContextMenu) return;
+        addContextMenu.classList.remove('open');
+        addContextMenu.style.visibility = '';
+        addContextMenu.style.display = '';
+      }
+      
+      if (chatAtBtn) {
+        chatAtBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (addContextMenu && addContextMenu.classList.contains('open')) {
+            hideAddContextMenu();
+          } else {
+            showAddContextMenu();
+          }
+        });
+      }
+      
+      cfgChatInput.addEventListener('input', (e) => {
+        // Remove any @`...` text that might have been typed or pasted
+        const text = cfgChatInput.value;
+        const cleanedText = text.replace(/@`([^`]+)`/g, '');
+        if (cleanedText !== text) {
+          const cursorPos = cfgChatInput.selectionStart;
+          cfgChatInput.value = cleanedText;
+          cfgChatInput.selectionStart = cfgChatInput.selectionEnd = Math.min(cursorPos, cleanedText.length);
+        }
+        
+        // Check if user typed '@' to show menu
+        try {
+          const pos = cfgChatInput.selectionStart || 0;
+          const prev = cfgChatInput.value.slice(pos - 1, pos);
+          if (prev === '@') {
+            showAddContextMenu();
+          }
+        } catch {}
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && addContextMenu) {
+          hideAddContextMenu();
+        }
+      });
+      
+      document.addEventListener('click', (e) => {
+        const compose = document.querySelector('.chat-compose');
+        if (compose && addContextMenu && !compose.contains(e.target) && !addContextMenu.contains(e.target)) {
+          hideAddContextMenu();
+        }
+      });
+      
+      cfgChatSend.addEventListener('click', () => {
+        const text = getFinalInputText();
+        if (!text.trim()) return;
         const you = document.createElement('div');
         you.className = 'chat-msg msg-you';
         you.innerHTML = '<div class="chat-role">You</div><div>' + text + '</div>';
         cfgChatList.appendChild(you);
         cfgChatInput.value = '';
+        activeMentions = [];
+        renderMentionChips();
         setTimeout(() => {
           const ai = document.createElement('div');
           ai.className = 'chat-msg msg-ai';
@@ -605,6 +1448,11 @@
           cfgChatList.scrollTop = cfgChatList.scrollHeight;
         }, 500);
       });
+      
+      // Initialize mention chips on page load
+      renderMentionChips();
+
+      // Tabs
       const tabsEls = document.querySelectorAll('.tabs .tab');
       const panes = {
         overview: document.getElementById('pane-overview'),
@@ -620,6 +1468,25 @@
           const key = tab.getAttribute('data-target');
           const pane = panes[key];
           if (pane) pane.classList.remove('hidden');
+        });
+      });
+
+      // Strategy Idea/Code tabs
+      const strategyTabs = document.querySelectorAll('.strategy-inner-tab');
+      const strategyIdea = document.getElementById('strategy-idea');
+      const strategyCode = document.getElementById('strategy-code');
+      strategyTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          strategyTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const target = tab.getAttribute('data-strategy-tab');
+          if (target === 'idea') {
+            strategyIdea.classList.remove('hidden');
+            strategyCode.classList.remove('active');
+          } else {
+            strategyIdea.classList.add('hidden');
+            strategyCode.classList.add('active');
+          }
         });
       });
     </script>

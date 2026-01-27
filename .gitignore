@@ -1,0 +1,30 @@
+# IDEs and Editors
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+*~
+
+# Build tools
+.vite/
+dist/
+build/
+*.log
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

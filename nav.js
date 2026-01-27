@@ -32,6 +32,9 @@
       <a class="rail-btn" href="explore.html" title="Explore" aria-label="Explore">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-8 0c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zm0 2c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zm8 0c-.738 0-1.429.131-2.061.362A5.97 5.97 0 0119 17v2h5v-2c0-2.21-2.239-4-5-4z"/></svg>
       </a>
+      <a class="rail-btn" href="library.html" title="Library" aria-label="Library">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-2-9h-4v4h-2v-4H8V9h4V5h2v4h4v2z"/></svg>
+      </a>
       <a class="rail-btn" href="#search" title="Search" aria-label="Search">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
       </a>
@@ -56,7 +59,19 @@
         <ul>
           <li><a class="${active==='home'?'active':''}" href="index.html">Home</a></li>
           <li><a class="${active==='explore'?'active':''}" href="explore.html">Explore</a></li>
+          <li><a class="${active==='library'?'active':''}" href="library.html">Library</a></li>
           <li><a href="#search">Search</a></li>
+          <li>
+            <a href="https://stg.alva.xyz/landing" target="_blank" rel="noopener noreferrer">
+              <span>About</span>
+              <span class="nav-external-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 5h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 11l6-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
       <div class="nav-scroll">
@@ -79,14 +94,14 @@
           </ul>
         </div>
         <div class="section with-divider">
-          <div class="section-title section-title-row"><span>Threads</span></div>
-          <ul>
-            <li><a href="#threads-a">Thread A</a></li>
-            <li><a href="#threads-b">Thread B</a></li>
-            <li><a href="#threads-c">Thread C</a></li>
-            <li><a class="more" href="#threads-more">··· More</a></li>
-          </ul>
-        </div>
+            <div class="section-title section-title-row"><span>Threads</span></div>
+            <ul>
+              <li><a class="${active==='thread_a'?'active':''}" href="thread_A.html">Thread A</a></li>
+              <li><a class="${active==='thread_b'?'active':''}" href="thread_B.html">Thread B</a></li>
+              <li><a class="${active==='thread_c'?'active':''}" href="thread_C.html">Thread C</a></li>
+              <li><a class="more" href="#threads-more">··· More</a></li>
+            </ul>
+          </div>
       </div>
       <div class="nav-bottom">
         <div class="me-icons">
@@ -104,6 +119,10 @@
     const p = location.pathname.split('/').pop() || 'index.html';
     if (p === '' || p === 'index.html') return 'home';
     if (p === 'explore.html') return 'explore';
+    if (p === 'library.html') return 'library';
+    if (p === 'thread_A.html') return 'thread_a';
+    if (p === 'thread_B.html') return 'thread_b';
+    if (p === 'thread_C.html') return 'thread_c';
     return '';
   }
   function applyCollapsedFromStorage() {
@@ -113,16 +132,21 @@
       document.body.classList.toggle('sidebar-collapsed', collapsed);
       const btn = document.getElementById('sidebarToggle');
       if (btn) btn.textContent = collapsed ? '»' : '«';
-    } catch {}
+    } catch (e) {
+      console.warn('[nav.js] Failed to apply collapsed state from storage:', e);
+    }
   }
   function bindToggle() {
-    const btn = document.getElementById('sidebarToggle');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
+    // Use event delegation for more reliable binding
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('#sidebarToggle');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
       const collapsed = document.body.classList.toggle('sidebar-collapsed');
       btn.textContent = collapsed ? '»' : '«';
       try { localStorage.setItem('alva_nav_collapsed', collapsed ? '1' : '0'); } catch {}
-    });
+    }, true); // Use capture phase to catch events early
   }
   function bindSearch() {
     const links = document.querySelectorAll('a[href="#search"]');
@@ -192,10 +216,18 @@
   }
   function init() {
     const aside = document.querySelector('aside');
-    if (!aside) return;
+    if (!aside) {
+      console.warn('[nav.js] No aside element found');
+      return;
+    }
     const active = detectActive();
     const hasNav = !!aside.querySelector('.nav-top');
-    if (!hasNav) aside.innerHTML = tpl(active);
+    if (!hasNav) {
+      console.log('[nav.js] Injecting navigation HTML');
+      aside.innerHTML = tpl(active);
+    } else {
+      console.log('[nav.js] Navigation already exists, skipping injection');
+    }
     applyCollapsedFromStorage();
     bindToggle();
     bindSearch();
@@ -204,4 +236,86 @@
   }
   window.AlvaNav = { init };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+// Global tooltip system - faster appearance (40% faster than default)
+(function() {
+  let tooltipEl = null;
+  let tooltipTimeout = null;
+  const defaultDelay = 1000; // Browser default is ~1000ms
+  const fasterDelay = Math.round(defaultDelay * 0.6); // 40% faster = 600ms
+  
+  function createTooltip() {
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.className = 'tooltip-custom';
+      document.body.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  }
+  
+  function showTooltip(element, text) {
+    const tooltip = createTooltip();
+    tooltip.textContent = text;
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.display = 'block';
+    tooltip.classList.remove('show');
+    
+    const rect = element.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const x = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    const y = rect.top - tooltipRect.height - 8;
+    
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+    tooltip.style.visibility = 'visible';
+    
+    tooltipTimeout = setTimeout(() => {
+      tooltip.classList.add('show');
+    }, fasterDelay);
+  }
+  
+  function hideTooltip() {
+    if (tooltipTimeout) {
+      clearTimeout(tooltipTimeout);
+      tooltipTimeout = null;
+    }
+    if (tooltipEl) {
+      tooltipEl.classList.remove('show');
+      setTimeout(() => {
+        if (tooltipEl) {
+          tooltipEl.style.display = 'none';
+        }
+      }, 120);
+    }
+  }
+  
+  
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest('[title]');
+    if (target && !target.hasAttribute('data-no-tooltip')) {
+      const title = target.getAttribute('title');
+      e.preventDefault();
+      target.setAttribute('data-original-title', title);
+      target.removeAttribute('title');
+      showTooltip(target, title);
+    }
+  });
+  
+  document.addEventListener('mouseout', (e) => {
+    const target = e.target.closest('[data-original-title]');
+    if (target) {
+      // If moving to a child element, don't hide
+      if (e.relatedTarget && target.contains(e.relatedTarget)) {
+        return;
+      }
+      
+      const originalTitle = target.getAttribute('data-original-title');
+      if (originalTitle) {
+        target.setAttribute('title', originalTitle);
+        target.removeAttribute('data-original-title');
+        hideTooltip();
+      }
+    }
+  });
 })();
