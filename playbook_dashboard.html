@@ -8,7 +8,26 @@
     <style>
       /* Page-specific styles for dashboard */
       .paper { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-      .paper .hd { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+      .paper .hd { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+      .hd-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+      .hd-left { display: flex; align-items: center; gap: 10px; }
+      .hd-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+      .hd-avatar img { width: 100%; height: 100%; object-fit: cover; }
+      .hd-user { font-size: 13px; color: #6b7280; font-weight: 500; }
+      .hd-sep { color: #d1d5db; font-size: 13px; }
+      .hd-trend-icon { display: flex; align-items: center; color: #6b7280; }
+      .hd-trend-icon svg { width: 16px; height: 16px; }
+      .hd-title { font-size: 15px; font-weight: 600; color: #111827; }
+      .hd-status { width: 8px; height: 8px; border-radius: 50%; background: #14b8a6; flex-shrink: 0; }
+      .hd-actions { display: flex; align-items: center; gap: 12px; }
+      .hd-action-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; background: #fff; color: #6b7280; cursor: pointer; transition: all 0.2s; }
+      .hd-action-btn:hover { border-color: #d1d5db; color: #374151; background: #f9fafb; }
+      .hd-action-btn svg { width: 16px; height: 16px; }
+      .tabs { display: flex; gap: 24px; }
+      .tab { padding: 6px 0; border: none; background: transparent; color: #6b7280; font-size: 14px; font-weight: 500; cursor: pointer; position: relative; transition: color 0.2s; }
+      .tab:hover { color: #374151; }
+      .tab.active { color: #111827; font-weight: 600; }
+      .tab.active::after { content: ''; position: absolute; bottom: -12px; left: 0; right: 0; height: 2px; background: #14b8a6; border-radius: 1px; }
       .paper .bd { padding: 12px 14px; }
       #dashPanel { display: flex; flex-direction: column; position: relative; }
       #dashPanel .bd { flex: 1; }
@@ -263,7 +282,42 @@
       <div id="dashboardView">
         <section id="dashPanel" class="paper">
           <div class="hd">
-            <div class="title">Playbook Dashboard</div>
+            <div class="hd-row">
+              <div class="hd-left">
+                <div class="hd-avatar">
+                  <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=yllygg" alt="avatar">
+                </div>
+                <span class="hd-user">YLLYGG</span>
+                <span class="hd-sep">·</span>
+                <span class="hd-trend-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                  </svg>
+                </span>
+                <span class="hd-title">Attribution Analysis Strategy for Price Trends</span>
+                <span class="hd-status"></span>
+              </div>
+              <div class="hd-actions">
+                <button id="editHistoryBtn" class="hd-action-btn" title="Edit History">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </button>
+                <div id="editHistoryPanel" class="edit-history-panel">
+                  <div class="edit-history-body" id="editHistoryBody">
+                    <!-- History items will be injected here -->
+                  </div>
+                </div>
+                <button class="hd-action-btn" title="Settings">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
           <div class="bd">
             <div id="dashGrid" class="dash-grid">
@@ -1617,7 +1671,129 @@ return ma;`;
       });
     </script>
     <script>
-      // Global tooltip system moved to nav.js
+      // Edit History Panel
+      const editHistoryBtn = document.getElementById('editHistoryBtn');
+      const editHistoryPanel = document.getElementById('editHistoryPanel');
+      const editHistoryBody = document.getElementById('editHistoryBody');
+      
+      // Mock history data - grouped by version sections
+      const editHistoryData = [
+        {
+          version: 'Unreleased',
+          items: [
+            {
+              id: 'unreleased-1',
+              description: 'Monitoring list expanded to include Meta, AAPL, etc.',
+              date: '11/12/2025 16:52',
+              viewing: true
+            }
+          ]
+        },
+        {
+          version: 'V2',
+          date: '11/12/2025 16:52',
+          items: [
+            {
+              id: 'v2-1',
+              description: 'Changed schedule from every 30 minutes to every 20 minutes.',
+              date: '11/12/2025 16:52'
+            }
+          ]
+        },
+        {
+          version: 'V1',
+          date: '11/12/2025 16:52',
+          items: [
+            {
+              id: 'v1-1',
+              description: 'Changed schedule from every 30 minutes to every 20 minutes.',
+              date: '11/12/2025 16:52'
+            },
+            {
+              id: 'v1-2',
+              description: 'Changed schedule from every 30 minutes to every 20 minutes.',
+              date: '11/12/2025 16:52'
+            }
+          ]
+        },
+        {
+          version: 'V0',
+          date: '11/12/2025 16:52',
+          items: [
+            {
+              id: 'v0-1',
+              description: 'Changed schedule from every 30 minutes to every 20 minutes.',
+              date: '11/12/2025 16:52'
+            },
+            {
+              id: 'v0-2',
+              description: 'Changed schedule from every 30 minutes to every 20 minutes.',
+              date: '11/12/2025 16:52'
+            }
+          ]
+        }
+      ];
+      
+      function renderHistoryItem(item) {
+        return `
+          <div class="edit-history-item${item.viewing ? ' viewing' : ''}" data-id="${item.id}">
+            <div class="edit-history-item-header">
+              ${item.viewing ? `
+                <div class="edit-history-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              ` : ''}
+            </div>
+            <div class="edit-history-description">${item.description}</div>
+            <div class="edit-history-timestamp">
+              ${item.date}
+              ${item.viewing ? ' | <svg style="display: inline; width: 12px; height: 12px; vertical-align: middle; margin: 0 2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/></svg> You are viewing' : ''}
+            </div>
+          </div>
+        `;
+      }
+      
+      function renderEditHistory() {
+        if (!editHistoryBody) return;
+        let html = '';
+        
+        editHistoryData.forEach(section => {
+          const headerText = section.date ? `${section.version} • ${section.date}` : section.version;
+          html += `<div class="edit-history-section">
+            <div class="edit-history-section-header">${headerText}</div>
+            ${section.items.map(item => renderHistoryItem(item)).join('')}
+          </div>`;
+        });
+        
+        editHistoryBody.innerHTML = html;
+      }
+      
+      function toggleEditHistoryPanel() {
+        if (!editHistoryPanel) return;
+        const isOpen = editHistoryPanel.classList.contains('open');
+        if (!isOpen) {
+          renderEditHistory();
+        }
+        editHistoryPanel.classList.toggle('open', !isOpen);
+      }
+      
+      if (editHistoryBtn) {
+        editHistoryBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleEditHistoryPanel();
+        });
+      }
+      
+      // Close panel when clicking outside
+      document.addEventListener('click', (e) => {
+        if (editHistoryPanel && editHistoryPanel.classList.contains('open')) {
+          if (!editHistoryPanel.contains(e.target) && e.target !== editHistoryBtn) {
+            editHistoryPanel.classList.remove('open');
+          }
+        }
+      });
     </script>
   </body>
 </html>

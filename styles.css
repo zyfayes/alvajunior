@@ -1196,3 +1196,132 @@ body.sidebar-collapsed .nav-popover { left: 60px; }
   transition: all 0.2s;
 }
 .input-btn:hover { color: #14b8a6; }
+
+/* ============================================
+   EDIT HISTORY PANEL
+   ============================================ */
+.edit-history-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 380px;
+  max-height: 480px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.edit-history-panel.open {
+  display: flex;
+}
+
+.edit-history-body {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.edit-history-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.edit-history-section:last-child {
+  border-bottom: none;
+}
+
+.edit-history-section-header {
+  padding: 10px 16px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.edit-history-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.edit-history-item:hover {
+  background: #f8fafc;
+}
+
+.edit-history-item.viewing {
+  background: #f0fdf4;
+}
+
+.edit-history-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.edit-history-item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-history-version {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.edit-history-item.viewing .edit-history-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #14b8a6;
+}
+
+.edit-history-item .edit-history-check {
+  display: none;
+}
+
+.edit-history-description {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.edit-history-timestamp {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Scroll indicator for history list */
+.edit-history-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.edit-history-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.edit-history-body::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.edit-history-body::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Position container for history panel */
+.hd-actions {
+  position: relative;
+}
