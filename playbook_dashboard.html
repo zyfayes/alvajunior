@@ -23,6 +23,35 @@
       .hd-action-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; background: #fff; color: #6b7280; cursor: pointer; transition: all 0.2s; }
       .hd-action-btn:hover { border-color: #d1d5db; color: #374151; background: #f9fafb; }
       .hd-action-btn svg { width: 16px; height: 16px; }
+      .hd-action-btn-text { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+      .hd-action-btn-text:hover { background: #d1fae5; border-color: #0f766e; }
+      .share-dd { position: relative; }
+      .share-panel { position: absolute; top: calc(100% + 8px); right: 0; width: 360px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 50; }
+      .share-panel.open { display: block; }
+      .share-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+      .share-title { font-size: 14px; font-weight: 600; color: #111827; }
+      .share-close { border: 0; background: transparent; color: #6b7280; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s; }
+      .share-close:hover { background: #f3f4f6; color: #374151; }
+      .share-body { padding: 14px; }
+      .share-visibility { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .share-visibility-label { font-size: 13px; font-weight: 500; color: #374151; }
+      .share-toggle { display: flex; align-items: center; gap: 10px; }
+      .share-toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+      .share-toggle-switch input { opacity: 0; width: 0; height: 0; }
+      .share-toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #14b8a6; transition: 0.3s; border-radius: 24px; }
+      .share-toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+      .share-toggle-switch input:checked + .share-toggle-slider { background-color: #14b8a6; }
+      .share-toggle-switch input:not(:checked) + .share-toggle-slider { background-color: #d1d5db; }
+      .share-toggle-switch input:checked + .share-toggle-slider:before { transform: translateX(20px); }
+      .share-toggle-label { font-size: 13px; font-weight: 500; color: #374151; }
+      .share-url-section { display: block; }
+      .share-url-section.hidden { display: none; }
+      .share-url-label { font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 8px; }
+      .share-url-input-group { display: flex; gap: 8px; }
+      .share-url-input { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #6b7280; background: #f9fafb; }
+      .share-copy-btn { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+      .share-copy-btn:hover { background: #d1fae5; border-color: #0f766e; }
+      .share-copy-btn.copied { background: #d1fae5; color: #059669; }
       .tabs { display: flex; gap: 24px; }
       .tab { padding: 6px 0; border: none; background: transparent; color: #6b7280; font-size: 14px; font-weight: 500; cursor: pointer; position: relative; transition: color 0.2s; }
       .tab:hover { color: #374151; }
@@ -45,7 +74,7 @@
       @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
       .chart-canvas { width: 100%; height: 160px; display: block; }
       .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; gap: 16px; }
-      .chart-card { position: relative; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
+      .chart-card { position: relative; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); display: flex; flex-direction: column; transition: opacity 0.3s, transform 0.3s; }
       .card-hd { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); }
       .card-title { font-size: 14px; font-weight: 700; cursor: pointer; }
       .card-title:hover { color: #0f766e; }
@@ -203,6 +232,7 @@
       .detail-title { font-size: 18px; font-weight: 700; }
       .detail-subtitle { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
       .detail-subtitle-book-icon { display: inline-flex; align-items: center; width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+      .detail-version-badge { display: inline-flex; align-items: center; padding: 2px 6px; background: #f3f4f6; color: #6b7280; border-radius: 4px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; margin-left: 2px; }
       .detail-status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-left: 4px; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(34,197,94,0.2); animation: statusPulse 2s ease-in-out infinite; }
       @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
       .detail-meta { margin-top: 4px; padding: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
@@ -254,6 +284,27 @@
       .detail-ds-title { font-size: 13px; font-weight: 600; }
       .detail-ds-close { border: 1px solid var(--border); background: #ffffff; color: var(--text); border-radius: 8px; padding: 2px 8px; font-size: 12px; cursor: pointer; }
       .detail-ds-body { font-size: 12px; color: #0f172a; line-height: 1.5; }
+
+      /* Error/Warning state styles for cards */
+      .card-error { border-color: #fecaca; background: linear-gradient(180deg, #fef2f2 0%, #ffffff 100%); }
+      .card-error .card-hd { border-bottom-color: #fecaca; }
+      .card-upd-pill-error { background: #fef2f2 !important; color: #dc2626 !important; border: 1px solid #fecaca !important; }
+      .card-error-icon { display: inline-flex; align-items: center; width: 14px; height: 14px; color: #dc2626; }
+      .card-error-icon svg { width: 14px; height: 14px; }
+      
+      /* Detail page error status */
+      .detail-status-dot-error { background: #dc2626 !important; box-shadow: 0 0 0 2px rgba(220,38,38,0.2) !important; }
+      .detail-error-banner { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; margin-top: 8px; font-size: 13px; color: #dc2626; transition: all 0.3s; }
+      .detail-error-banner.success { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+      .detail-error-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+      .detail-error-banner span { flex: 1; }
+      .detail-upgrade-btn { border: 1px solid #dc2626; background: #ffffff; color: #dc2626; border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-left: auto; position: relative; min-width: 80px; }
+      .detail-upgrade-btn:hover:not(:disabled) { background: #fee2e2; border-color: #b91c1c; color: #b91c1c; }
+      .detail-upgrade-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+      .detail-upgrade-btn.loading { color: transparent; }
+      .detail-upgrade-btn.loading::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border: 2px solid #dc2626; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+      .detail-delete-btn { border: 1px solid #dc2626; background: #dc2626; color: #ffffff; border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-left: auto; }
+      .detail-delete-btn:hover { background: #b91c1c; border-color: #b91c1c; }
     </style>
   </head>
   <body class="has-chat-panel">
@@ -310,12 +361,48 @@
                     <!-- History items will be injected here -->
                   </div>
                 </div>
-                <button class="hd-action-btn" title="Settings">
+                <div class="share-dd">
+                  <button id="shareBtn" class="hd-action-btn" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <div id="sharePanel" class="share-panel">
+                    <div class="share-header">
+                      <div class="share-title">Share Playbook</div>
+                      <button id="shareClose" class="share-close">×</button>
+                    </div>
+                    <div class="share-body">
+                      <div class="share-visibility">
+                        <div class="share-visibility-label">Visibility</div>
+                        <div class="share-toggle">
+                          <label class="share-toggle-switch">
+                            <input type="checkbox" id="shareVisibilityToggle" checked>
+                            <span class="share-toggle-slider"></span>
+                          </label>
+                          <span class="share-toggle-label" id="shareVisibilityLabel">Public</span>
+                        </div>
+                      </div>
+                      <div class="share-url-section" id="shareUrlSection">
+                        <div class="share-url-label">Share URL</div>
+                        <div class="share-url-input-group">
+                          <input type="text" id="shareUrlInput" class="share-url-input" readonly value="https://alva.xyz/playbook/attribution-analysis-strategy">
+                          <button id="shareCopyBtn" class="share-copy-btn">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="hd-action-btn" title="Star">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                   </svg>
                 </button>
+                <button class="hd-action-btn-text" title="Release">Release</button>
               </div>
             </div>
           </div>
@@ -360,6 +447,72 @@
                       <div class="card-upd-pop">
                         <div class="card-upd-row card-upd-time"></div>
                         <div class="card-upd-row card-upd-interval"></div>
+                      </div>
+                    </div>
+                    <div class="shape-dd">
+                      <button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button>
+                      <div class="shape-menu">
+                        <button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button>
+                        <button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button>
+                        <button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button>
+                        <button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container"><div class="chart-skeleton"></div></div>
+              </div>
+              <div class="chart-card card-error" id="chart-eth-funding-rate" data-w="1" data-h="1" draggable="true">
+                <div class="card-hd">
+                  <div class="card-title" onclick="openChartDetail('chart-eth-funding-rate')">ETH Funding Rate</div>
+                  <div class="card-ops">
+                    <div class="card-upd card-upd-error" data-updated="2025-01-15 08:30" data-interval="8h" data-error="true" data-error-msg="Source playbook has a breaking change. Upgrade required to continue." data-error-type="breaking-change">
+                      <button class="card-upd-pill card-upd-pill-error" type="button">
+                        <span class="card-error-icon">
+                          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 1L15 14H1L8 1Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                          </svg>
+                        </span>
+                        <span class="card-upd-label">Paused</span>
+                      </button>
+                      <div class="card-upd-pop">
+                        <div class="card-upd-row card-upd-time"></div>
+                        <div class="card-upd-row card-upd-interval"></div>
+                        <div class="card-upd-row card-upd-error-msg" style="color: #dc2626; margin-top: 4px;"></div>
+                      </div>
+                    </div>
+                    <div class="shape-dd">
+                      <button class="shape-btn" aria-label="Widget size"><span class="shape-ico" data-cur="sq-s"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span></button>
+                      <div class="shape-menu">
+                        <button class="shape-item" data-size="sq-s"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="#9ca3af"/></svg></span><span>1×1</span></button>
+                        <button class="shape-item" data-size="sq-l"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#9ca3af"/></svg></span><span>2×2</span></button>
+                        <button class="shape-item" data-size="rect-h"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="8" fill="#9ca3af"/></svg></span><span>2×1</span></button>
+                        <button class="shape-item" data-size="rect-v"><span class="shape-ico"><svg viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="12" fill="#9ca3af"/></svg></span><span>1×2</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container"><div class="chart-skeleton"></div></div>
+              </div>
+              <div class="chart-card card-error card-archived" id="chart-sol-rsi" data-w="1" data-h="1" draggable="true">
+                <div class="card-hd">
+                  <div class="card-title" onclick="openChartDetail('chart-sol-rsi')">SOL RSI</div>
+                  <div class="card-ops">
+                    <div class="card-upd card-upd-error" data-updated="2025-01-10 14:20" data-interval="4h" data-error="true" data-error-msg="Source playbook no longer maintains this data stream. Widget archived." data-error-type="archived">
+                      <button class="card-upd-pill card-upd-pill-error" type="button">
+                        <span class="card-error-icon">
+                          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 1L15 14H1L8 1Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                          </svg>
+                        </span>
+                        <span class="card-upd-label">Archived</span>
+                      </button>
+                      <div class="card-upd-pop">
+                        <div class="card-upd-row card-upd-time"></div>
+                        <div class="card-upd-row card-upd-interval"></div>
+                        <div class="card-upd-row card-upd-error-msg" style="color: #dc2626; margin-top: 4px;"></div>
                       </div>
                     </div>
                     <div class="shape-dd">
@@ -604,9 +757,24 @@
           canvas.className = 'chart-canvas';
           canvas.dataset.h = '160';
           skel.replaceWith(canvas);
-          const series = idx % 2 === 0 ? [30,32,31,35,34,36,38,37,39,41,40,42] : [12,11,13,12,14,13,15,16,15,17,18,17];
-          const color = idx % 2 === 0 ? '#7c3aed' : '#f59e0b';
           const card = canvas.closest('.chart-card');
+          const cardId = card ? card.id : '';
+          
+          // Special handling for error state cards
+          let series, color;
+          if (cardId === 'chart-eth-funding-rate') {
+            // ETH Funding Rate data (oscillating around 0)
+            series = [0.012, 0.008, 0.015, 0.010, 0.006, 0.018, 0.014, 0.009, 0.011, 0.007, 0.013, 0.016];
+            color = '#dc2626'; // Red to indicate error state
+          } else if (cardId === 'chart-sol-rsi') {
+            // SOL RSI data (RSI typically ranges 0-100)
+            series = [45, 48, 52, 55, 58, 62, 65, 68, 72, 75, 78, 82];
+            color = '#dc2626'; // Red to indicate archived state
+          } else {
+            series = idx % 2 === 0 ? [30,32,31,35,34,36,38,37,39,41,40,42] : [12,11,13,12,14,13,15,16,15,17,18,17];
+            color = idx % 2 === 0 ? '#7c3aed' : '#f59e0b';
+          }
+          
           if (card) {
             if (!card.id) card.id = 'chart-' + (idx + 1);
             const titleEl = card.querySelector('.card-title');
@@ -614,6 +782,9 @@
             const updEl = card.querySelector('.card-upd');
             const updated = updEl ? updEl.getAttribute('data-updated') || '' : '';
             const interval = updEl ? updEl.getAttribute('data-interval') || '' : '';
+            const isError = updEl ? updEl.getAttribute('data-error') === 'true' : false;
+            const errorMsg = updEl ? updEl.getAttribute('data-error-msg') || '' : '';
+            const errorType = updEl ? updEl.getAttribute('data-error-type') || '' : '';
             chartDetails.set(card.id, {
               id: card.id,
               title,
@@ -622,7 +793,11 @@
               updated,
               interval,
               series,
-              color
+              color,
+              isError,
+              errorMsg,
+              errorType,
+              version: 'V1'
             });
           }
           charts.push(() => drawLineChart(canvas, series, color));
@@ -639,10 +814,16 @@
         const pill = upd.querySelector('.card-upd-pill');
         const timeRow = upd.querySelector('.card-upd-time');
         const intvRow = upd.querySelector('.card-upd-interval');
+        const errorRow = upd.querySelector('.card-upd-error-msg');
         const ts = upd.getAttribute('data-updated') || '';
         const iv = upd.getAttribute('data-interval') || '';
+        const isError = upd.getAttribute('data-error') === 'true';
+        const errorMsg = upd.getAttribute('data-error-msg') || '';
         if (timeRow) timeRow.textContent = ts ? 'Last Updated: ' + ts : 'Last Updated: -';
         if (intvRow) intvRow.textContent = iv ? 'Interval: ' + iv : 'Interval: -';
+        if (errorRow && isError && errorMsg) {
+          errorRow.textContent = '⚠ ' + errorMsg;
+        }
         if (pill && pop) {
           pill.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -778,7 +959,8 @@
           updated: detailTs || '',
           interval: '1w',
           series,
-          color
+          color,
+          version: 'V1'
         });
         initChartCard(card, canvas, series, color);
         initCardUpdate(card);
@@ -873,7 +1055,13 @@
         const t = (meta.title || '').toLowerCase();
         let baseText = '';
         let dataStream = 'BTC 价格';
-        if (t.includes('btc') && t.includes('ma25') && (t.includes(' w') || t.endsWith('w'))) {
+        if (t.includes('sol') && t.includes('rsi')) {
+          baseText = 'This chart displays the Relative Strength Index (RSI) for SOL, a momentum oscillator that measures the speed and magnitude of price changes. RSI values range from 0 to 100, with readings above 70 typically indicating overbought conditions and below 30 indicating oversold conditions.';
+          dataStream = 'SOL RSI';
+        } else if (t.includes('eth') && t.includes('funding')) {
+          baseText = 'This chart tracks the ETH perpetual futures funding rate across major exchanges. Funding rates indicate market sentiment: positive rates suggest longs pay shorts (bullish bias), negative rates suggest shorts pay longs (bearish bias). Extreme values often precede mean-reversion moves.';
+          dataStream = 'ETH Funding Rate';
+        } else if (t.includes('btc') && t.includes('ma25') && (t.includes(' w') || t.endsWith('w'))) {
           baseText = 'This chart shows the 25‑period moving average of BTC on the weekly timeframe. Each point is the arithmetic mean of the latest 25 weekly closes, smoothing out short‑term noise and highlighting medium‑term trend shifts and key support/resistance areas.';
         } else if (t.includes('btc') && t.includes('ma25')) {
           baseText = 'This chart shows a 25‑period moving average of BTC on the selected timeframe. It averages the last 25 candle closes to filter out minor fluctuations and focus on the mid‑term structure of price action.';
@@ -894,12 +1082,68 @@
           } else {
             description = 'BTC MA7–MA25 Crossover Allocator';
           }
+        } else if (t.includes('eth') && t.includes('funding')) {
+          description = 'ETH Perpetual Funding Rate Monitor';
+        } else if (t.includes('sol') && t.includes('rsi')) {
+          description = 'SOL RSI Indicator';
         }
+        
+        const version = meta.version || 'V1';
+        const versionBadge = '<span class="detail-version-badge">' + version + '</span>';
+        
+        // Check if this chart has error state
+        if (meta.isError) {
+          const errorDot = '<span class="detail-status-dot detail-status-dot-error" title="Error" aria-label="Error"></span>';
+          return 'Created by @Sheer · ' + bookIcon + ' ' + description + ' ' + versionBadge + ' ' + errorDot;
+        }
+        
         const runningDot = '<span class="detail-status-dot" title="Running" aria-label="Running"></span>';
-        return 'Created by @Sheer · ' + bookIcon + ' ' + description + ' ' + runningDot;
+        return 'Created by @Sheer · ' + bookIcon + ' ' + description + ' ' + versionBadge + ' ' + runningDot;
       }
       function buildCodeContent(meta) {
         const t = (meta.title || '').toLowerCase();
+        if (t.includes('sol') && t.includes('rsi')) {
+          return `// SOL Relative Strength Index (RSI)
+const symbol = 'SOLUSDT';
+const period = 14;
+
+// Fetch historical price data
+const candles = await fetchOHLC({
+  symbol: symbol,
+  timeframe: '1h',
+  limit: 100
+});
+
+// Calculate RSI
+const closes = candles.map(c => c.close);
+const rsi = calculateRSI(closes, period);
+
+// Return the latest RSI value
+return rsi[rsi.length - 1];`;
+        }
+        if (t.includes('eth') && t.includes('funding')) {
+          return `// ETH Perpetual Funding Rate
+const symbol = 'ETHUSDT';
+const exchanges = ['binance', 'okx', 'bybit'];
+
+// Fetch funding rates from multiple exchanges
+const fundingRates = await Promise.all(
+  exchanges.map(ex => fetchFundingRate({
+    exchange: ex,
+    symbol: symbol
+  }))
+);
+
+// Calculate average funding rate
+const avgRate = fundingRates.reduce((sum, r) => sum + r.rate, 0) / fundingRates.length;
+
+// Return funding rate data
+return {
+  rate: avgRate,
+  timestamp: Date.now(),
+  exchanges: fundingRates
+};`;
+        }
         if (t.includes('btc') && t.includes('ma25')) {
           return `// BTC 25-period Moving Average
 const symbol = 'BTCUSDT';
@@ -941,6 +1185,159 @@ return ma;`;
         if (detailSubtitle) {
           detailSubtitle.innerHTML = buildSubtitle(meta);
         }
+        
+        // Handle error banner
+        const existingBanner = document.getElementById('detailErrorBanner');
+        if (existingBanner) existingBanner.remove();
+        
+        if (meta.isError && meta.errorMsg) {
+          const banner = document.createElement('div');
+          banner.id = 'detailErrorBanner';
+          banner.className = 'detail-error-banner';
+          const isBreakingChange = meta.errorType === 'breaking-change';
+          const isArchived = meta.errorType === 'archived';
+          let bannerContent = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L15 14H1L8 1Z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>' + meta.errorMsg + '</span>';
+          if (isBreakingChange) {
+            bannerContent += '<button id="detailUpgradeBtn" class="detail-upgrade-btn">Upgrade</button>';
+          } else if (isArchived) {
+            bannerContent += '<button id="detailDeleteBtn" class="detail-delete-btn">Delete</button>';
+          }
+          banner.innerHTML = bannerContent;
+          const headerLeft = document.querySelector('.detail-header-left');
+          if (headerLeft) {
+            headerLeft.appendChild(banner);
+          }
+          
+          // Handle upgrade button
+          if (isBreakingChange) {
+            const upgradeBtn = document.getElementById('detailUpgradeBtn');
+            if (upgradeBtn) {
+              upgradeBtn.addEventListener('click', () => {
+                // Get current widget ID
+                const currentWidgetId = detailOverlay.dataset.currentId;
+                if (!currentWidgetId) return;
+                
+                // Show button loading
+                upgradeBtn.disabled = true;
+                upgradeBtn.classList.add('loading');
+                
+                // Simulate upgrade process
+                setTimeout(() => {
+                  // Update banner to success state
+                  banner.classList.remove('detail-error-banner');
+                  banner.classList.add('detail-error-banner', 'success');
+                  
+                  // Update banner content
+                  const successIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                  const successMsg = 'Upgraded to latest version. Data stream updates resumed.';
+                  banner.innerHTML = successIcon + '<span>' + successMsg + '</span>';
+                  
+                  // Remove upgrade button
+                  upgradeBtn.remove();
+                  
+                  // Update card state in dashboard
+                  const card = document.getElementById(currentWidgetId);
+                  if (card) {
+                    // Remove error classes
+                    card.classList.remove('card-error');
+                    const cardUpd = card.querySelector('.card-upd');
+                    if (cardUpd) {
+                      cardUpd.removeAttribute('data-error');
+                      cardUpd.removeAttribute('data-error-type');
+                      cardUpd.classList.remove('card-upd-error');
+                      
+                      // Update card update pill
+                      const pill = cardUpd.querySelector('.card-upd-pill');
+                      if (pill) {
+                        pill.classList.remove('card-upd-pill-error');
+                        const errorIcon = pill.querySelector('.card-error-icon');
+                        if (errorIcon) errorIcon.remove();
+                        const label = pill.querySelector('.card-upd-label');
+                        if (label) label.textContent = 'Last';
+                        const value = pill.querySelector('.card-upd-value');
+                        if (value) {
+                          const now = new Date();
+                          const mm = String(now.getMonth() + 1).padStart(2, '0');
+                          const dd = String(now.getDate()).padStart(2, '0');
+                          const hh = String(now.getHours()).padStart(2, '0');
+                          const mi = String(now.getMinutes()).padStart(2, '0');
+                          value.textContent = mm.replace(/^0/, '') + '/' + dd.replace(/^0/, '') + ' ' + hh + ':' + mi;
+                        }
+                      }
+                      
+                      // Update card update time
+                      const now = new Date();
+                      const mm = String(now.getMonth() + 1).padStart(2, '0');
+                      const dd = String(now.getDate()).padStart(2, '0');
+                      const hh = String(now.getHours()).padStart(2, '0');
+                      const mi = String(now.getMinutes()).padStart(2, '0');
+                      const updated = now.getFullYear() + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
+                      cardUpd.setAttribute('data-updated', updated);
+                    }
+                  }
+                  
+                  // Update chartDetails meta
+                  const meta = chartDetails.get(currentWidgetId);
+                  if (meta) {
+                    meta.isError = false;
+                    meta.errorMsg = '';
+                    meta.errorType = '';
+                    meta.updated = new Date().toISOString().slice(0, 16).replace('T', ' ');
+                    meta.version = 'V2';
+                    
+                    // Update subtitle with new version
+                    if (detailSubtitle) {
+                      detailSubtitle.innerHTML = buildSubtitle(meta);
+                    }
+                  }
+                  
+                  // Auto-hide success banner after 5 seconds
+                  setTimeout(() => {
+                    banner.style.opacity = '0';
+                    setTimeout(() => {
+                      banner.remove();
+                    }, 300);
+                  }, 5000);
+                }, 1500);
+              });
+            }
+          }
+          
+          // Handle delete button for archived widgets
+          if (isArchived) {
+            const deleteBtn = document.getElementById('detailDeleteBtn');
+            if (deleteBtn) {
+              deleteBtn.addEventListener('click', () => {
+                // Get current widget ID
+                const currentWidgetId = detailOverlay.dataset.currentId;
+                if (!currentWidgetId) return;
+                
+                // Confirm deletion
+                if (confirm('Are you sure you want to delete this archived widget? This action cannot be undone.')) {
+                  // Remove card from dashboard
+                  const card = document.getElementById(currentWidgetId);
+                  if (card) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                      card.remove();
+                      // Remove from chartDetails
+                      chartDetails.delete(currentWidgetId);
+                      // Close detail overlay
+                      showDashboardView();
+                      // Reapply layout
+                      applyLayout();
+                    }, 300);
+                  } else {
+                    // If card not found, just close detail overlay
+                    showDashboardView();
+                  }
+                }
+              });
+            }
+          }
+        }
+        
         detailCreated.textContent = meta.created || '-';
         detailUpdated.textContent = meta.updated || '-';
         detailInterval.textContent = meta.interval || '-';
@@ -1384,7 +1781,7 @@ return ma;`;
       // Mock history data - grouped by version sections
       const editHistoryData = [
         {
-          version: 'Unreleased',
+          version: 'Unreleased Draft',
           items: [
             {
               id: 'unreleased-1',
@@ -1496,6 +1893,103 @@ return ma;`;
         if (editHistoryPanel && editHistoryPanel.classList.contains('open')) {
           if (!editHistoryPanel.contains(e.target) && e.target !== editHistoryBtn) {
             editHistoryPanel.classList.remove('open');
+          }
+        }
+      });
+    </script>
+    <script>
+      // Share Panel
+      const shareBtn = document.getElementById('shareBtn');
+      const sharePanel = document.getElementById('sharePanel');
+      const shareClose = document.getElementById('shareClose');
+      const shareVisibilityToggle = document.getElementById('shareVisibilityToggle');
+      const shareVisibilityLabel = document.getElementById('shareVisibilityLabel');
+      const shareUrlSection = document.getElementById('shareUrlSection');
+      const shareUrlInput = document.getElementById('shareUrlInput');
+      const shareCopyBtn = document.getElementById('shareCopyBtn');
+      
+      // Default to public
+      let isPublic = true;
+      
+      function toggleSharePanel() {
+        if (!sharePanel) return;
+        const isOpen = sharePanel.classList.contains('open');
+        // Close other panels
+        document.querySelectorAll('.share-panel.open, .edit-history-panel.open').forEach(panel => {
+          if (panel !== sharePanel) panel.classList.remove('open');
+        });
+        sharePanel.classList.toggle('open', !isOpen);
+      }
+      
+      function updateShareVisibility() {
+        isPublic = shareVisibilityToggle.checked;
+        if (isPublic) {
+          shareVisibilityLabel.textContent = 'Public';
+          shareUrlSection.classList.remove('hidden');
+        } else {
+          shareVisibilityLabel.textContent = 'Private';
+          shareUrlSection.classList.add('hidden');
+        }
+      }
+      
+      function copyShareUrl() {
+        if (!shareUrlInput) return;
+        shareUrlInput.select();
+        shareUrlInput.setSelectionRange(0, 99999); // For mobile devices
+        try {
+          document.execCommand('copy');
+          shareCopyBtn.textContent = 'Copied!';
+          shareCopyBtn.classList.add('copied');
+          setTimeout(() => {
+            shareCopyBtn.textContent = 'Copy';
+            shareCopyBtn.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          // Fallback for modern browsers
+          navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+            shareCopyBtn.textContent = 'Copied!';
+            shareCopyBtn.classList.add('copied');
+            setTimeout(() => {
+              shareCopyBtn.textContent = 'Copy';
+              shareCopyBtn.classList.remove('copied');
+            }, 2000);
+          });
+        }
+      }
+      
+      if (shareBtn) {
+        shareBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleSharePanel();
+        });
+      }
+      
+      if (shareClose) {
+        shareClose.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (sharePanel) sharePanel.classList.remove('open');
+        });
+      }
+      
+      if (shareVisibilityToggle) {
+        shareVisibilityToggle.addEventListener('change', updateShareVisibility);
+        // Initialize
+        updateShareVisibility();
+      }
+      
+      if (shareCopyBtn) {
+        shareCopyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          copyShareUrl();
+        });
+      }
+      
+      // Close panel when clicking outside
+      document.addEventListener('click', (e) => {
+        if (sharePanel && sharePanel.classList.contains('open')) {
+          const shareDD = sharePanel.closest('.share-dd');
+          if (!shareDD || !shareDD.contains(e.target)) {
+            sharePanel.classList.remove('open');
           }
         }
       });

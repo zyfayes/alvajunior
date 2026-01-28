@@ -27,6 +27,35 @@
       .hd-action-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; background: #fff; color: #6b7280; cursor: pointer; transition: all 0.2s; }
       .hd-action-btn:hover { border-color: #d1d5db; color: #374151; background: #f9fafb; }
       .hd-action-btn svg { width: 16px; height: 16px; }
+      .hd-action-btn-text { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+      .hd-action-btn-text:hover { background: #d1fae5; border-color: #0f766e; }
+      .share-dd { position: relative; }
+      .share-panel { position: absolute; top: calc(100% + 8px); right: 0; width: 360px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); display: none; z-index: 50; }
+      .share-panel.open { display: block; }
+      .share-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+      .share-title { font-size: 14px; font-weight: 600; color: #111827; }
+      .share-close { border: 0; background: transparent; color: #6b7280; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s; }
+      .share-close:hover { background: #f3f4f6; color: #374151; }
+      .share-body { padding: 14px; }
+      .share-visibility { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .share-visibility-label { font-size: 13px; font-weight: 500; color: #374151; }
+      .share-toggle { display: flex; align-items: center; gap: 10px; }
+      .share-toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+      .share-toggle-switch input { opacity: 0; width: 0; height: 0; }
+      .share-toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #14b8a6; transition: 0.3s; border-radius: 24px; }
+      .share-toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+      .share-toggle-switch input:checked + .share-toggle-slider { background-color: #14b8a6; }
+      .share-toggle-switch input:not(:checked) + .share-toggle-slider { background-color: #d1d5db; }
+      .share-toggle-switch input:checked + .share-toggle-slider:before { transform: translateX(20px); }
+      .share-toggle-label { font-size: 13px; font-weight: 500; color: #374151; }
+      .share-url-section { display: block; }
+      .share-url-section.hidden { display: none; }
+      .share-url-label { font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 8px; }
+      .share-url-input-group { display: flex; gap: 8px; }
+      .share-url-input { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #6b7280; background: #f9fafb; }
+      .share-copy-btn { border: 1px solid #14b8a6; background: #ecfdf5; color: #0f766e; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+      .share-copy-btn:hover { background: #d1fae5; border-color: #0f766e; }
+      .share-copy-btn.copied { background: #d1fae5; color: #059669; }
       .paper .bd { padding: 12px 14px; }
       .tabs { display: flex; gap: 24px; }
       .tab { padding: 6px 0; border: none; background: transparent; color: #6b7280; font-size: 14px; font-weight: 500; cursor: pointer; position: relative; transition: color 0.2s; }
@@ -382,12 +411,48 @@
                   <!-- History items will be injected here -->
                 </div>
               </div>
-              <button class="hd-action-btn" title="Settings">
+              <div class="share-dd">
+                <button id="shareBtn" class="hd-action-btn" title="Share">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                </button>
+                <div id="sharePanel" class="share-panel">
+                  <div class="share-header">
+                    <div class="share-title">Share Playbook</div>
+                    <button id="shareClose" class="share-close">×</button>
+                  </div>
+                  <div class="share-body">
+                    <div class="share-visibility">
+                      <div class="share-visibility-label">Visibility</div>
+                      <div class="share-toggle">
+                        <label class="share-toggle-switch">
+                          <input type="checkbox" id="shareVisibilityToggle" checked>
+                          <span class="share-toggle-slider"></span>
+                        </label>
+                        <span class="share-toggle-label" id="shareVisibilityLabel">Public</span>
+                      </div>
+                    </div>
+                    <div class="share-url-section" id="shareUrlSection">
+                      <div class="share-url-label">Share URL</div>
+                      <div class="share-url-input-group">
+                        <input type="text" id="shareUrlInput" class="share-url-input" readonly value="https://alva.xyz/playbook/attribution-analysis-strategy">
+                        <button id="shareCopyBtn" class="share-copy-btn">Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="hd-action-btn" title="Star">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
               </button>
+              <button class="hd-action-btn-text" title="Release">Release</button>
             </div>
           </div>
           <div class="tabs">
@@ -1229,7 +1294,7 @@ return ma;`;
       // Mock history data - grouped by version sections
       const editHistoryData = [
         {
-          version: 'Unreleased',
+          version: 'Unreleased Draft',
           items: [
             {
               id: 'unreleased-1',
@@ -1341,6 +1406,103 @@ return ma;`;
         if (editHistoryPanel && editHistoryPanel.classList.contains('open')) {
           if (!editHistoryPanel.contains(e.target) && e.target !== editHistoryBtn) {
             editHistoryPanel.classList.remove('open');
+          }
+        }
+      });
+    </script>
+    <script>
+      // Share Panel
+      const shareBtn = document.getElementById('shareBtn');
+      const sharePanel = document.getElementById('sharePanel');
+      const shareClose = document.getElementById('shareClose');
+      const shareVisibilityToggle = document.getElementById('shareVisibilityToggle');
+      const shareVisibilityLabel = document.getElementById('shareVisibilityLabel');
+      const shareUrlSection = document.getElementById('shareUrlSection');
+      const shareUrlInput = document.getElementById('shareUrlInput');
+      const shareCopyBtn = document.getElementById('shareCopyBtn');
+      
+      // Default to public
+      let isPublic = true;
+      
+      function toggleSharePanel() {
+        if (!sharePanel) return;
+        const isOpen = sharePanel.classList.contains('open');
+        // Close other panels
+        document.querySelectorAll('.share-panel.open, .edit-history-panel.open').forEach(panel => {
+          if (panel !== sharePanel) panel.classList.remove('open');
+        });
+        sharePanel.classList.toggle('open', !isOpen);
+      }
+      
+      function updateShareVisibility() {
+        isPublic = shareVisibilityToggle.checked;
+        if (isPublic) {
+          shareVisibilityLabel.textContent = 'Public';
+          shareUrlSection.classList.remove('hidden');
+        } else {
+          shareVisibilityLabel.textContent = 'Private';
+          shareUrlSection.classList.add('hidden');
+        }
+      }
+      
+      function copyShareUrl() {
+        if (!shareUrlInput) return;
+        shareUrlInput.select();
+        shareUrlInput.setSelectionRange(0, 99999); // For mobile devices
+        try {
+          document.execCommand('copy');
+          shareCopyBtn.textContent = 'Copied!';
+          shareCopyBtn.classList.add('copied');
+          setTimeout(() => {
+            shareCopyBtn.textContent = 'Copy';
+            shareCopyBtn.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          // Fallback for modern browsers
+          navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+            shareCopyBtn.textContent = 'Copied!';
+            shareCopyBtn.classList.add('copied');
+            setTimeout(() => {
+              shareCopyBtn.textContent = 'Copy';
+              shareCopyBtn.classList.remove('copied');
+            }, 2000);
+          });
+        }
+      }
+      
+      if (shareBtn) {
+        shareBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleSharePanel();
+        });
+      }
+      
+      if (shareClose) {
+        shareClose.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (sharePanel) sharePanel.classList.remove('open');
+        });
+      }
+      
+      if (shareVisibilityToggle) {
+        shareVisibilityToggle.addEventListener('change', updateShareVisibility);
+        // Initialize
+        updateShareVisibility();
+      }
+      
+      if (shareCopyBtn) {
+        shareCopyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          copyShareUrl();
+        });
+      }
+      
+      // Close panel when clicking outside
+      document.addEventListener('click', (e) => {
+        if (sharePanel && sharePanel.classList.contains('open')) {
+          const shareDD = sharePanel.closest('.share-dd');
+          if (!shareDD || !shareDD.contains(e.target)) {
+            sharePanel.classList.remove('open');
           }
         }
       });
