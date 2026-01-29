@@ -1861,15 +1861,41 @@ return ma;`;
         if (!editHistoryBody) return;
         let html = '';
         
-        editHistoryData.forEach(section => {
+        editHistoryData.forEach((section, index) => {
           const headerText = section.date ? `${section.version} • ${section.date}` : section.version;
-          html += `<div class="edit-history-section">
-            <div class="edit-history-section-header">${headerText}</div>
+          const isUnreleased = section.version === 'Unreleased' || section.version === 'Unreleased Draft';
+          html += `<div class="edit-history-section" data-section-index="${index}">
+            <div class="edit-history-section-header">
+              <span>${headerText}</span>
+              ${isUnreleased ? `<button class="edit-history-discard-btn" title="Discard changes" onclick="discardUnreleased(event)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 14L4 9l5-5"></path>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </button>` : ''}
+            </div>
             ${section.items.map(item => renderHistoryItem(item)).join('')}
           </div>`;
         });
         
         editHistoryBody.innerHTML = html;
+      }
+      
+      function discardUnreleased(event) {
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+        // Remove unreleased section from data
+        const unreleasedIndex = editHistoryData.findIndex(s => s.version === 'Unreleased' || s.version === 'Unreleased Draft');
+        if (unreleasedIndex !== -1) {
+          editHistoryData.splice(unreleasedIndex, 1);
+          // Set first item of next version (V2) as viewing
+          if (editHistoryData.length > 0 && editHistoryData[0].items.length > 0) {
+            editHistoryData[0].items[0].viewing = true;
+          }
+          renderEditHistory();
+        }
       }
       
       function toggleEditHistoryPanel() {
